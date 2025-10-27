@@ -3,12 +3,14 @@ import { Button } from '@/components/ui/button';
 
 export default function LoginModal() {
     return (
-        <div className="size-full absolute  bg-neutral-500/50 flex justify-center items-center">
+        <div className="flex size-full absolute top-0 bg-neutral-500/50 justify-center items-center">
             <div className="flex flex-col items-center bg-neutral-50 rounded-xl py-16 px-28 gap-[30px]">
                 <div className="flex flex-col items-center gap-[20px]">
                     {/* logo and title */}
                     <div className="size-10 bg-neutral-400"></div>
-                    <h3 className="text-2xl">Discover the archer&apos;s way.</h3>
+                    <h3 className="text-2xl text-center">
+                        Discover the archer&apos;s way.
+                    </h3>
                 </div>
                 <div className="flex flex-col items-center gap-[10px]">
                     {/* buttons */}
