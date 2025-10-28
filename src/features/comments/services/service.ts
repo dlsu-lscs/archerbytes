@@ -1,62 +1,78 @@
 import { db } from '@/config/database';
 import { comments } from '@/lib/db/schema';
-import { eq, and, isNull } from 'drizzle-orm';
-import type { CreateCommentInput, UpdateCommentInput } from '../types';
+import { eq, sql } from 'drizzle-orm';
 
-export class CommentService {
-  static async create(data: CreateCommentInput) {
-    const [comment] = await db
-      .insert(comments)
-      .values({
-        userId: data.userId,
-        articleId: data.articleId,
-        content: data.content,
-        replyTo: data.replyTo,
-      })
-      .returning();
-    return comment;
-  }
-
-  static async getByArticleID(articleID: string) {
-    return await db
-      .select()
-      .from(comments)
-      .where(and(eq(comments.articleId, articleID), isNull(comments.replyTo)));
-  }
-
-  static async getById(id: number) {
-    const [comment] = await db
-      .select()
-      .from(comments)
-      .where(eq(comments.id, id));
-    return comment ?? null;
-  }
-
-  static async getReplies(parentCommentId: number) {
-    return await db
-      .select()
-      .from(comments)
-      .where(eq(comments.replyTo, parentCommentId));
-  }
-
-  static async update(id: number, data: UpdateCommentInput) {
-    const [updated] = await db
-      .update(comments)
-      .set({
-        content: data.content,
-        updatedAt: new Date(),
-      })
-      .where(eq(comments.id, id))
-      .returning();
-    return updated ?? null;
-  }
-
-  static async delete(id: number) {
-    const [deleted] = await db
-      .delete(comments)
-      .where(eq(comments.id, id))
-      .returning();
-
-    return deleted ?? null;
-  }
+interface CreateCommentData {
+  userId: string;
+  articleId: string;
+  content: string;
+  replyTo?: number | null;
 }
+
+interface UpdateCommentData {
+  content?: string;
+}
+
+export async function createComment(data: CreateCommentData) {
+  const inserted = await db
+    .insert(comments)
+    .values({
+      userId: data.userId,
+      articleId: data.articleId,
+      content: data.content.trim(),
+      replyTo: data.replyTo ?? null,
+    })
+    .returning();
+  return inserted[0];
+}
+
+export async function getCommentsByArticleID(articleId: string) {
+  return db
+    .select()
+    .from(comments)
+    .where(eq(comments.articleId, articleId))
+    .orderBy(comments.createdAt);
+}
+
+export async function getCommentById(id: number) {
+  const rows = await db.select().from(comments).where(eq(comments.id, id));
+  return rows[0] ?? null;
+}
+
+export async function getReplies(parentId: number) {
+  return db
+    .select()
+    .from(comments)
+    .where(eq(comments.replyTo, parentId))
+    .orderBy(comments.createdAt);
+}
+
+export async function updateComment(id: number, data: UpdateCommentData) {
+  const updated = await db
+    .update(comments)
+    .set({
+      ...(data.content !== undefined ? { content: data.content.trim() } : {}),
+      updatedAt: sql`now()`,
+    })
+    .where(eq(comments.id, id))
+    .returning();
+
+  return updated.length > 0 ? updated[0] : null;
+}
+
+export async function deleteComment(id: number) {
+  const deleted = await db
+    .delete(comments)
+    .where(eq(comments.id, id))
+    .returning();
+  return deleted.length > 0 ? deleted[0] : null;
+}
+
+export const CommentService = {
+  create: createComment,
+  getByArticleID: getCommentsByArticleID,
+  getById: getCommentById,
+  update: updateComment,
+  delete: deleteComment,
+  getReplies,
+};
