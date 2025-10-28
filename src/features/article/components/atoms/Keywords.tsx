@@ -7,7 +7,7 @@ type KeywordsType = {
 export default function Keywords({ keywords = [] }: KeywordsType) {
     return (
         <div className="flex gap-2">
-            <p className="mr-2">Keywords:</p>
+            <p className="mr-1">Keywords:</p>
             {keywords.map((item, index) =>
                 index === keywords.length - 1 ? (
                     <Link className="underline" href="/" key={index}>
