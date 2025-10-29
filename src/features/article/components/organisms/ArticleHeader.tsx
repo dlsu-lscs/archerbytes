@@ -16,7 +16,7 @@ export default function ArticleHeader() {
     };
 
     return (
-        <div className="flex flex-col gap-[10px] py-3 h-max border-solid border-neutral-400 border-b-2">
+        <div className="flex flex-col gap-[10px] py-3 mb-3 h-max border-solid border-neutral-400 border-b-2">
             <Breadcrumbs link="Home > Category > Title" />
             <ArticleDetails article={placeholderArticle} />
             <Keywords

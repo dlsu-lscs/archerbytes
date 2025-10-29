@@ -1,6 +1,7 @@
 import Sidebar from '@/components/organisms/Sidebar';
 import RelatedSidebar from '@/features/article/components/organisms/RelatedSidebar';
 import ArticleHeader from '@/features/article/components/organisms/ArticleHeader';
+import Discussion from '@/features/article/components/organisms/Discussion';
 import Photo from '@/features/article/components/atoms/Photo';
 
 export default function ArticlePage() {
@@ -9,9 +10,9 @@ export default function ArticlePage() {
             <div className="hidden lg:flex justify-end">
                 <Sidebar />
             </div>
-            <main className="flex flex-col gap-[10px] px-10">
-                <ArticleHeader />
-                <section className="flex flex-col gap-3">
+            <main className="flex flex-col gap-[30px] px-10">
+                <section className="flex flex-col gap-[10px]">
+                    <ArticleHeader />
                     <Photo source="/image.jpg" />
                     <p>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
@@ -55,6 +56,7 @@ export default function ArticlePage() {
                         consequuntur libero officiis harum eos in error dicta?
                     </p>
                 </section>
+                <Discussion />
             </main>
             <div className="hidden lg:block grow">
                 <RelatedSidebar />
