@@ -43,6 +43,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (error instanceof Error) {
+      if (error.message === 'Parent comment does not exist.') {
+        return NextResponse.json({ error: error.message }, { status: 404 });
+      }
+      if (error.message === 'Can only reply to parent comments.') {
+        return NextResponse.json({ error: error.message }, { status: 400 });
+      }
+    }
+
     return NextResponse.json(
       { error: 'Failed to create comment' },
       { status: 500 },

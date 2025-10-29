@@ -4,6 +4,21 @@ import { eq, sql } from 'drizzle-orm';
 import type { CreateCommentInput, UpdateCommentInput } from '../types';
 
 export async function createComment(data: CreateCommentInput) {
+  if (data.replyTo) {
+    const parent = await db
+      .select()
+      .from(comments)
+      .where(eq(comments.id, data.replyTo));
+
+    if (!parent[0]) {
+      throw new Error('Parent comment does not exist.');
+    }
+
+    if (parent[0].replyTo !== null) {
+      throw new Error('Can only reply to parent comments.');
+    }
+  }
+
   const inserted = await db
     .insert(comments)
     .values({
