@@ -1,19 +1,9 @@
 import { db } from '@/config/database';
 import { comments } from '@/lib/db/schema';
 import { eq, sql } from 'drizzle-orm';
+import type { CreateCommentInput, UpdateCommentInput } from '../types';
 
-interface CreateCommentData {
-  userId: string;
-  articleId: string;
-  content: string;
-  replyTo?: number | null;
-}
-
-interface UpdateCommentData {
-  content?: string;
-}
-
-export async function createComment(data: CreateCommentData) {
+export async function createComment(data: CreateCommentInput) {
   const inserted = await db
     .insert(comments)
     .values({
@@ -47,7 +37,7 @@ export async function getReplies(parentId: number) {
     .orderBy(comments.createdAt);
 }
 
-export async function updateComment(id: number, data: UpdateCommentData) {
+export async function updateComment(id: number, data: UpdateCommentInput) {
   const updated = await db
     .update(comments)
     .set({
