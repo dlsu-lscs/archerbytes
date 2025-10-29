@@ -5,9 +5,20 @@ import {
   timestamp,
   integer,
   unique,
+  pgEnum,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { comments } from './comments.entity';
+
+export const reactionTypeEnum = pgEnum('reaction_type', [
+  'like',
+  'heart',
+  'care',
+  'haha',
+  'wow',
+  'sad',
+  'angry',
+]);
 
 export const articleReactions = pgTable(
   'article_reactions',
@@ -15,7 +26,7 @@ export const articleReactions = pgTable(
     id: serial('id').primaryKey(),
     userId: text('user_id').notNull(),
     articleId: text('article_id').notNull(),
-    reactionType: text('reaction_type').notNull(),
+    reactionType: reactionTypeEnum('reaction_type').notNull(),
     createdAt: timestamp('created_at')
       .notNull()
       .default(sql`now()`),
@@ -31,7 +42,7 @@ export const commentReactions = pgTable(
     commentId: integer('comment_id')
       .notNull()
       .references(() => comments.id, { onDelete: 'cascade' }),
-    reactionType: text('reaction_type').notNull(),
+    reactionType: reactionTypeEnum('reaction_type').notNull(),
     createdAt: timestamp('created_at')
       .notNull()
       .default(sql`now()`),
