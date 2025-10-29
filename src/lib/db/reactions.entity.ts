@@ -1,4 +1,11 @@
-import { pgTable, serial, text, timestamp, integer } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  integer,
+  unique,
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { comments } from './comments.entity';
 
@@ -13,13 +20,7 @@ export const articleReactions = pgTable(
       .notNull()
       .default(sql`now()`),
   },
-  (table) => [
-    // Prevents the same user from having multiple reactions on the same article
-    {
-      name: 'unique_user_article',
-      columns: [table.userId, table.articleId],
-    },
-  ],
+  (t) => [unique('unique_user_article').on(t.userId, t.articleId)],
 );
 
 export const commentReactions = pgTable(
@@ -35,10 +36,5 @@ export const commentReactions = pgTable(
       .notNull()
       .default(sql`now()`),
   },
-  (table) => [
-    {
-      name: 'unique_user_comment',
-      columns: [table.userId, table.commentId],
-    },
-  ],
+  (t) => [unique('unique_user_comment').on(t.userId, t.commentId)],
 );
