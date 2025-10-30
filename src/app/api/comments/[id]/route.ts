@@ -5,23 +5,24 @@ import { ZodError } from 'zod';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } },
 ) {
   try {
-    const { id } = await params;
-    const numericId = parseInt(id);
-
-    if (isNaN(numericId)) {
-      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    const id = Number(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { error: 'Invalid comment ID' },
+        { status: 400 },
+      );
     }
 
-    const comment = await CommentService.getById(numericId);
+    const comment = await CommentService.getById(id);
 
     if (!comment) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ data: comment }, { status: 200 });
+    return NextResponse.json({ data: comment });
   } catch (error) {
     console.error('Error fetching comment:', error);
     return NextResponse.json(
@@ -33,26 +34,37 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } },
 ) {
   try {
-    const { id } = await params;
-    const numericId = parseInt(id);
-
-    if (isNaN(numericId)) {
-      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    const id = Number(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { error: 'Invalid comment ID' },
+        { status: 400 },
+      );
     }
 
     const body = await req.json();
-    const validatedData = updateCommentSchema.parse(body);
 
-    const comment = await CommentService.update(numericId, validatedData);
-
-    if (!comment) {
-      return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
+    if (!body.userId) {
+      return NextResponse.json(
+        { error: 'userId is required' },
+        { status: 400 },
+      );
     }
 
-    return NextResponse.json({ data: comment }, { status: 200 });
+    const validatedData = updateCommentSchema.parse(body);
+    const comment = await CommentService.update(id, body.userId, validatedData);
+
+    if (!comment) {
+      return NextResponse.json(
+        { error: 'Comment not found or you are not allowed to update it' },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({ data: comment });
   } catch (error) {
     console.error('Error updating comment:', error);
 
@@ -72,26 +84,39 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } },
 ) {
   try {
-    const { id } = await params;
-    const numericId = parseInt(id);
-
-    if (isNaN(numericId)) {
-      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    const id = Number(params.id);
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { error: 'Invalid comment ID' },
+        { status: 400 },
+      );
     }
 
-    const comment = await CommentService.delete(numericId);
+    const body = await req.json();
+
+    if (!body.userId) {
+      return NextResponse.json(
+        { error: 'userId is required' },
+        { status: 400 },
+      );
+    }
+
+    const comment = await CommentService.delete(id, body.userId);
 
     if (!comment) {
-      return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Comment not found or you are not allowed to delete it' },
+        { status: 404 },
+      );
     }
 
-    return NextResponse.json(
-      { message: 'Comment deleted successfully', data: comment },
-      { status: 200 },
-    );
+    return NextResponse.json({
+      message: 'Comment deleted successfully',
+      data: comment,
+    });
   } catch (error) {
     console.error('Error deleting comment:', error);
     return NextResponse.json(
