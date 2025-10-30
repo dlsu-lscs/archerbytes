@@ -1,0 +1,2 @@
+ALTER TABLE "article_reactions" ADD CONSTRAINT "article_reactions_user_id_article_id_unique" UNIQUE("user_id","article_id");--> statement-breakpoint
+ALTER TABLE "comment_reactions" ADD CONSTRAINT "comment_reactions_user_id_comment_id_unique" UNIQUE("user_id","comment_id");
