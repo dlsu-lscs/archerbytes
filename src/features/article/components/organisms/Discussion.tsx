@@ -19,8 +19,11 @@ export default function Discussion() {
             <DraftComment />
             <div className="flex flex-col gap-[10px]">
                 <Comment comment={comment1} />
-                <Comment comment={comment1} />
-                <Comment comment={comment1} />
+                <Comment comment={comment1}>
+                    <Comment comment={comment1} />
+                    <Comment comment={comment1} />
+                    <Comment comment={comment1} />
+                </Comment>
                 <Comment comment={comment1} />
             </div>
         </div>
