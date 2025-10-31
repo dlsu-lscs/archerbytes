@@ -1,5 +1,8 @@
-import Link from 'next/link';
+'use client';
+
+// import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { signInWithGoogle } from '@/lib/util/auth/client-actions';
 
 export default function LoginModal() {
   return (
@@ -21,7 +24,10 @@ export default function LoginModal() {
         <div className="flex flex-col items-center">
           {/* sign in */}
           <p className="text-neutral-600">
-            Already have an account? <Link href="/">Sign in</Link>
+            Already have an account?{' '}
+            <button onClick={signInWithGoogle} className="underline">
+              Sign in
+            </button>
           </p>
         </div>
       </div>

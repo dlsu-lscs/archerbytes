@@ -15,6 +15,13 @@
       "when": 1761625503198,
       "tag": "0001_stiff_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761889103515,
+      "tag": "0002_funny_absorbing_man",
+      "breakpoints": true
     }
   ]
 }
