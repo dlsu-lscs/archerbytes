@@ -41,7 +41,12 @@ export async function getCommentsByArticleID(articleId: string) {
     return db
       .select()
       .from(comments)
-      .where(eq(comments.articleId, articleId))
+      .where(
+        and(
+          eq(comments.articleId, articleId),
+          sql`${comments.replyTo} IS NULL`,
+        ),
+      )
       .orderBy(comments.createdAt);
   } catch (error) {
     console.error('Error fetching comments by article ID:', error);
