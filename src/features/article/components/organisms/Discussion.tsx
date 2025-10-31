@@ -21,8 +21,10 @@ export default function Discussion() {
                 <Comment comment={comment1} />
                 <Comment comment={comment1}>
                     <Comment comment={comment1} />
-                    <Comment comment={comment1} />
-                    <Comment comment={comment1} />
+                    <Comment comment={comment1}>
+                        <Comment comment={comment1} />
+                        <Comment comment={comment1} />
+                    </Comment>
                 </Comment>
                 <Comment comment={comment1} />
             </div>

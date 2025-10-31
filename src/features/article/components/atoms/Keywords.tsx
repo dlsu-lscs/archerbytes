@@ -1,8 +1,5 @@
 import Link from 'next/link';
-
-type KeywordsType = {
-    keywords: string[];
-};
+import { KeywordsType } from '../../types/article.types';
 
 export default function Keywords({ keywords = [] }: KeywordsType) {
     return (

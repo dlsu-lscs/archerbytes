@@ -1,8 +1,5 @@
 import { Button } from '@/components/ui/button';
-
-type TopicProps = {
-    topic: string;
-};
+import { TopicProps } from '../../types/article.types';
 
 export default function TopicChip({ topic }: TopicProps) {
     return (

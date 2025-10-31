@@ -1,18 +1,6 @@
-export type ArticleDetailsType = {
-    title: string;
-    quote: string;
-    quotee: string;
-    author: string;
-    occupation: string;
-    readingTime: number;
-    publicationDate: Date;
-};
+import { ArticleDetailsType } from '../../types/article.types';
 
-export default function ArticleDetails({
-    article,
-}: {
-    article: ArticleDetailsType;
-}) {
+export default function ArticleDetails({ article }: ArticleDetailsType) {
     return (
         <div className="flex flex-col gap-[10px]">
             <h1 className="text-5xl font-bold">{article.title.toUpperCase()}</h1>

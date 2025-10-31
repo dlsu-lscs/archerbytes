@@ -1,10 +1,5 @@
 import TopicChip from './TopicChip';
-
-type SmallArticleItemType = {
-    topic: string;
-    title: string;
-    author: string;
-};
+import { SmallArticleItemType } from '../../types/article.types';
 
 export default function SmallArticleItem({
     topic,

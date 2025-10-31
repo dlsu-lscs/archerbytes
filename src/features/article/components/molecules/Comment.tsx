@@ -17,23 +17,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { BiLike } from 'react-icons/bi';
 import { FaRegCommentAlt } from 'react-icons/fa';
 
-type CommentType = {
-    id: number;
-    avatarURL: string;
-    userId: string;
-    occupation: string;
-    isAuthor: boolean;
-    content: string;
-    likeCount: number;
-    replyCount: number;
-    repliesTo: number;
-};
-
-type CommentProp = {
-    comment: CommentType;
-    children: React.ReactNode;
-    isDraft: boolean;
-};
+import { CommentProp } from '../../types/comment.types';
 
 export default function Comment({
     comment,
@@ -41,7 +25,6 @@ export default function Comment({
     isDraft = false,
 }: CommentProp) {
     const hasReplies = !!children;
-    const replyCount = React.Children.count(children);
 
     return (
         <div className="flex flex-col gap-[10px]">
@@ -99,7 +82,7 @@ export default function Comment({
                             {!isLast && (
                                 <div className="absolute -left-[16px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
                             )}{' '}
-                            <div className="absolute  -left-[16px] w-13 h-16 -top-3 bottom-0 border-b-2 border-l-2 border-neutral-300" />
+                            <div className="absolute -left-[16px] w-13 h-16 -top-3 bottom-0 border-b-2 border-l-2 border-neutral-300" />
                             {child}
                         </div>
                     );
