@@ -1,5 +1,8 @@
-import Link from 'next/link';
+'use client';
+
+// import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { signInWithGoogle } from '@/lib/util/auth/client-actions';
 
 export default function Login() {
     return (
@@ -26,5 +29,22 @@ export default function Login() {
                 </div>
             </div>
         </div>
-    );
+        <div className="flex flex-col items-center gap-[10px]">
+          {/* buttons */}
+          <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
+          <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
+          <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
+        </div>
+        <div className="flex flex-col items-center">
+          {/* sign in */}
+          <p className="text-neutral-600">
+            Already have an account?{' '}
+            <button onClick={signInWithGoogle} className="underline">
+              Sign in
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
