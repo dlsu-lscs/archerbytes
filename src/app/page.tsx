@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import LoginModal from '@/components/organisms/LoginModal';
+import Login from '@/components/organisms/Login';
 
 export default function Home() {
   return (
