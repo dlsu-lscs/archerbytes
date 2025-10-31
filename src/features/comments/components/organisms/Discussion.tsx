@@ -1,4 +1,4 @@
-import Comment from '@/features/article/components/molecules/Comment';
+import Comment from '@/features/comments/components/molecules/Comment';
 import DraftComment from './DraftComment';
 import { Button } from '@/components/ui/button';
 
@@ -21,10 +21,7 @@ export default function Discussion() {
                 <Comment comment={comment1} />
                 <Comment comment={comment1}>
                     <Comment comment={comment1} />
-                    <Comment comment={comment1}>
-                        <Comment comment={comment1} />
-                        <Comment comment={comment1} />
-                    </Comment>
+                    <Comment comment={comment1} />
                 </Comment>
                 <Comment comment={comment1} />
             </div>
