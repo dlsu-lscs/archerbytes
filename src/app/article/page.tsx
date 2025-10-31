@@ -2,7 +2,7 @@ import Sidebar from '@/components/organisms/Sidebar';
 import RelatedSidebar from '@/features/article/components/organisms/RelatedSidebar';
 import ArticleHeader from '@/features/article/components/organisms/ArticleHeader';
 import ArticleContent from '@/features/article/components/molecules/ArticleContent';
-import Discussion from '@/features/article/components/organisms/Discussion';
+import Discussion from '@/features/comments/components/organisms/Discussion';
 
 export default function ArticlePage() {
     return (
