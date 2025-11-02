@@ -1,0 +1,16 @@
+services:
+  postgres:
+    # Using Postgres 15 as a stable, long-term-supported (LTS-like) major release
+    image: postgres:15
+    container_name: archerbytes_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: archerbytes_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+    driver: local
