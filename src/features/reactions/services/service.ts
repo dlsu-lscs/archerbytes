@@ -1,6 +1,6 @@
 import { db } from '@/config/database';
 import { articleReactions, commentReactions } from '@/lib/db/reactions.entity';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import type {
   CreateArticleReactionInput,
   DeleteArticleReactionInput,
@@ -27,6 +27,19 @@ export async function createArticleReaction(data: CreateArticleReactionInput) {
   }
 }
 
+export async function getReactionsByArticleId(articleId: string) {
+  try {
+    return await db
+      .select()
+      .from(articleReactions)
+      .where(eq(articleReactions.articleId, articleId))
+      .orderBy(articleReactions.createdAt);
+  } catch (error) {
+    console.error('Error fetching reactions by article:', error);
+    throw error;
+  }
+}
+
 export async function getReactionsByArticleIdAndUserId(
   articleId: string,
   userId: string,
@@ -44,22 +57,6 @@ export async function getReactionsByArticleIdAndUserId(
       .orderBy(articleReactions.createdAt);
   } catch (error) {
     console.error('Error fetching reactions by article and user:', error);
-    throw error;
-  }
-}
-
-export async function getTotalReactionsByArticleId(articleId: string) {
-  try {
-    return await db
-      .select({
-        reactionType: articleReactions.reactionType,
-        count: sql<number>`cast(count(*) as integer)`,
-      })
-      .from(articleReactions)
-      .where(eq(articleReactions.articleId, articleId))
-      .groupBy(articleReactions.reactionType);
-  } catch (error) {
-    console.error('Error fetching total reactions for article:', error);
     throw error;
   }
 }
@@ -118,6 +115,19 @@ export async function createCommentReaction(data: CreateCommentReactionInput) {
   }
 }
 
+export async function getReactionsByCommentId(commentId: number) {
+  try {
+    return await db
+      .select()
+      .from(commentReactions)
+      .where(eq(commentReactions.commentId, commentId))
+      .orderBy(commentReactions.createdAt);
+  } catch (error) {
+    console.error('Error fetching reactions by comment:', error);
+    throw error;
+  }
+}
+
 export async function getReactionsByCommentIdAndUserId(
   commentId: number,
   userId: string,
@@ -135,22 +145,6 @@ export async function getReactionsByCommentIdAndUserId(
       .orderBy(commentReactions.createdAt);
   } catch (error) {
     console.error('Error fetching reactions by comment and user:', error);
-    throw error;
-  }
-}
-
-export async function getTotalReactionsByCommentId(commentId: number) {
-  try {
-    return await db
-      .select({
-        reactionType: commentReactions.reactionType,
-        count: sql<number>`cast(count(*) as integer)`,
-      })
-      .from(commentReactions)
-      .where(eq(commentReactions.commentId, commentId))
-      .groupBy(commentReactions.reactionType);
-  } catch (error) {
-    console.error('Error fetching total reactions for comment:', error);
     throw error;
   }
 }
@@ -194,13 +188,13 @@ export async function deleteCommentReaction(data: DeleteCommentReactionInput) {
 
 export const ReactionService = {
   createArticleReaction,
+  getReactionsByArticleId,
   getReactionsByArticleIdAndUserId,
-  getTotalReactionsByArticleId,
   updateArticleReaction,
   deleteArticleReaction,
   createCommentReaction,
+  getReactionsByCommentId,
   getReactionsByCommentIdAndUserId,
-  getTotalReactionsByCommentId,
   updateCommentReaction,
   deleteCommentReaction,
 };

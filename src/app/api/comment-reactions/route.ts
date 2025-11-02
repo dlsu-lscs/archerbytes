@@ -36,9 +36,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ data: reactions });
     }
 
-    const totalReactions =
-      await ReactionService.getTotalReactionsByCommentId(commentId);
-    return NextResponse.json({ data: totalReactions });
+    const reactions = await ReactionService.getReactionsByCommentId(commentId);
+    return NextResponse.json({ data: reactions });
   } catch (error) {
     console.error('Error fetching comment reactions:', error);
     return NextResponse.json(
@@ -77,6 +76,7 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+
     const errorMessage = error instanceof Error ? error.message : '';
     const errorCause =
       error instanceof Error && 'cause' in error ? error.cause : null;
