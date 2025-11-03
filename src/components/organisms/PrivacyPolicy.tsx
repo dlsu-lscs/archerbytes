@@ -25,19 +25,19 @@ export default function PrivacyPolicy() {
                             By continuing to browse this site, you agree to our use of cookies
                             and our Privacy Policy.
                         </p>
-                        <div className="flex gap-[15px] w-full text-xs md:text-base">
+                        <div className="flex gap-[15px] w-full md:text-base">
                             <DrawerClose>
-                                <Button className="bg-neutral-50 text-xs text-neutral-950 grow">
+                                <Button className="bg-neutral-50 text-xs md:text-base text-neutral-950 grow">
                                     I agree
                                 </Button>
                             </DrawerClose>
                             <DrawerClose>
-                                <Button className="bg-neutral-50 text-xs text-neutral-950 grow">
+                                <Button className="bg-neutral-50 text-xs md:text-base text-neutral-950 grow">
                                     I don&apos;t agree
                                 </Button>
                             </DrawerClose>
                             <DrawerClose>
-                                <Button className="bg-neutral-50 text-xs text-neutral-950 grow">
+                                <Button className="bg-neutral-50 text-xs md:text-base text-neutral-950 grow">
                                     Customize cookies
                                 </Button>
                             </DrawerClose>
