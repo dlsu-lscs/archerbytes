@@ -1,50 +1,48 @@
 'use client';
 
 // import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { signInWithGoogle } from '@/lib/util/auth/client-actions';
 
 export default function Login() {
     return (
-        <div className="flex size-full absolute top-0 bg-neutral-500/50 justify-center items-center">
-            <div className="flex flex-col items-center bg-neutral-50 rounded-xl py-16 px-28 gap-[30px]">
+        <div className="flex size-full absolute top-0 bg-neutral-500/50 backdrop-blur-xs justify-center items-center z-100">
+            <div className="flex flex-col items-center bg-secondary border border-3 border-black rounded-xl py-10 md:py-16 md:px-22 px-8 gap-[30px]">
                 <div className="flex flex-col items-center gap-[20px]">
                     {/* logo and title */}
-                    <div className="size-10 bg-neutral-400"></div>
-                    <h3 className="text-2xl text-center">
+                    <Image
+                        src={`/archerbytes-main.webp`}
+                        width={86}
+                        height={50}
+                        alt="Archerbytes logo"
+                    ></Image>
+                    <h3 className="text-lg md:text-2xl text-neutral-950 font-medium text-center">
                         Discover the archer&apos;s way.
                     </h3>
                 </div>
                 <div className="flex flex-col items-center gap-[10px]">
                     {/* buttons */}
-                    <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
-                    <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
-                    <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
+                    <Button
+                        className="text-neutral-950 bg-neutral-50 border-2 border-solid border-neutral-950 rounded-full md:px-26 px-8 py-5 "
+                        onClick={() => signInWithGoogle()}
+                    >
+                        Sign up with Google
+                    </Button>
                 </div>
                 <div className="flex flex-col items-center">
                     {/* sign in */}
-                    <p className="text-neutral-600">
-                        Already have an account? <Link href="/">Sign in</Link>
+                    <p className="text-sm text-neutral-600">
+                        Already have an account?{' '}
+                        <span
+                            className="cursor-pointer underline"
+                            onClick={() => signInWithGoogle()}
+                        >
+                            Sign In
+                        </span>
                     </p>
                 </div>
             </div>
         </div>
-        <div className="flex flex-col items-center gap-[10px]">
-          {/* buttons */}
-          <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
-          <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
-          <Button className="bg-neutral-300 rounded-full px-26 py-5"></Button>
-        </div>
-        <div className="flex flex-col items-center">
-          {/* sign in */}
-          <p className="text-neutral-600">
-            Already have an account?{' '}
-            <button onClick={signInWithGoogle} className="underline">
-              Sign in
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

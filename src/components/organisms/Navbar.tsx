@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Image from 'next/image';
 import { MdMenu } from 'react-icons/md';
 import {
     Sheet,
@@ -15,12 +15,17 @@ export default function Navbar() {
     return (
         <>
             {/* desktop */}
-            <nav className="hidden lg:flex md:w-full items-center gap-10 justify-center bg-neutral-200 py-6 ">
+            <nav className="hidden lg:flex md:w-full items-center gap-10 justify-center bg-background py-4 ">
                 {/* <MdMenu className="aspect-square " size={32} /> */}
                 <div className="flex justify-between gap-5 max-w-[80vw] grow items-center">
                     <div className="flex gap-5 min-w-0">
-                        <div className="size-10 shrink-0 bg-neutral-400"></div>
-                        <div className="flex shrink min-w-0 gap-2 items-center h-10 px-4 rounded-full bg-neutral-400">
+                        <Image
+                            src={`/archerbytes-main.webp`}
+                            width={86}
+                            height={50}
+                            alt="Archerbytes logo"
+                        ></Image>
+                        <div className="flex shrink min-w-0 gap-2 items-center h-10 px-4 rounded-full bg-neutral-50">
                             <IoIosSearch size={24} className="shrink-0" />
                             <input
                                 className="h-10 min-w-0 shrink text-neutral-950 outline-none"
@@ -30,31 +35,42 @@ export default function Navbar() {
                         </div>
                     </div>
                     <div className="flex items-center whitespace-nowrap text-md flex gap-[25px]">
-                        <p>Nav Link</p>
-                        <p>Nav Link</p>
-                        <p>Nav Link</p>
-                        <p>Nav Link</p>
-                        <p>Nav Link</p>
-                        <p>Nav Link</p>
-                        <Button className="bg-neutral-500 text-neutral-950 p-4">
-                            Get Started
+                        <p>About ArcherBytes</p>
+                        <p>Sign in</p>
+                        <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
+                            <p className="font-bold text-neutral-50 text-outline-black">
+                                Get Started
+                            </p>
+                            <p className="font-bold text-neutral-50 absolute inset-0 top-[6px]">
+                                Get Started
+                            </p>
                         </Button>
                     </div>
                 </div>
             </nav>
             {/* mobile */}
             <Sheet>
-                <nav className="flex lg:hidden md:w-full items-center gap-10 bg-neutral-200 py-6 ">
+                <nav className="flex lg:hidden md:w-full items-center gap-10 bg-background py-4 ">
                     {/* <MdMenu className="aspect-square " size={32} /> */}
                     <div className="flex justify-between max-w-[80vw] mx-auto grow items-center">
                         <div className="flex gap-5">
                             <SheetTrigger>
                                 <MdMenu className="aspect-square " size={32} />
                             </SheetTrigger>
-                            <div className="size-10 bg-neutral-400"></div>
+                            <Image
+                                src={`/archerbytes-main.webp`}
+                                width={86}
+                                height={50}
+                                alt="Archerbytes logo"
+                            ></Image>
                         </div>
-                        <Button className="bg-neutral-500 text-neutral-950 p-4">
-                            Get Started
+                        <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
+                            <p className="font-bold text-neutral-50 text-outline-black">
+                                Get Started
+                            </p>
+                            <p className="font-bold text-neutral-50 absolute inset-0 top-[6px]">
+                                Get Started
+                            </p>
                         </Button>
                     </div>
                 </nav>
@@ -71,12 +87,8 @@ export default function Navbar() {
                         </div>
 
                         <div className="flex flex-col items-center flex gap-[25px]">
-                            <p>Nav Link</p>
-                            <p>Nav Link</p>
-                            <p>Nav Link</p>
-                            <p>Nav Link</p>
-                            <p>Nav Link</p>
-                            <p>Nav Link</p>
+                            <p>About ArcherBytes</p>
+                            <p>Sign in</p>
                         </div>
                         <SheetTitle></SheetTitle>
                     </SheetHeader>
