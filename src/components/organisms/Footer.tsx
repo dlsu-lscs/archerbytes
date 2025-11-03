@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Footer() {
     return (
-        <footer className="flex flex-col w-full md:items-center bg-background text-neutral-50 py-6 px-5">
+        <footer className="flex flex-col w-full md:items-center bg-background text-neutral-50 py-6 px-5 z-100">
             <div className="flex flex-col gap-2 justify-center md:items-center w-fit">
                 <Image
                     src={`/archerbytes-main.webp`}

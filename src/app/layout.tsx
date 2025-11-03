@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/organisms/Navbar';
 import Footer from '@/components/organisms/Footer';
+import PrivacyPolicy from '@/components/organisms/PrivacyPolicy';
 
 import './globals.css';
 
@@ -34,8 +35,9 @@ export default function RootLayout({
                 <div className="flex flex-col min-h-screen">
                     <Navbar />
                     <main className="flex flex-col grow">{children}</main>
-                    <Footer />
+                    <PrivacyPolicy />
                 </div>
+                <Footer />
             </body>
         </html>
     );
