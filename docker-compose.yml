@@ -1,5 +1,6 @@
 services:
   postgres:
+    # Using Postgres 15 as a stable, long-term-supported (LTS-like) major release
     image: postgres:15
     container_name: archerbytes_db
     environment:
