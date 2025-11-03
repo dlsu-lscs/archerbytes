@@ -5,8 +5,6 @@ import Navbar from '@/components/organisms/Navbar';
 import Footer from '@/components/organisms/Footer';
 import PrivacyPolicy from '@/components/organisms/PrivacyPolicy';
 
-import './globals.css';
-
 const geistSans = Geist({
     variable: '--font-geist-sans',
     subsets: ['latin'],
