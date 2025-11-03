@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from '@/lib/auth/client';
 import Image from 'next/image';
-import Link from 'next/link';
 import { MdMenu } from 'react-icons/md';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { AiOutlineBell } from 'react-icons/ai';
 import {
     Sheet,
     SheetContent,
@@ -19,6 +21,10 @@ import Login from '@/features/auth/components/Login';
 
 export default function Navbar() {
     const [login, setLogin] = useState(false);
+
+    const { data: session, status } = useSession();
+
+    const user = session?.user;
 
     return (
         <>
@@ -45,17 +51,44 @@ export default function Navbar() {
                     </div>
                     <div className="flex items-center whitespace-nowrap text-md flex gap-[25px]">
                         <p>About ArcherBytes</p>
-                        <p className="hover:cursor-pointer" onClick={() => setLogin(true)}>
-                            Sign in
-                        </p>
-                        <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
-                            <p className="font-bold text-neutral-50 text-outline-black">
-                                Get Started
-                            </p>
-                            <p className="font-bold text-neutral-50 absolute inset-0 top-[6px]">
-                                Get Started
-                            </p>
-                        </Button>
+                        {!session ? (
+                            <>
+                                <p
+                                    className="hover:cursor-pointer"
+                                    onClick={() => setLogin(true)}
+                                >
+                                    Sign in
+                                </p>
+                                <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
+                                    <p className="font-bold text-neutral-50 text-outline-black">
+                                        Get Started
+                                    </p>
+                                    <p className="font-bold text-neutral-50 absolute inset-0 top-[6px]">
+                                        Get Started
+                                    </p>
+                                </Button>
+                            </>
+                        ) : (
+                            <div className="flex gap-3 items-center">
+                                <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
+                                    <HiOutlinePencilAlt className="text-neutral-950 size-6" />
+                                    <p className="font-bold text-neutral-50 text-outline-black">
+                                        Write
+                                    </p>
+                                    <p className="font-bold text-neutral-50 absolute inset-0 top-[6px] left-[32px]">
+                                        Write
+                                    </p>
+                                </Button>
+                                <AiOutlineBell className="size-8" />
+                                <Image
+                                    src={user?.image || '/globe.svg'}
+                                    width={128}
+                                    height={128}
+                                    className="rounded-full size-8"
+                                    alt="User image"
+                                ></Image>
+                            </div>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -75,14 +108,34 @@ export default function Navbar() {
                                 alt="Archerbytes logo"
                             ></Image>
                         </div>
-                        <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
-                            <p className="font-bold text-neutral-50 text-outline-black">
-                                Get Started
-                            </p>
-                            <p className="font-bold text-neutral-50 absolute inset-0 top-[6px]">
-                                Get Started
-                            </p>
-                        </Button>
+
+                        {!session ? (
+                            <>
+                                <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
+                                    <p className="font-bold text-neutral-50 text-outline-black">
+                                        Get Started
+                                    </p>
+                                    <p className="font-bold text-neutral-50 absolute inset-0 top-[6px]">
+                                        Get Started
+                                    </p>
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex gap-3 items-center">
+                                    <Button className="bg-secondary relative p-0 border border-2 border-neutral-950">
+                                        <HiOutlinePencilAlt className="text-neutral-950 size-6" />
+                                    </Button>
+                                    <Image
+                                        src={user?.image || '/globe.svg'}
+                                        width={128}
+                                        height={128}
+                                        className="rounded-full size-8"
+                                        alt="User image"
+                                    ></Image>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </nav>
 
@@ -99,12 +152,6 @@ export default function Navbar() {
 
                         <div className="flex flex-col items-center flex gap-[25px]">
                             <p>About ArcherBytes</p>
-                            <p
-                                className="hover:cursor-pointer"
-                                onClick={() => setLogin(true)}
-                            >
-                                Sign in
-                            </p>
                         </div>
                         <SheetTitle></SheetTitle>
                     </SheetHeader>
