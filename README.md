@@ -134,7 +134,63 @@ src/
 
 ## Auth Endpoints
 
-### TODO: auth endpoints here
+### Testing Authentication
+
+---
+
+### Sign In & Get Session
+
+**Step 1: Sign In**
+
+1. Navigate to the login page:
+
+   ```
+   http://localhost:3000/login
+   ```
+
+2. Click **"Sign in"** and complete login using your `@dlsu.edu.ph` email
+
+**Step 2: Test in Browser Console**
+
+After successful sign-in, open **DevTools Console** (F12) and run:
+
+```javascript
+// Get current session
+fetch('/api/auth/get-session', { credentials: 'include' })
+  .then((r) => r.json())
+  .then(console.log);
+```
+
+**Expected Response:**
+
+```json
+{
+  "session": {
+    "id": "cm3abc123...",
+    "userId": "cm3xyz789...",
+    "expiresAt": "2025-11-11T05:17:54.229Z",
+    "token": "...",
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0...",
+    "createdAt": "2025-11-04T10:30:00.000Z",
+    "updatedAt": "2025-11-04T10:30:00.000Z"
+  },
+  "user": {
+    "id": "cm3xyz789...",
+    "name": "Juan Dela Cruz",
+    "email": "juan_delacruz@dlsu.edu.ph",
+    "emailVerified": true,
+    "image": "https://lh3.googleusercontent.com/...",
+    "createdAt": "2025-11-04T10:30:00.000Z",
+    "updatedAt": "2025-11-04T10:30:00.000Z"
+  }
+}
+```
+
+---
+
+> [!IMPORTANT]
+> OAuth authentication must be completed in a browser. The Google OAuth flow requires user interaction and cannot be automated via API calls.
 
 ---
 
