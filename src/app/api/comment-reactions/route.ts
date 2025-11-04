@@ -5,6 +5,7 @@ import {
   deleteCommentReactionSchema,
   updateCommentReactionSchema,
 } from '@/features/reactions/types';
+import { CommentService } from '@/features/comments/services/service';
 import { ZodError } from 'zod';
 
 export async function GET(req: NextRequest) {
@@ -35,9 +36,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ data: reactions });
     }
 
-    const totalReactions =
-      await ReactionService.getTotalReactionsByCommentId(commentId);
-    return NextResponse.json({ data: totalReactions });
+    const reactions = await ReactionService.getReactionsByCommentId(commentId);
+    return NextResponse.json({ data: reactions });
   } catch (error) {
     console.error('Error fetching comment reactions:', error);
     return NextResponse.json(
@@ -51,6 +51,12 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const validatedData = createCommentReactionSchema.parse(body);
+
+    const commentExists = await CommentService.getById(validatedData.commentId);
+    if (!commentExists) {
+      return NextResponse.json({ error: 'Comment not found' }, { status: 404 });
+    }
+
     const reaction = await ReactionService.createCommentReaction(validatedData);
 
     if (!reaction) {
@@ -68,6 +74,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: 'Validation failed', details: error.issues },
         { status: 400 },
+      );
+    }
+
+    const errorMessage = error instanceof Error ? error.message : '';
+    const errorCause =
+      error instanceof Error && 'cause' in error ? error.cause : null;
+    const isDuplicate =
+      errorMessage.includes('duplicate key value') ||
+      errorMessage.includes('unique_user_comment') ||
+      (errorCause &&
+        typeof errorCause === 'object' &&
+        'code' in errorCause &&
+        errorCause.code === '23505');
+
+    if (isDuplicate) {
+      return NextResponse.json(
+        { error: 'You have already reacted to this comment' },
+        { status: 409 },
       );
     }
 

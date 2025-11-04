@@ -27,9 +27,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ data: reactions });
     }
 
-    const totalReactions =
-      await ReactionService.getTotalReactionsByArticleId(articleId);
-    return NextResponse.json({ data: totalReactions });
+    const reactions = await ReactionService.getReactionsByArticleId(articleId);
+    return NextResponse.json({ data: reactions });
   } catch (error) {
     console.error('Error fetching article reactions:', error);
     return NextResponse.json(
@@ -63,6 +62,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const errorMessage = error instanceof Error ? error.message : '';
+    const errorCause =
+      error instanceof Error && 'cause' in error ? error.cause : null;
+    const isDuplicate =
+      errorMessage.includes('duplicate key value') ||
+      errorMessage.includes('unique_user_article') ||
+      (errorCause &&
+        typeof errorCause === 'object' &&
+        'code' in errorCause &&
+        errorCause.code === '23505');
+
+    if (isDuplicate) {
+      return NextResponse.json(
+        { error: 'You have already reacted to this article' },
+        { status: 409 },
+      );
+    }
+
     return NextResponse.json(
       { error: 'Failed to create article reaction' },
       { status: 500 },
@@ -78,7 +95,7 @@ export async function PATCH(req: NextRequest) {
 
     if (!reaction) {
       return NextResponse.json(
-        { error: 'Reaction not found or you are not allowed to update it' },
+        { error: 'Reaction not found or you are not authorized to update it' },
         { status: 404 },
       );
     }
@@ -109,7 +126,7 @@ export async function DELETE(req: NextRequest) {
 
     if (!reaction) {
       return NextResponse.json(
-        { error: 'Reaction not found or you are not allowed to delete it' },
+        { error: 'Reaction not found or you are not authorized to delete it' },
         { status: 404 },
       );
     }

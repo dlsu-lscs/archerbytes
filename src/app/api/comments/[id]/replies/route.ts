@@ -13,6 +13,14 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
     }
 
+    const parentComment = await CommentService.getById(numericId);
+    if (!parentComment) {
+      return NextResponse.json(
+        { error: 'Parent comment not found' },
+        { status: 404 },
+      );
+    }
+
     const replies = await CommentService.getReplies(numericId);
 
     return NextResponse.json({ data: replies }, { status: 200 });

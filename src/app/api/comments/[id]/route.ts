@@ -5,10 +5,11 @@ import { ZodError } from 'zod';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
     if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid comment ID' },
@@ -34,10 +35,11 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
     if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid comment ID' },
@@ -84,10 +86,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
     if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid comment ID' },
