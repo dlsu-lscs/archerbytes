@@ -6,7 +6,7 @@ import { IoIosInformationCircleOutline } from 'react-icons/io';
 
 export default function Sidebar() {
     return (
-        <div className="hidden lg:flex flex-col gap-1 grow max-w-64 text-xl p-5 rounded-xl border-dashed border-neutral-400 border-2">
+        <div className="hidden lg:flex flex-col gap-1 grow max-w-64 text-xl p-5 rounded-xl border-dashed border-neutral-400 border-2 z-100">
             <p className="flex gap-2 items-center">
                 <HiOutlineHome /> HOME
             </p>
