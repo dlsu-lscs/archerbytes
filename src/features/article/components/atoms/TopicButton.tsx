@@ -1,13 +1,10 @@
 import { Button } from '@/components/ui/button';
+import { TopicType } from '../../types/topic.types';
 
-type TopicProps = {
-    topic: string;
-};
-
-export default function TopicButton({ topic }: TopicProps) {
+export default function TopicButton({ children }: TopicType) {
     return (
-        <Button className="rounded-full bg-neutral-400 text-neutral-900 h-7">
-            {topic}
+        <Button className="rounded-full bg-neutral-400 text-neutral-900 h-7 border-solid border-2 border-neutral-950 py-4">
+            {children}
         </Button>
     );
 }

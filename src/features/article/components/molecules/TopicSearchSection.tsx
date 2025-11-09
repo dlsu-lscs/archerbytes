@@ -1,18 +1,29 @@
+import Image from 'next/image';
 import TopicButton from '../atoms/TopicButton';
 
 export default function TopicSearchSection() {
     return (
         <div className="flex flex-col gap-[10px]">
-            <h6 className="font-medium text-lg">Search by topic</h6>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-                <TopicButton topic="Topic" />
-                <TopicButton topic="Topic" />
-                <TopicButton topic="Topic" />
-                <TopicButton topic="Topic" />
-                <TopicButton topic="Topic" />
-                <TopicButton topic="Topic" />
+            <div className="flex justify-between items-center text-primary">
+                <div className="flex gap-2">
+                    <Image
+                        src={'/recommended.webp'}
+                        height={24}
+                        width={24}
+                        alt="Recommended"
+                    />
+                    <h6 className="font-medium text-lg">Recommended Topics</h6>
+                </div>
             </div>
-            <p className="w-full text-center text-neutral-500 text-sm">See More</p>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+                <TopicButton>Topic</TopicButton>
+                <TopicButton>Topic</TopicButton>
+                <TopicButton>Topic</TopicButton>
+                <TopicButton>Topic</TopicButton>
+                <TopicButton>Topic</TopicButton>
+                <TopicButton>Topic</TopicButton>
+            </div>
+            <p className=" text-primary text-sm ">See More</p>
         </div>
     );
 }

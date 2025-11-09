@@ -1,5 +1,5 @@
 import { BreadcrumbsType } from '../../types/article.types';
 
 export default function Breadcrumbs({ link }: BreadcrumbsType) {
-    return <p>{link}</p>;
+    return <p className="font-bold text-neutral-950">{link}</p>;
 }

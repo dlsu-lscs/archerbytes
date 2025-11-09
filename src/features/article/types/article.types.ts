@@ -7,6 +7,9 @@ export type ArticleDetailsType = {
     readingTime: number;
     publicationDate: Date;
 };
+export type ArticleDetailsProp = {
+    article: ArticleDetailsType;
+};
 
 export type BreadcrumbsType = {
     link: string;
@@ -20,8 +23,5 @@ export type SmallArticleItemType = {
     topic: string;
     title: string;
     author: string;
-};
-
-export type TopicProps = {
-    topic: string;
+    date: string;
 };

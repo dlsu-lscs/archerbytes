@@ -10,6 +10,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 
+import Image from 'next/image';
+
 import React from 'react';
 import clsx from 'clsx';
 
@@ -18,6 +20,7 @@ import { BiLike } from 'react-icons/bi';
 import { FaRegCommentAlt } from 'react-icons/fa';
 
 import { CommentProp } from '../../types/comment.types';
+import { Span } from 'next/dist/trace';
 
 export default function Comment({
     comment,
@@ -28,7 +31,11 @@ export default function Comment({
 
     return (
         <div className="flex flex-col gap-[10px]">
-            <Card>
+            <Card
+                className={clsx({
+                    'bg-blue-300': comment.isAuthor === true,
+                })}
+            >
                 <CardContent className="flex rounded-2xl relative">
                     <div
                         className={clsx(
@@ -37,12 +44,24 @@ export default function Comment({
                         )}
                     ></div>
 
-                    <div className="size-12 my-[3px] shrink-0 rounded-full bg-neutral-400 mr-3"></div>
+                    <Image
+                        className="size-12 my-[3px] shrink-0 rounded-full mr-3"
+                        height={128}
+                        width={128}
+                        src={comment.avatarURL}
+                        alt="Avatar"
+                    />
                     <div className="flex flex-col gap-[15px] w-full">
                         <div className="flex justify-between">
                             <div>
                                 <h3 className="text-lg font-bold">{comment.userId}</h3>
-                                <p className="text-md font-light">{comment.occupation}</p>
+                                {comment.isAuthor === true ? (
+                                    <p className="text-md font-light">
+                                        Author - {comment.occupation}
+                                    </p>
+                                ) : (
+                                    <p className="text-md font-light">{comment.occupation}</p>
+                                )}
                             </div>
                             <BsThreeDots size={24} />
                         </div>
@@ -72,6 +91,7 @@ export default function Comment({
                     </div>
                 </CardContent>
             </Card>
+            {/* this function draws lines */}
             {hasReplies ? (
                 React.Children.map(children, (child, index) => {
                     const count = React.Children.count(children);
@@ -82,7 +102,7 @@ export default function Comment({
                             {!isLast && (
                                 <div className="absolute -left-[16px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
                             )}{' '}
-                            <div className="absolute -left-[16px] w-13 h-16 -top-3 bottom-0 border-b-2 border-l-2 border-neutral-300" />
+                            <div className="absolute -left-[16px] w-13 h-16 -top-3 bottom-0 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl" />
                             {child}
                         </div>
                     );

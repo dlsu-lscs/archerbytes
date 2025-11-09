@@ -1,29 +1,45 @@
+import Image from 'next/image';
 import SmallArticleItem from '../atoms/SmallArticleItem';
 
-export default function RelatedArticleSection() {
+export default function RecentlyViewedSection() {
     return (
         <div className="flex flex-col gap-[10px]">
-            <h3 className="font-medium text-lg">Related Articles</h3>
-            <div>
+            <div className="flex justify-between items-center text-primary">
+                <div className="flex gap-2">
+                    <Image
+                        src={'/recently_viewed.webp'}
+                        height={24}
+                        width={24}
+                        alt="Recently Viewed"
+                    />
+                    <h6 className="font-medium text-lg">Recently Viewed</h6>
+                </div>
+                <p className="font-light text-md">Clear</p>
+            </div>
+            <div className="flex flex-col gap-6">
                 <SmallArticleItem
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
+                    date="Oct 11"
                 />
                 <SmallArticleItem
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
+                    date="Oct 11"
                 />
                 <SmallArticleItem
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
+                    date="Oct 11"
                 />
                 <SmallArticleItem
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
+                    date="Oct 11"
                 />
             </div>
         </div>
