@@ -5,7 +5,7 @@ export default function ArticleDetails({ article }: ArticleDetailsProp) {
     return (
         <div className="flex flex-col gap-[10px] text-neutral-950">
             <TopicChip>Gaming</TopicChip>
-            <h1 className="text-3xl md:text-5xl font-bold text-justify md:text-left">
+            <h1 className="text-2xl md:text-5xl font-bold">
                 {article.title.toUpperCase()}
             </h1>
             <h5 className="font-extralight text-neutral-500">
