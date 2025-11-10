@@ -21,7 +21,7 @@ export const articles = pgTable('articles', {
   categoryId: integer('category_id')
     .notNull()
     .references(() => articleCategories.id, {
-      onDelete: 'restrict', // Changed to 'restrict'
+      onDelete: 'restrict',
     }),
   authorId: integer('author_id')
     .notNull()
