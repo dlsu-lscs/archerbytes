@@ -9,11 +9,10 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { articleCategories } from './article-categories.entity';
-import { articleAuthors } from './article-authors.entity';
+import { user } from './auth-schema';
 
 export const articles = pgTable('articles', {
   id: serial('id').primaryKey(),
-
   title: varchar('title', { length: 500 }).notNull(),
   subtitle: varchar('subtitle', { length: 500 }).notNull(),
   slug: varchar('slug', { length: 500 }).notNull().unique(),
@@ -23,9 +22,9 @@ export const articles = pgTable('articles', {
     .references(() => articleCategories.id, {
       onDelete: 'restrict',
     }),
-  authorId: integer('author_id')
+  userId: text('user_id')
     .notNull()
-    .references(() => articleAuthors.id, { onDelete: 'restrict' }),
+    .references(() => user.id, { onDelete: 'restrict' }),
   featuredImageUrl: varchar('featured_image_url', { length: 1000 }),
   tags: text('tags').array(),
   metaTitle: varchar('meta_title', { length: 255 }),
@@ -42,8 +41,8 @@ export const articlesRelations = relations(articles, ({ one }) => ({
     fields: [articles.categoryId],
     references: [articleCategories.id],
   }),
-  author: one(articleAuthors, {
-    fields: [articles.authorId],
-    references: [articleAuthors.id],
+  user: one(user, {
+    fields: [articles.userId],
+    references: [user.id],
   }),
 }));
