@@ -33,13 +33,13 @@ export default function ArticleHeader() {
                     'UI/UX',
                 ]}
             />
-            <div className="flex gap-5 text-neutral-950">
+            <div className="flex gap-5 text-neutral-950 text-sm">
                 <div className="flex gap-2 items-center">
-                    <IoHeartCircleSharp size={32} />
+                    <IoHeartCircleSharp size={24} />
                     <p>Like this article</p>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <ImBubble size={30} />
+                    <ImBubble size={24} />
                     <p>Reply to this article</p>
                 </div>
             </div>

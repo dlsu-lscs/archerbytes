@@ -20,7 +20,6 @@ import { BiLike } from 'react-icons/bi';
 import { FaRegCommentAlt } from 'react-icons/fa';
 
 import { CommentProp } from '../../types/comment.types';
-import { Span } from 'next/dist/trace';
 
 export default function Comment({
     comment,
@@ -54,13 +53,13 @@ export default function Comment({
                     <div className="flex flex-col gap-[15px] w-full">
                         <div className="flex justify-between">
                             <div>
-                                <h3 className="text-lg font-bold">{comment.userId}</h3>
+                                <h3 className="text-md font-bold">{comment.userId}</h3>
                                 {comment.isAuthor === true ? (
-                                    <p className="text-md font-light">
+                                    <p className="text-sm font-light">
                                         Author - {comment.occupation}
                                     </p>
                                 ) : (
-                                    <p className="text-md font-light">{comment.occupation}</p>
+                                    <p className="text-sm font-light">{comment.occupation}</p>
                                 )}
                             </div>
                             <BsThreeDots size={24} />
@@ -71,7 +70,7 @@ export default function Comment({
                                 placeholder="Share your thoughts here..."
                             />
                         ) : (
-                            <div>{comment.content}</div>
+                            <div className="text-sm">{comment.content}</div>
                         )}
 
                         {isDraft === true ? (

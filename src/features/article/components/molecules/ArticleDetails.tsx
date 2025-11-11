@@ -11,24 +11,24 @@ export default function ArticleDetails({ article }: ArticleDetailsProp) {
             <h5 className="font-extralight text-neutral-500">
                 &rdquo;{article.quote}&rdquo; - {article.quotee}
             </h5>
-            <div className="flex items-start gap-5">
+            <div className="flex items-start gap-5  text-sm">
                 <div className="flex gap-3 items-center">
                     <div className="size-12 shrink-0 rounded-full bg-neutral-400"></div>
                     <div className="flex flex-col">
                         <h5 className="font-bold">{article.author}</h5>
-                        <p className="text-sm">{article.occupation}</p>
+                        <p className="text-xs">{article.occupation}</p>
                     </div>
+                    <p>{'\u2022'}</p>
+                    <p className="align-middle">{article.readingTime} min read</p>
+                    <p>{'\u2022'}</p>
+                    <p>
+                        {article.publicationDate.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                        })}
+                    </p>
                 </div>
-                <p>{'\u2022'}</p>
-                <p>{article.readingTime} min read</p>
-                <p>{'\u2022'}</p>
-                <p>
-                    {article.publicationDate.toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                    })}
-                </p>
             </div>
         </div>
     );

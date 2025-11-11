@@ -5,14 +5,15 @@ export default function TopicSearchSection() {
     return (
         <div className="flex flex-col gap-[10px]">
             <div className="flex justify-between items-center text-primary">
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                     <Image
                         src={'/recommended.webp'}
                         height={24}
                         width={24}
                         alt="Recommended"
+                        className="size-8"
                     />
-                    <h6 className="font-medium text-lg">Recommended Topics</h6>
+                    <h6 className="font-medium text-md">Recommended Topics</h6>
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-x-2 gap-y-2">

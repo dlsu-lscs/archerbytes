@@ -4,7 +4,7 @@ import SavedArticlesSection from '../molecules/SavedArticlesSection';
 
 export default function RelatedSidebar() {
     return (
-        <div className="hidden lg:flex flex-col gap-6 p-5 max-w-84">
+        <div className="hidden lg:flex flex-col gap-6 p-5 max-w-64">
             <RecentlyViewedSection />
             <TopicSearchSection />
             <SavedArticlesSection count={50} />

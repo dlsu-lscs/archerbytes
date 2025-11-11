@@ -5,14 +5,14 @@ export default function RecentlyViewedSection() {
     return (
         <div className="flex flex-col gap-[10px]">
             <div className="flex justify-between items-center text-primary">
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                     <Image
                         src={'/recently_viewed.webp'}
                         height={24}
                         width={24}
                         alt="Recently Viewed"
                     />
-                    <h6 className="font-medium text-lg">Recently Viewed</h6>
+                    <h6 className="font-medium text-md">Recently Viewed</h6>
                 </div>
                 <p className="font-light text-md">Clear</p>
             </div>
