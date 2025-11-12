@@ -1,5 +1,5 @@
 import TopicChip from './TopicChip';
-import { SmallArticleItemType } from '../../types/article.types';
+import { SmallArticleItemType } from '@/types/article.types';
 
 export default function SmallArticleItem({
     topic,

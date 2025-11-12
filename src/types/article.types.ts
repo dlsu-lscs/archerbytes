@@ -3,9 +3,12 @@ export type ArticleDetailsType = {
     quote: string;
     quotee: string;
     author: string;
+    avatarURL: string;
     occupation: string;
     readingTime: number;
     publicationDate: Date;
+    commentCount: number;
+    likeCount: number;
 };
 export type ArticleDetailsProp = {
     article: ArticleDetailsType;
@@ -24,4 +27,10 @@ export type SmallArticleItemType = {
     title: string;
     author: string;
     date: string;
+};
+
+export type IconsType = {
+    date: Date;
+    likes: number;
+    comments: number;
 };

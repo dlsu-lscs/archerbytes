@@ -1,5 +1,5 @@
 import Sidebar from '@/components/organisms/Sidebar';
-import RelatedSidebar from '@/features/article/components/organisms/RelatedSidebar';
+import RelatedSidebar from '@/components/organisms/RelatedSidebar';
 import ArticleHeader from '@/features/article/components/organisms/ArticleHeader';
 import ArticleContent from '@/features/article/components/molecules/ArticleContent';
 import Discussion from '@/features/comments/components/organisms/Discussion';
