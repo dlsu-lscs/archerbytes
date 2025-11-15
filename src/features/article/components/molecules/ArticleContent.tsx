@@ -2,7 +2,7 @@ import Photo from '@/features/article/components/atoms/Photo';
 
 export default function ArticleContent() {
     return (
-        <div>
+        <div className="flex flex-col gap-5">
             <Photo source="/image.jpg" />
             <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
