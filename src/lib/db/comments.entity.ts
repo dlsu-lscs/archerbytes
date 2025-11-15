@@ -12,7 +12,6 @@ export const comments = pgTable('comments', {
   id: serial('id').primaryKey(),
   userId: text('user_id').notNull(),
   articleId: text('article_id').notNull(),
-  // Deleting a parent comment will delete its replies
   replyTo: integer('reply_to').references((): AnyPgColumn => comments.id, {
     onDelete: 'cascade',
   }),

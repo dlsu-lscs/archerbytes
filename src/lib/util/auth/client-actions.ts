@@ -6,7 +6,7 @@ export async function signInWithGoogle() {
   try {
     await authClient.signIn.social({
       provider: 'google',
-      callbackURL: '/', // redirect sa home after successful login
+      callbackURL: '/', 
     });
   } catch (error) {
     console.error('Sign in failed:', error);
@@ -19,7 +19,7 @@ export async function signOutUser() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          window.location.href = '/login'; // redirect to login after logout
+          window.location.href = '/login'; 
         },
       },
     });
