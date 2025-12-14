@@ -7,7 +7,7 @@ type PhotoType = {
 export default function Photo({ source }: PhotoType) {
     return (
         <Image
-            className="rounded-xl "
+            className="rounded-xl"
             src={source}
             width={1600}
             height={900}

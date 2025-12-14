@@ -9,7 +9,6 @@ import { AiOutlineBell } from 'react-icons/ai';
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -30,7 +29,6 @@ export default function Navbar() {
         <>
             {/* desktop */}
             <nav className="hidden lg:flex md:w-full items-center gap-10 justify-center bg-background py-4 z-100">
-                {/* <MdMenu className="aspect-square " size={32} /> */}
                 <div className="flex justify-between gap-5 max-w-[80vw] grow items-center">
                     <div className="flex gap-5 min-w-0">
                         <Image
@@ -95,7 +93,6 @@ export default function Navbar() {
             {/* mobile */}
             <Sheet>
                 <nav className="flex lg:hidden md:w-full items-center gap-10 bg-background py-4 ">
-                    {/* <MdMenu className="aspect-square " size={32} /> */}
                     <div className="flex justify-between max-w-[80vw] mx-auto grow items-center">
                         <div className="flex gap-5">
                             <SheetTrigger>

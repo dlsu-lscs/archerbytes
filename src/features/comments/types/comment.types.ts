@@ -1,5 +1,5 @@
 export type CommentType = {
-    id: number;
+    id?: number;
     avatarURL: string;
     userId: string;
     occupation: string;
@@ -7,11 +7,10 @@ export type CommentType = {
     content: string;
     likeCount: number;
     replyCount: number;
-    repliesTo: number;
 };
 
 export type CommentProp = {
     comment: CommentType;
-    children: React.ReactNode;
-    isDraft: boolean;
+    children?: React.ReactNode;
+    isDraft?: boolean;
 };

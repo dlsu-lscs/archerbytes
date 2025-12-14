@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
-import { TopicProps } from '../../types/article.types';
+import { Badge } from '@/components/ui/badge';
+import { TopicType } from '../../types/topic.types';
 
-export default function TopicChip({ topic }: TopicProps) {
+export default function TopicChip({ children }: TopicType) {
     return (
-        <Button className="bg-neutral-600 text-neutral-50 px-8 py-[0.5px] rounded-full h-auto text-[0.65rem] font-light">
-            {topic}
-        </Button>
+        <Badge className="bg-neutral-600 text-neutral-50 text-[10px] px-6 py-0 font-light">
+            {children}
+        </Badge>
     );
 }

@@ -1,7 +1,11 @@
 import Breadcrumbs from '@/features/article/components/atoms/Breadcrumbs';
 import Keywords from '@/features/article/components/atoms/Keywords';
 import ArticleDetails from '../molecules/ArticleDetails';
-import { ArticleDetailsType } from '../molecules/ArticleDetails';
+import { ArticleDetailsProp } from '../../types/article.types';
+import { ArticleDetailsType } from '../../types/article.types';
+
+import { IoHeartCircleSharp } from 'react-icons/io5';
+import { ImBubble } from 'react-icons/im';
 
 export default function ArticleHeader() {
     const placeholderArticle: ArticleDetailsType = {
@@ -16,7 +20,7 @@ export default function ArticleHeader() {
     };
 
     return (
-        <div className="flex flex-col gap-[10px] py-3 mb-3 h-max border-solid border-neutral-400 border-b-2">
+        <div className="flex flex-col gap-[10px] pt-3 mb-3 h-max ">
             <Breadcrumbs link="Home > Category > Title" />
             <ArticleDetails article={placeholderArticle} />
             <Keywords
@@ -29,6 +33,16 @@ export default function ArticleHeader() {
                     'UI/UX',
                 ]}
             />
+            <div className="flex gap-5 text-neutral-950 text-sm">
+                <div className="flex gap-2 items-center">
+                    <IoHeartCircleSharp size={24} />
+                    <p>Like this article</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                    <ImBubble size={24} />
+                    <p>Reply to this article</p>
+                </div>
+            </div>
         </div>
     );
 }
