@@ -37,12 +37,12 @@ export default function Feed() {
                     <div className="md:hidden border-b-2 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] items-center justify-end gap-1.5 px-2 py-1 grow">
                         <Select>
                             <SelectTrigger className="border-0 shadow-none">
-                                <SelectValue placeholder="Sort by" />
+                                <SelectValue placeholder="For you" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="light">Light</SelectItem>
-                                <SelectItem value="dark">Dark</SelectItem>
-                                <SelectItem value="system">System</SelectItem>
+                                <SelectItem value="for-you">For you</SelectItem>
+                                <SelectItem value="trending">Trending</SelectItem>
+                                <SelectItem value="system">By category</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

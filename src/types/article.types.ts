@@ -9,6 +9,8 @@ export type ArticleDetailsType = {
     publicationDate: Date;
     commentCount: number;
     likeCount: number;
+    keywords: string[];
+    previewURL: string;
 };
 export type ArticleDetailsProp = {
     article: ArticleDetailsType;
@@ -16,10 +18,6 @@ export type ArticleDetailsProp = {
 
 export type BreadcrumbsType = {
     link: string;
-};
-
-export type KeywordsType = {
-    keywords: string[];
 };
 
 export type SmallArticleItemType = {

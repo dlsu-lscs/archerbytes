@@ -7,24 +7,42 @@ import {
 } from '@/components/ui/carousel';
 
 import { Card, CardContent } from '@/components/ui/card';
+import CarouselCard from '../molecules/CarouselCard';
+import { ArticleDetailsType } from '@/types/article.types';
 
 export default function ArticleCarousel() {
+    const placeholderArticle: ArticleDetailsType = {
+        title: 'Top 10 LSCS Research and Development Officers of all time',
+        quote:
+            'Research and Development is the best committee in the whole universe',
+        quotee: 'Ian Gabriel Ilagan',
+        author: 'Charles Cordez',
+        avatarURL: '/lscs-logo.png',
+        occupation: 'DevOps Engineer',
+        readingTime: 6,
+        publicationDate: new Date('2025-10-29'),
+        commentCount: 100,
+        likeCount: 100,
+        keywords: [
+            'Computer',
+            'Programming',
+            'Coding',
+            'Frontend',
+            'Backend',
+            'UI/UX',
+        ],
+        previewURL: '/image.jpg',
+    };
+
     return (
-        <Carousel className="col-span-full md:mx-30 py-5 max-h-fit">
+        <Carousel className="col-span-full mx-5 md:mx-30 py-5 max-h-fit">
             <CarouselContent>
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <CarouselItem key={index}>
-                        <div className="p-1">
-                            <Card>
-                                <CardContent className="flex items-center justify-center p-6 h-75">
-                                    <span className="text-4xl font-semibold">{index + 1}</span>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </CarouselItem>
-                ))}
+                <CarouselCard article={placeholderArticle} />
+                <CarouselCard article={placeholderArticle} />
+                <CarouselCard article={placeholderArticle} />
+                <CarouselCard article={placeholderArticle} />
             </CarouselContent>
-            <div className="absolute right-28 bottom-16">
+            <div className="hidden md:block absolute right-28 bottom-16">
                 <CarouselPrevious className="left-0 right-0 top-0 bottom-0" />
                 <CarouselNext className="left-10 top-0 bottom-0" />
             </div>

@@ -20,22 +20,21 @@ export default function ArticleHeader() {
         publicationDate: new Date('2025-10-29'),
         commentCount: 100,
         likeCount: 100,
+        keywords: [
+            'Computer',
+            'Programming',
+            'Coding',
+            'Frontend',
+            'Backend',
+            'UI/UX',
+        ],
     };
 
     return (
         <div className="flex flex-col gap-[10px] pt-3 mb-3 h-max ">
             <Breadcrumbs link="Home > Category > Title" />
             <ArticleDetails article={placeholderArticle} />
-            <Keywords
-                keywords={[
-                    'Computer',
-                    'Programming',
-                    'Coding',
-                    'Frontend',
-                    'Backend',
-                    'UI/UX',
-                ]}
-            />
+            <Keywords article={placeholderArticle} />
             <div className="flex gap-5 text-neutral-950 text-sm">
                 <div className="flex gap-2 items-center">
                     <IoHeartCircleSharp size={24} />
