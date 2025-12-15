@@ -38,13 +38,13 @@ export default function Comment({
                 <CardContent className="flex rounded-2xl relative">
                     <div
                         className={clsx(
-                            `absolute left-[47px] top-[51px] h-full w-[2px] bg-neutral-300`,
+                            `absolute md:left-[47px] left-[40px] md:top-[51px] top-[35px] h-full w-[2px] bg-neutral-300`,
                             { hidden: !hasReplies },
                         )}
                     ></div>
 
                     <Image
-                        className="size-12 my-[3px] shrink-0 rounded-full mr-3"
+                        className="size-8 md:size-12 my-[3px] shrink-0 rounded-full mr-3"
                         height={128}
                         width={128}
                         src={comment.avatarURL}
@@ -97,18 +97,18 @@ export default function Comment({
                     const isLast = index === count - 1;
 
                     return (
-                        <div className="relative ml-16" key={index}>
+                        <div className="relative md:ml-16 ml-8" key={index}>
                             {!isLast && (
-                                <div className="absolute -left-[16px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
+                                <div className="absolute md:-left-[16px] left-[9px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
                             )}{' '}
-                            <div className="absolute -left-[16px] w-13 h-16 -top-3 bottom-0 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl" />
+                            <div className="absolute md:-left-[16px] left-[9px] md:w-13 w-5 h-16 md:-top-3 -top-5 bottom-0 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl" />
                             {child}
-                        </div>
+                        </div >
                     );
                 })
             ) : (
                 <></>
             )}
-        </div>
+        </div >
     );
 }
