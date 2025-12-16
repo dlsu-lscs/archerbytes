@@ -35,7 +35,7 @@ export default function ArticleCarousel() {
     };
 
     return (
-        <Carousel className="col-span-full mx-5 md:mx-30 py-5 max-h-fit">
+        <Carousel className="col-span-full mx-5 lg:mx-30 py-5">
             <CarouselContent>
                 <CarouselCard article={placeholderArticle} />
                 <CarouselCard article={placeholderArticle} />

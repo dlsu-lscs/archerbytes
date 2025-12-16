@@ -27,7 +27,7 @@ export default function Feed() {
 
     return (
         <section className="flex flex-col gap-[10px]">
-            <Tabs defaultValue="for-you">
+            <Tabs defaultValue="for-you " className="lg:max-w-[50vw]">
                 <TabsList className="w-full">
                     <div className="hidden md:block">
                         <TabsTrigger value="for-you">For you</TabsTrigger>

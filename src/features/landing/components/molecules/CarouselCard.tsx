@@ -37,7 +37,7 @@ export default function CarouselCard({ article }: ArticleDetailsProp) {
                                         By: {article.author}
                                     </p>
                                     <div className="hidden md:flex gap-2 w-25 md:w-100">
-                                        {article.keywords.map((item, index) => (
+                                        {article.keywords.slice(0, 3).map((item, index) => (
                                             <TopicChip key={index}>{item}</TopicChip>
                                         ))}
                                     </div>

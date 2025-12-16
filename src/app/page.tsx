@@ -10,7 +10,7 @@ export default function LandingPage() {
             <div className="hidden lg:flex justify-end">
                 <Sidebar />
             </div>
-            <main className="flex flex-col gap-[30px] px-10">
+            <main className="flex flex-col gap-[30px] px-5">
                 <Feed />
             </main>
             <div className="hidden lg:block grow">

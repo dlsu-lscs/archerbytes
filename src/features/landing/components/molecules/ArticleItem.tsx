@@ -30,7 +30,7 @@ export default function ArticleItem({ article }: ArticleDetailsProp) {
                 <CardContent className="flex flex-col gap-2 p-0">
                     <div className="flex gap-2 items-center">
                         <Image
-                            className="size-4 shrink-0 rounded-full"
+                            className="hidden md:block size-4 shrink-0 rounded-full"
                             height={128}
                             width={128}
                             src={article.avatarURL}
@@ -54,11 +54,11 @@ export default function ArticleItem({ article }: ArticleDetailsProp) {
                     />
                 </CardContent>
                 <Image
-                    className="w-48 aspect-video shrink-0 rounded-xl"
+                    className="hidden md:block w-48 aspect-video shrink-0 rounded-xl"
                     height={480}
                     width={854}
                     src={'/image.jpg'}
-                    alt="Avatar"
+                    alt="Preview"
                 />
             </div>
         </Card>
