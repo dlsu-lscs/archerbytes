@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/sheet';
 import { IoIosSearch } from 'react-icons/io';
 import { Button } from '@/components/ui/button';
-
+import Sidebar from './Sidebar';
 import Login from '@/features/auth/components/Login';
 
 export default function Navbar() {
@@ -137,7 +137,7 @@ export default function Navbar() {
                 </nav>
 
                 <SheetContent className="">
-                    <SheetHeader className="flex flex-col gap-5 mt-5">
+                    <SheetHeader className="flex flex-col mt-5">
                         <div className="flex gap-2 items-center h-10 px-4 rounded-full bg-neutral-400">
                             <IoIosSearch size={24} />
                             <input
@@ -147,10 +147,8 @@ export default function Navbar() {
                             />
                         </div>
 
-                        <div className="flex flex-col items-center flex gap-[25px]">
-                            <p>About ArcherBytes</p>
-                        </div>
                         <SheetTitle></SheetTitle>
+                        <Sidebar />
                     </SheetHeader>
                 </SheetContent>
             </Sheet>
