@@ -7,7 +7,7 @@ import SidebarItem from '../molecules/SidebarItem';
 
 export default function Sidebar() {
     return (
-        <div className="hidden lg:flex flex-col gap-2 grow max-w-52 text-lg p-5 z-10">
+        <div className="flex flex-col gap-2 grow max-w-52 text-lg p-5 z-10">
             <SidebarItem icon={<HiOutlineHome />} title="HOME" isSelected={true} />
             <SidebarItem icon={<GoPerson />} title="PROFILE" />
             <SidebarItem icon={<IoBookmarkOutline />} title="SAVED" />

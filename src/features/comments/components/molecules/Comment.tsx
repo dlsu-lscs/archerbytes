@@ -21,6 +21,8 @@ import { FaRegCommentAlt } from 'react-icons/fa';
 
 import { CommentProp } from '../../types/comment.types';
 
+import { createComment } from '../../services/service';
+
 export default function Comment({
     comment,
     children,
@@ -74,7 +76,9 @@ export default function Comment({
                         )}
 
                         {isDraft === true ? (
-                            <Button className="px-10 w-fit">Reply</Button>
+                            <Button className="px-10 w-fit">
+                                Reply
+                            </Button>
                         ) : (
                             <div className="flex gap-5">
                                 <div className="flex gap-2 items-center">

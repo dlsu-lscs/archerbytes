@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { TopicType } from '@/types/topic.types';
+import { TopicType } from '../../types/topic.types';
 
 export default function TopicChip({ children }: TopicType) {
     return (
