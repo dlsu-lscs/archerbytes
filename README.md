@@ -866,6 +866,481 @@ curl.exe -X DELETE http://localhost:3000/api/article-reactions ^
 
 ---
 
+## Article Endpoints
+
+### GET `/api/articles`
+
+- returns a paginated list of articles with optional filtering and sorting
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/articles?page=1&limit=10&status=published&sort=newest&category=1"
+```
+
+- **Query Parameters:**
+  - `page` (number, optional): Page number, starts at 1. Default: `1`
+  - `limit` (number, optional): Items per page, max 100. Default: `10`
+  - `status` (string, optional): Filter by status - `"published"` or `"draft"`
+  - `sort` (string, optional): Sort order - `"newest"`, `"oldest"`, or `"popular"`. Default: `"newest"`
+  - `category` (number, optional): Filter by category ID
+
+- `response`:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Maangas na article about APDEV",
+      "subtitle": "A guide how to pass CCAPDEV",
+      "slug": "how-to-pass-CCAPDEV",
+      "featuredImageUrl": "https://example.com/image.jpg",
+      "status": "published",
+      "publishedAt": "2025-11-01T08:00:00.000Z",
+      "createdAt": "2025-10-28T10:30:00.000Z",
+      "category": {
+        "id": 1,
+        "name": "Web Development",
+        "slug": "web-development"
+      },
+      "reactionCount": 15
+    },
+    {
+      "id": 2,
+      "title": "How to Survive Computer Science",
+      "subtitle": "A guide how to pass CS in DLSU",
+      "slug": "how-to-pass-CS-in-DLSU",
+      "featuredImageUrl": null,
+      "status": "published",
+      "publishedAt": "2025-10-30T12:00:00.000Z",
+      "createdAt": "2025-10-27T14:20:00.000Z",
+      "category": {
+        "id": 2,
+        "name": "DLSU",
+        "slug": "DLSU"
+      },
+      "reactionCount": 8
+    }
+  ],
+  "meta": {
+    "total": 42,
+    "page": 1,
+    "limit": 10,
+    "pages": 5
+  }
+}
+```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "too_big",
+      "maximum": 100,
+      "inclusive": true,
+      "path": ["limit"],
+      "message": "Too big: expected number to be <=100"
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to list articles"
+}
+```
+
+### GET `/api/articles/[slug]`
+
+- returns a single article by its slug
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/articles/getting-started-nextjs?status=published"
+```
+
+- **Route Parameters:**
+  - `slug` (string, required): The article slug
+
+- **Query Parameters:**
+  - `status` (string, optional): Filter by status - `"published"` or `"draft"`
+
+- `response`:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "Getting Started with Next.js",
+    "subtitle": "A comprehensive guide to building modern web applications",
+    "slug": "getting-started-nextjs",
+    "content": "<h1>Introduction</h1><p>Next.js is a powerful React framework...</p>",
+    "featuredImageUrl": "https://example.com/image.jpg",
+    "status": "published",
+    "publishedAt": "2025-11-01T08:00:00.000Z",
+    "createdAt": "2025-10-28T10:30:00.000Z",
+    "updatedAt": "2025-10-31T15:45:00.000Z",
+    "category": {
+      "id": 1,
+      "name": "Web Development",
+      "slug": "web-development"
+    }
+  }
+}
+```
+
+```json
+{
+  "error": "Article not found"
+}
+```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "too_small",
+      "minimum": 1,
+      "inclusive": true,
+      "path": ["slug"],
+      "message": "Article slug is required"
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to fetch article"
+}
+```
+
+### GET `/api/articles/search`
+
+- searches articles by title, subtitle, or content
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/articles/search?q=nextjs&page=1&limit=10"
+```
+
+- **Query Parameters:**
+  - `q` (string, required): Search query, minimum 3 characters
+  - `page` (number, optional): Page number. Default: `1`
+  - `limit` (number, optional): Items per page, max 100. Default: `10`
+
+- `response`:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Getting Started with Next.js",
+      "subtitle": "A comprehensive guide to building modern web applications",
+      "slug": "getting-started-nextjs",
+      "featuredImageUrl": "https://example.com/image.jpg",
+      "status": "published",
+      "publishedAt": "2025-11-01T08:00:00.000Z",
+      "createdAt": "2025-10-28T10:30:00.000Z",
+      "category": {
+        "id": 1,
+        "name": "Web Development",
+        "slug": "web-development"
+      },
+      "reactionCount": 15
+    }
+  ],
+  "meta": {
+    "total": 3,
+    "page": 1,
+    "limit": 10,
+    "pages": 1
+  }
+}
+```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "too_small",
+      "minimum": 3,
+      "inclusive": true,
+      "path": ["q"],
+      "message": "Search query must be at least 3 characters long"
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to search articles"
+}
+```
+
+### GET `/api/articles/category/[categoryId]`
+
+- returns articles filtered by category ID with pagination and sorting
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/articles/category/1?page=1&limit=10&sort=newest"
+```
+
+- **Route Parameters:**
+  - `categoryId` (number, required): The category ID
+
+- **Query Parameters:**
+  - `page` (number, optional): Page number. Default: `1`
+  - `limit` (number, optional): Items per page, max 100. Default: `10`
+  - `sort` (string, optional): Sort order - `"newest"`, `"oldest"`, or `"popular"`. Default: `"newest"`
+
+- `response`:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Getting Started with Next.js",
+      "subtitle": "A comprehensive guide to building modern web applications",
+      "slug": "getting-started-nextjs",
+      "featuredImageUrl": "https://example.com/image.jpg",
+      "status": "published",
+      "publishedAt": "2025-11-01T08:00:00.000Z",
+      "createdAt": "2025-10-28T10:30:00.000Z",
+      "category": {
+        "id": 1,
+        "name": "Web Development",
+        "slug": "web-development"
+      },
+      "reactionCount": 15
+    }
+  ],
+  "meta": {
+    "total": 12,
+    "page": 1,
+    "limit": 10,
+    "pages": 2
+  }
+}
+```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "invalid_type",
+      "expected": "number",
+      "received": "NaN",
+      "path": ["categoryId"],
+      "message": "Invalid input: expected number, received NaN"
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to list articles by category"
+}
+```
+
+---
+
+## Category Endpoints
+
+### GET `/api/categories`
+
+- returns all article categories with article counts
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/categories"
+```
+
+- `response`:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Web Development",
+      "slug": "web-development",
+      "description": "Articles about web development, frameworks, and best practices",
+      "createdAt": "2025-10-01T09:00:00.000Z",
+      "articleCount": 18
+    },
+    {
+      "id": 2,
+      "name": "Frontend",
+      "slug": "frontend",
+      "description": "Frontend development, UI/UX, and client-side technologies",
+      "createdAt": "2025-10-02T10:30:00.000Z",
+      "articleCount": 24
+    },
+    {
+      "id": 3,
+      "name": "Backend",
+      "slug": "backend",
+      "description": "Server-side development, APIs, and database management",
+      "createdAt": "2025-10-03T11:15:00.000Z",
+      "articleCount": 12
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to list categories"
+}
+```
+
+### GET `/api/categories/[slug]`
+
+- returns a single category by its slug
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/categories/web-development"
+```
+
+- **Route Parameters:**
+  - `slug` (string, required): The category slug
+
+- `response`:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Web Development",
+    "slug": "web-development",
+    "description": "Articles about web development, frameworks, and best practices",
+    "createdAt": "2025-10-01T09:00:00.000Z"
+  }
+}
+```
+
+```json
+{
+  "error": "Category not found"
+}
+```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "too_small",
+      "minimum": 1,
+      "inclusive": true,
+      "path": ["slug"],
+      "message": "Category slug is required"
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to fetch category"
+}
+```
+
+### GET `/api/categories/[id]/articles`
+
+- returns all articles in a specific category with pagination
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/categories/1/articles?page=1&limit=10"
+```
+
+- **Route Parameters:**
+  - `id` (number, required): The category ID
+
+- **Query Parameters:**
+  - `page` (number, optional): Page number. Default: `1`
+  - `limit` (number, optional): Items per page, max 100. Default: `10`
+
+- `response`:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Getting Started with Next.js",
+      "subtitle": "A comprehensive guide to building modern web applications",
+      "slug": "getting-started-nextjs",
+      "featuredImageUrl": "https://example.com/image.jpg",
+      "status": "published",
+      "publishedAt": "2025-11-01T08:00:00.000Z",
+      "createdAt": "2025-10-28T10:30:00.000Z",
+      "category": {
+        "id": 1,
+        "name": "Web Development",
+        "slug": "web-development"
+      },
+      "reactionCount": 15
+    }
+  ],
+  "meta": {
+    "total": 18,
+    "page": 1,
+    "limit": 10,
+    "pages": 2
+  }
+}
+```
+
+```json
+{
+  "error": "Category not found"
+}
+```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "invalid_type",
+      "expected": "number",
+      "received": "NaN",
+      "path": ["id"],
+      "message": "Invalid input: expected number, received NaN"
+    }
+  ]
+}
+```
+
+```json
+{
+  "error": "Failed to list category articles"
+}
+```
+
+---
+
 ## 7. 🤝 Code Contribution Guide
 
 ### Branch Model
