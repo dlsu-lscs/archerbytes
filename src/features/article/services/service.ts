@@ -62,7 +62,7 @@ function buildArticleWhereClause(options: {
       or(
         ilike(articles.title, searchTerm),
         ilike(articles.subtitle, searchTerm),
-        sql`CAST(${articles.content} AS text) ILIKE ${searchTerm}`,
+        ilike(articles.content, searchTerm),
       )!,
     );
   }

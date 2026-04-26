@@ -29,6 +29,20 @@
       "when": 1776996000000,
       "tag": "0003_heavy_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777075200000,
+      "tag": "0004_worthy_quicksilver",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777185079825,
+      "tag": "0005_aromatic_black_crow",
+      "breakpoints": true
     }
   ]
 }

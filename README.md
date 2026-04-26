@@ -978,7 +978,7 @@ curl.exe -X GET "http://localhost:3000/api/articles/getting-started-nextjs?statu
     "title": "Getting Started with Next.js",
     "subtitle": "A comprehensive guide to building modern web applications",
     "slug": "getting-started-nextjs",
-    "content": "<h1>Introduction</h1><p>Next.js is a powerful React framework...</p>",
+    "content": "# Introduction\n\nNext.js is a powerful React framework...",
     "featuredImageUrl": "https://example.com/image.jpg",
     "status": "published",
     "publishedAt": "2025-11-01T08:00:00.000Z",
@@ -1264,14 +1264,14 @@ curl.exe -X GET "http://localhost:3000/api/categories/web-development"
 }
 ```
 
-### GET `/api/categories/[id]/articles`
+### GET `/api/categories/by-id/[id]/articles`
 
 - returns all articles in a specific category with pagination
 
 - `request`:
 
 ```bash
-curl.exe -X GET "http://localhost:3000/api/categories/1/articles?page=1&limit=10"
+curl.exe -X GET "http://localhost:3000/api/categories/by-id/1/articles?page=1&limit=10"
 ```
 
 - **Route Parameters:**

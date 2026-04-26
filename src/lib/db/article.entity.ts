@@ -6,7 +6,6 @@ import {
   text,
   timestamp,
   integer,
-  jsonb,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { articleCategories } from './article-categories.entity';
@@ -19,7 +18,7 @@ export const articles = pgTable(
     title: varchar('title', { length: 500 }).notNull(),
     subtitle: varchar('subtitle', { length: 500 }).notNull(),
     slug: varchar('slug', { length: 500 }).notNull().unique(),
-    content: jsonb('content').notNull(),
+    content: text('content').notNull(),
     categoryId: integer('category_id')
       .notNull()
       .references(() => articleCategories.id, {
