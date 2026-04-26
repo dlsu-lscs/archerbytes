@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { CategoryService } from '@/features/article/services/service';
 import { GET as listCategoriesGET } from '@/app/api/categories/route';
 import { GET as categoryBySlugGET } from '@/app/api/categories/[slug]/route';
-import { GET as categoryArticlesGET } from '@/app/api/categories/[id]/articles/route';
+import { GET as categoryArticlesGET } from '@/app/api/categories/by-id/[id]/articles/route';
 
 vi.mock('@/features/article/services/service', () => ({
   ArticleService: {
@@ -85,7 +85,7 @@ describe('categories API routes', () => {
     expect(json).toEqual({ error: 'Failed to fetch category' });
   });
 
-  test('GET /api/categories/[id]/articles returns paginated data', async () => {
+  test('GET /api/categories/by-id/[id]/articles returns paginated data', async () => {
     vi.mocked(CategoryService.getById).mockResolvedValue({
       id: 2,
       slug: 'news',
@@ -98,7 +98,7 @@ describe('categories API routes', () => {
       limit: 10,
     } as never);
 
-    const req = new NextRequest('http://localhost:3000/api/categories/2/articles?page=1&limit=10');
+    const req = new NextRequest('http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10');
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: '2' }),
     });
@@ -109,8 +109,8 @@ describe('categories API routes', () => {
     expect(json.data).toHaveLength(1);
   });
 
-  test('GET /api/categories/[id]/articles returns 400 for invalid id', async () => {
-    const req = new NextRequest('http://localhost:3000/api/categories/nope/articles?page=1&limit=10');
+  test('GET /api/categories/by-id/[id]/articles returns 400 for invalid id', async () => {
+    const req = new NextRequest('http://localhost:3000/api/categories/by-id/nope/articles?page=1&limit=10');
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: 'nope' }),
     });
@@ -118,10 +118,10 @@ describe('categories API routes', () => {
     expect(res.status).toBe(400);
   });
 
-  test('GET /api/categories/[id]/articles returns 404 when category is missing', async () => {
+  test('GET /api/categories/by-id/[id]/articles returns 404 when category is missing', async () => {
     vi.mocked(CategoryService.getById).mockResolvedValue(null as never);
 
-    const req = new NextRequest('http://localhost:3000/api/categories/2/articles?page=1&limit=10');
+    const req = new NextRequest('http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10');
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: '2' }),
     });
@@ -131,11 +131,11 @@ describe('categories API routes', () => {
     expect(json).toEqual({ error: 'Category not found' });
   });
 
-  test('GET /api/categories/[id]/articles returns 500 when service throws', async () => {
+  test('GET /api/categories/by-id/[id]/articles returns 500 when service throws', async () => {
     vi.mocked(CategoryService.getById).mockResolvedValue({ id: 2 } as never);
     vi.mocked(CategoryService.listArticles).mockRejectedValue(new Error('db failure'));
 
-    const req = new NextRequest('http://localhost:3000/api/categories/2/articles?page=1&limit=10');
+    const req = new NextRequest('http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10');
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: '2' }),
     });

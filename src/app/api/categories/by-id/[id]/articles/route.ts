@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
-import { ArticleService, CategoryService } from '@/features/article/services/service';
+import { CategoryService } from '@/features/article/services/service';
 import { categoryArticlesQuerySchema, idParamSchema } from '@/features/article/types';
 import { buildPaginationMeta, fail, okPaginated } from '@/lib/api/response';
 
