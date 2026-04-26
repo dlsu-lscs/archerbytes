@@ -1,5 +1,6 @@
 import {
   index,
+  pgEnum,
   pgTable,
   serial,
   varchar,
@@ -10,6 +11,11 @@ import {
 import { relations } from 'drizzle-orm';
 import { articleCategories } from './article-categories.entity';
 import { user } from './auth-schema';
+
+export const articleStatusEnum = pgEnum('article_status', [
+  'draft',
+  'published',
+]);
 
 export const articles = pgTable(
   'articles',
@@ -32,7 +38,7 @@ export const articles = pgTable(
     metaTitle: varchar('meta_title', { length: 255 }),
     metaDescription: varchar('meta_description', { length: 500 }),
     metaImageUrl: varchar('meta_image_url', { length: 1000 }),
-    status: varchar('status', { length: 20 }).notNull().default('draft'),
+    status: articleStatusEnum('status').notNull().default('draft'),
     publishedAt: timestamp('published_at'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),

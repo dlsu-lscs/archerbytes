@@ -1,9 +1,5 @@
 import { db } from '@/config/database';
-import {
-  articleCategories,
-  articleReactions,
-  articles,
-} from '@/lib/db/schema';
+import { articleCategories, articleReactions, articles } from '@/lib/db/schema';
 import {
   and,
   asc,
@@ -50,7 +46,9 @@ function buildArticleWhereClause(options: {
 }) {
   const conditions: SQL[] = [];
 
-  conditions.push(eq(articles.status, options.status ?? DEFAULT_VISIBLE_STATUS));
+  conditions.push(
+    eq(articles.status, options.status ?? DEFAULT_VISIBLE_STATUS),
+  );
 
   if (options.categoryId !== undefined) {
     conditions.push(eq(articles.categoryId, options.categoryId));
@@ -119,7 +117,10 @@ async function listArticlesWithCount(options: {
         reactionCount: sql<number>`count(${articleReactions.id})::int`,
       })
       .from(articles)
-      .innerJoin(articleCategories, eq(articles.categoryId, articleCategories.id))
+      .innerJoin(
+        articleCategories,
+        eq(articles.categoryId, articleCategories.id),
+      )
       .leftJoin(
         articleReactions,
         sql`${articleReactions.articleId} = ${articles.id}::text`,
@@ -152,7 +153,10 @@ async function listArticlesWithCount(options: {
         reactionCount: sql<number>`count(${articleReactions.id})::int`,
       })
       .from(articles)
-      .innerJoin(articleCategories, eq(articles.categoryId, articleCategories.id))
+      .innerJoin(
+        articleCategories,
+        eq(articles.categoryId, articleCategories.id),
+      )
       .leftJoin(
         articleReactions,
         sql`${articleReactions.articleId} = ${articles.id}::text`,
@@ -172,7 +176,10 @@ async function listArticlesWithCount(options: {
   };
 }
 
-export async function getArticleBySlug(slug: string, status?: 'published' | 'draft') {
+export async function getArticleBySlug(
+  slug: string,
+  status?: 'published' | 'draft',
+) {
   try {
     return (
       (await db.query.articles.findFirst({
@@ -317,7 +324,10 @@ export async function getCategoryById(categoryId: number) {
   }
 }
 
-export async function listCategoryArticles(categoryId: number, query: CategoryArticlesQuery) {
+export async function listCategoryArticles(
+  categoryId: number,
+  query: CategoryArticlesQuery,
+) {
   try {
     return listArticlesWithCount({
       page: query.page,
