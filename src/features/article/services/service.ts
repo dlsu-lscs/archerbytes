@@ -33,12 +33,9 @@ type ListArticlePayload = Partial<
     | 'keywords'
     | 'previewURL'
     | 'readingTime'
-    | 'publicationDate'
   >
 > &
-  Pick<ArticleDetailsType, 'title' | 'author' | 'commentCount' | 'likeCount'> & {
-    publicationDate: Date | null;
-  };
+  Pick<ArticleDetailsType, 'title' | 'author' | 'commentCount' | 'reactionCount'>;
 
 type ListArticleRow = ListArticlePayload & {
   id: number;
@@ -53,7 +50,6 @@ type ListArticleRow = ListArticlePayload & {
     name: string;
     slug: string;
   };
-  reactionCount: number;
 };
 
 function buildArticleWhereClause(options: {
@@ -114,7 +110,7 @@ async function listArticlesWithCount(options: {
     .where(whereClause);
 
   let rows: ListArticleRow[] = [];
-  const likeCountSelect = sql<number>`count(distinct ${articleReactions.id})::int`;
+  const reactionCountSelect = sql<number>`count(distinct ${articleReactions.id})::int`;
   const commentCountSelect = sql<number>`count(distinct ${comments.id})::int`;
 
   if (options.sort === 'popular') {
@@ -127,7 +123,6 @@ async function listArticlesWithCount(options: {
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
         status: articles.status,
-        publicationDate: articles.publishedAt,
         publishedAt: articles.publishedAt,
         createdAt: articles.createdAt,
         category: {
@@ -135,9 +130,8 @@ async function listArticlesWithCount(options: {
           name: articleCategories.name,
           slug: articleCategories.slug,
         },
-        likeCount: likeCountSelect,
+        reactionCount: reactionCountSelect,
         commentCount: commentCountSelect,
-        reactionCount: likeCountSelect,
       })
       .from(articles)
       .innerJoin(
@@ -169,7 +163,6 @@ async function listArticlesWithCount(options: {
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
         status: articles.status,
-        publicationDate: articles.publishedAt,
         publishedAt: articles.publishedAt,
         createdAt: articles.createdAt,
         category: {
@@ -177,9 +170,8 @@ async function listArticlesWithCount(options: {
           name: articleCategories.name,
           slug: articleCategories.slug,
         },
-        likeCount: likeCountSelect,
+        reactionCount: reactionCountSelect,
         commentCount: commentCountSelect,
-        reactionCount: likeCountSelect,
       })
       .from(articles)
       .innerJoin(
@@ -237,7 +229,7 @@ export async function getArticleBySlug(
 
     const rows = await db
       .select({
-        likeCount: sql<number>`count(distinct ${articleReactions.id})::int`,
+        reactionCount: sql<number>`count(distinct ${articleReactions.id})::int`,
         commentCount: sql<number>`count(distinct ${comments.id})::int`,
       })
       .from(articles)
@@ -250,12 +242,12 @@ export async function getArticleBySlug(
       .groupBy(articles.id)
       .limit(1);
 
-    const counts = rows[0] ?? { likeCount: 0, commentCount: 0 };
+    const counts = rows[0] ?? { reactionCount: 0, commentCount: 0 };
 
     return {
       ...article,
       author: article.user.name,
-      likeCount: counts.likeCount,
+      reactionCount: counts.reactionCount,
       commentCount: counts.commentCount,
     };
   } catch (error) {
