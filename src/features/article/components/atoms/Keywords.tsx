@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArticleDetailsProp } from '@/types/article.types';
+import { ArticleDetailsProp } from '@/features/article/types/article.types';
 
 export default function Keywords({ article }: ArticleDetailsProp) {
     return (

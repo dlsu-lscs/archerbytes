@@ -8,7 +8,7 @@ import {
 
 import { Card, CardContent } from '@/components/ui/card';
 import CarouselCard from '../molecules/CarouselCard';
-import { ArticleDetailsType } from '@/types/article.types';
+import { ArticleDetailsType } from '@/features/article/types/article.types';
 
 export default function ArticleCarousel() {
     const placeholderArticle: ArticleDetailsType = {

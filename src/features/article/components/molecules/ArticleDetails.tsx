@@ -1,5 +1,5 @@
 import TopicChip from '../atoms/TopicChip';
-import { ArticleDetailsProp } from '@/types/article.types';
+import { ArticleDetailsProp } from '@/features/article/types/article.types';
 
 export default function ArticleDetails({ article }: ArticleDetailsProp) {
     return (

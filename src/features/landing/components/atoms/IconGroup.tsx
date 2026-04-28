@@ -2,7 +2,7 @@ import { FaRegCalendar } from 'react-icons/fa6';
 import { IoHeartCircleSharp } from 'react-icons/io5';
 import { ImBubble } from 'react-icons/im';
 
-import { IconsType } from '@/types/article.types';
+import { IconsType } from '@/features/article/types/article.types';
 
 export default function IconGroup({ date, likes, comments }: IconsType) {
     return (
