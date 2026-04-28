@@ -15,7 +15,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ArticleDetailsProp } from '@/types/article.types';
+import { ArticleDetailsProp } from '@/features/article/types/article.types';
 import Image from 'next/image';
 
 export default function CarouselCard({ article }: ArticleDetailsProp) {

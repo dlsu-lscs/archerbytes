@@ -5,7 +5,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ArticleDetailsType } from '@/types/article.types';
+import { ArticleDetailsType } from '@/features/article/types/article.types';
 
 import FeaturedCard from './FeaturedCard';
 

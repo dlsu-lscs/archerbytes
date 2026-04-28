@@ -16,7 +16,7 @@ import IconGroup from '../atoms/IconGroup';
 
 import Image from 'next/image';
 
-import { ArticleDetailsProp } from '@/types/article.types';
+import { ArticleDetailsProp } from '@/features/article/types/article.types';
 
 export default function ArticleItem({ article }: ArticleDetailsProp) {
     return (

@@ -1,6 +1,6 @@
 import ArticleItem from '../molecules/ArticleItem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArticleDetailsType } from '@/types/article.types';
+import { ArticleDetailsType } from '@/features/article/types/article.types';
 import {
     Select,
     SelectContent,

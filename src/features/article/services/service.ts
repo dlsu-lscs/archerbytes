@@ -1,5 +1,6 @@
 import { db } from '@/config/database';
-import { articleCategories, articleReactions, articles } from '@/lib/db/schema';
+import { articleCategories, articleReactions, articles, comments, user } from '@/lib/db/schema';
+import type { ArticleDetailsType } from '@/features/article/types/article.types';
 import {
   and,
   asc,
@@ -22,9 +23,22 @@ const DEFAULT_VISIBLE_STATUS = 'published' as const;
 
 type SortOption = 'newest' | 'oldest' | 'popular';
 
-type ListArticleRow = {
+type ListArticlePayload = Partial<
+  Omit<
+    ArticleDetailsType,
+    | 'quote'
+    | 'quotee'
+    | 'avatarURL'
+    | 'occupation'
+    | 'keywords'
+    | 'previewURL'
+    | 'readingTime'
+  >
+> &
+  Pick<ArticleDetailsType, 'title' | 'author' | 'commentCount' | 'reactionCount'>;
+
+type ListArticleRow = ListArticlePayload & {
   id: number;
-  title: string;
   subtitle: string;
   slug: string;
   featuredImageUrl: string | null;
@@ -36,7 +50,6 @@ type ListArticleRow = {
     name: string;
     slug: string;
   };
-  reactionCount: number;
 };
 
 function buildArticleWhereClause(options: {
@@ -97,12 +110,15 @@ async function listArticlesWithCount(options: {
     .where(whereClause);
 
   let rows: ListArticleRow[] = [];
+  const reactionCountSelect = sql<number>`count(distinct ${articleReactions.id})::int`;
+  const commentCountSelect = sql<number>`count(distinct ${comments.id})::int`;
 
   if (options.sort === 'popular') {
     rows = await db
       .select({
         id: articles.id,
         title: articles.title,
+        author: user.name,
         subtitle: articles.subtitle,
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
@@ -114,21 +130,24 @@ async function listArticlesWithCount(options: {
           name: articleCategories.name,
           slug: articleCategories.slug,
         },
-        reactionCount: sql<number>`count(${articleReactions.id})::int`,
+        reactionCount: reactionCountSelect,
+        commentCount: commentCountSelect,
       })
       .from(articles)
       .innerJoin(
         articleCategories,
         eq(articles.categoryId, articleCategories.id),
       )
+      .innerJoin(user, eq(articles.userId, user.id))
       .leftJoin(
         articleReactions,
         sql`${articleReactions.articleId} = ${articles.id}::text`,
       )
+      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
       .where(whereClause)
-      .groupBy(articles.id, articleCategories.id)
+      .groupBy(articles.id, articleCategories.id, user.id)
       .orderBy(
-        desc(sql`count(${articleReactions.id})`),
+        desc(sql`count(distinct ${articleReactions.id})`),
         desc(articles.publishedAt),
         desc(articles.createdAt),
       )
@@ -139,6 +158,7 @@ async function listArticlesWithCount(options: {
       .select({
         id: articles.id,
         title: articles.title,
+        author: user.name,
         subtitle: articles.subtitle,
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
@@ -150,19 +170,22 @@ async function listArticlesWithCount(options: {
           name: articleCategories.name,
           slug: articleCategories.slug,
         },
-        reactionCount: sql<number>`count(${articleReactions.id})::int`,
+        reactionCount: reactionCountSelect,
+        commentCount: commentCountSelect,
       })
       .from(articles)
       .innerJoin(
         articleCategories,
         eq(articles.categoryId, articleCategories.id),
       )
+      .innerJoin(user, eq(articles.userId, user.id))
       .leftJoin(
         articleReactions,
         sql`${articleReactions.articleId} = ${articles.id}::text`,
       )
+      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
       .where(whereClause)
-      .groupBy(articles.id, articleCategories.id)
+      .groupBy(articles.id, articleCategories.id, user.id)
       .orderBy(...applySort(options.sort))
       .limit(options.limit)
       .offset(offset);
@@ -181,7 +204,7 @@ export async function getArticleBySlug(
   status?: 'published' | 'draft',
 ) {
   try {
-    return (
+    const article =
       (await db.query.articles.findFirst({
         where: and(
           eq(articles.slug, slug),
@@ -198,8 +221,35 @@ export async function getArticleBySlug(
             },
           },
         },
-      })) ?? null
-    );
+      })) ?? null;
+
+    if (!article) {
+      return null;
+    }
+
+    const rows = await db
+      .select({
+        reactionCount: sql<number>`count(distinct ${articleReactions.id})::int`,
+        commentCount: sql<number>`count(distinct ${comments.id})::int`,
+      })
+      .from(articles)
+      .leftJoin(
+        articleReactions,
+        sql`${articleReactions.articleId} = ${articles.id}::text`,
+      )
+      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .where(eq(articles.id, article.id))
+      .groupBy(articles.id)
+      .limit(1);
+
+    const counts = rows[0] ?? { reactionCount: 0, commentCount: 0 };
+
+    return {
+      ...article,
+      author: article.user.name,
+      reactionCount: counts.reactionCount,
+      commentCount: counts.commentCount,
+    };
   } catch (error) {
     console.error('Error fetching article by slug:', error);
     throw error;
