@@ -42,7 +42,7 @@ export async function createComment(data: CreateCommentInput) {
 export async function getCommentsByArticleID(articleId: number) {
   try {
     const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
-    const replyCountSelect = sql<number>`(select count(${comments.id})::int from ${comments} c where c.reply_to = ${comments.id})`;
+    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
 
     return db
       .select({
@@ -78,7 +78,7 @@ export async function getCommentsByArticleID(articleId: number) {
 export async function getCommentById(id: number) {
   try {
     const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
-    const replyCountSelect = sql<number>`(select count(${comments.id})::int from ${comments} c where c.reply_to = ${comments.id})`;
+    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
 
     const rows = await db
       .select({
@@ -111,7 +111,7 @@ export async function getCommentById(id: number) {
 export async function getReplies(parentId: number) {
   try {
     const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
-    const replyCountSelect = sql<number>`(select count(${comments.id})::int from ${comments} c where c.reply_to = ${comments.id})`;
+    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
 
     return db
       .select({

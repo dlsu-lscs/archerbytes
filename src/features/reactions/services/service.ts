@@ -27,7 +27,7 @@ export async function createArticleReaction(data: CreateArticleReactionInput) {
   }
 }
 
-export async function getReactionsByArticleId(articleId: string) {
+export async function getReactionsByArticleId(articleId: number) {
   try {
     return await db
       .select()
@@ -41,7 +41,7 @@ export async function getReactionsByArticleId(articleId: string) {
 }
 
 export async function getReactionsByArticleIdAndUserId(
-  articleId: string,
+  articleId: number,
   userId: string,
 ) {
   try {
