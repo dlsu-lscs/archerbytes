@@ -212,6 +212,7 @@ export async function getArticleBySlug(
               name: true,
               email: true,
               image: true,
+              occupation: true,
             },
           },
         },
@@ -238,6 +239,8 @@ export async function getArticleBySlug(
     return {
       ...article,
       author: article.user.name,
+      avatarURL: article.user.image,
+      occupation: article.user.occupation ?? null,
       reactionCount: counts.reactionCount,
       commentCount: counts.commentCount,
     };
