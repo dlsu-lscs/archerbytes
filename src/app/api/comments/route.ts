@@ -5,11 +5,19 @@ import { ZodError } from 'zod';
 
 export async function GET(req: NextRequest) {
   try {
-    const articleId = req.nextUrl.searchParams.get('articleId');
+    const articleIdParam = req.nextUrl.searchParams.get('articleId');
 
-    if (!articleId) {
+    if (!articleIdParam) {
       return NextResponse.json(
         { error: 'articleId query parameter is required' },
+        { status: 400 },
+      );
+    }
+
+    const articleId = Number(articleIdParam);
+    if (Number.isNaN(articleId)) {
+      return NextResponse.json(
+        { error: 'Invalid articleId query parameter' },
         { status: 400 },
       );
     }

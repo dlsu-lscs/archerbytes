@@ -36,7 +36,7 @@ export async function createComment(data: CreateCommentInput) {
   }
 }
 
-export async function getCommentsByArticleID(articleId: string) {
+export async function getCommentsByArticleID(articleId: number) {
   try {
     return db
       .select()

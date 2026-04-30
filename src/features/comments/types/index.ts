@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createCommentSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
-  articleId: z.string().min(1, 'Article ID is required'),
+  articleId: z.number().int().positive('Article ID is required'),
   content: z
     .string()
     .min(1, 'Content is Required')

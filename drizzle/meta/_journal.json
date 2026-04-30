@@ -50,6 +50,13 @@
       "when": 1777223123482,
       "tag": "0006_past_skaar",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777545600000,
+      "tag": "0007_steady_mjolnir",
+      "breakpoints": true
     }
   ]
 }
