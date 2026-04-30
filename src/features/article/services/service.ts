@@ -30,7 +30,6 @@ type ListArticlePayload = Partial<
     | 'quotee'
     | 'avatarURL'
     | 'occupation'
-    | 'keywords'
     | 'previewURL'
     | 'readingTime'
   >

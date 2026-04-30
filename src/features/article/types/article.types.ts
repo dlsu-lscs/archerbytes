@@ -16,8 +16,8 @@ export type ArticleDetailsType = {
     createdAt: Date;
     updatedAt: Date;
     author: string;
-    avatarURL?: string;
-    occupation?: string;
+    avatarURL: string | null;
+    occupation: string | null;
     readingTime: number;
     quote?: string;
     quotee?: string;

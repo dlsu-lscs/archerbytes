@@ -7,9 +7,9 @@ export type CommentType = {
     updatedAt: Date;
     user: {
         id: string;
-        name?: string;
-        avatarURL?: string;
-        occupation?: string | null;
+        name: string;
+        avatarURL: string | null;
+        occupation: string | null;
     };
     isAuthor?: boolean;
     reactionCount: number;
