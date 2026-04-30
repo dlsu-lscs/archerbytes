@@ -1,13 +1,16 @@
 export type CommentType = {
     id?: number;
     articleId: number;
-    userId: number;
     replyTo?: number | null;
     content: string;
     createdAt: Date;
     updatedAt: Date;
-    avatarURL?: string;
-    occupation?: string;
+    user: {
+        id: string;
+        name?: string;
+        avatarURL?: string;
+        occupation?: string | null;
+    };
     isAuthor?: boolean;
     reactionCount: number;
     replyCount: number;

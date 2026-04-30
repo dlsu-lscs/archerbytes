@@ -5,7 +5,7 @@ export type ArticleDetailsType = {
     slug: string;
     content: string;
     categoryId: number;
-    userId: number;
+    userId: string;
     featuredImageUrl: string | null;
     tags: string[];
     metaTitle: string | null;
