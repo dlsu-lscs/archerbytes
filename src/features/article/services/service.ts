@@ -23,18 +23,28 @@ const DEFAULT_VISIBLE_STATUS = 'published' as const;
 
 type SortOption = 'newest' | 'oldest' | 'popular';
 
+type ArticleAuthor = {
+  id: string;
+  name: string;
+  avatarURL: string | null;
+  occupation: string | null;
+};
+
 type ListArticlePayload = Partial<
   Omit<
     ArticleDetailsType,
     | 'quote'
     | 'quotee'
+    | 'author'
     | 'avatarURL'
     | 'occupation'
     | 'previewURL'
     | 'readingTime'
   >
 > &
-  Pick<ArticleDetailsType, 'title' | 'author' | 'commentCount' | 'reactionCount'>;
+  Pick<ArticleDetailsType, 'title' | 'commentCount' | 'reactionCount'> & {
+    author: ArticleAuthor;
+  };
 
 type ListArticleRow = ListArticlePayload & {
   id: number;
@@ -117,7 +127,12 @@ async function listArticlesWithCount(options: {
       .select({
         id: articles.id,
         title: articles.title,
-        author: user.name,
+        author: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
         subtitle: articles.subtitle,
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
@@ -141,7 +156,14 @@ async function listArticlesWithCount(options: {
       .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
       .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(whereClause)
-      .groupBy(articles.id, articleCategories.id, user.id)
+      .groupBy(
+        articles.id,
+        articleCategories.id,
+        user.id,
+        user.name,
+        user.image,
+        user.occupation,
+      )
       .orderBy(
         desc(sql`count(distinct ${articleReactions.id})`),
         desc(articles.publishedAt),
@@ -154,7 +176,12 @@ async function listArticlesWithCount(options: {
       .select({
         id: articles.id,
         title: articles.title,
-        author: user.name,
+        author: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
         subtitle: articles.subtitle,
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
@@ -178,7 +205,14 @@ async function listArticlesWithCount(options: {
       .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
       .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(whereClause)
-      .groupBy(articles.id, articleCategories.id, user.id)
+      .groupBy(
+        articles.id,
+        articleCategories.id,
+        user.id,
+        user.name,
+        user.image,
+        user.occupation,
+      )
       .orderBy(...applySort(options.sort))
       .limit(options.limit)
       .offset(offset);
@@ -234,12 +268,16 @@ export async function getArticleBySlug(
       .limit(1);
 
     const counts = rows[0] ?? { reactionCount: 0, commentCount: 0 };
+    const { user: articleUser, ...articleWithoutUser } = article;
 
     return {
-      ...article,
-      author: article.user.name,
-      avatarURL: article.user.image,
-      occupation: article.user.occupation ?? null,
+      ...articleWithoutUser,
+      author: {
+        id: articleUser.id,
+        name: articleUser.name,
+        avatarURL: articleUser.image,
+        occupation: articleUser.occupation,
+      },
       reactionCount: counts.reactionCount,
       commentCount: counts.commentCount,
     };
