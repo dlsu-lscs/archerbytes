@@ -1,15 +1,28 @@
 export type ArticleDetailsType = {
+    id: number;
     title: string;
-    quote: string;
-    quotee: string;
+    subtitle: string;
+    slug: string;
+    content: string;
+    categoryId: number;
+    userId: number;
+    featuredImageUrl: string | null;
+    tags: string[];
+    metaTitle: string | null;
+    metaDescription: string | null;
+    metaImageUrl: string | null;
+    status: 'draft' | 'published';
+    publishedAt: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
     author: string;
-    avatarURL: string;
-    occupation: string;
+    avatarURL?: string;
+    occupation?: string;
     readingTime: number;
-    publicationDate: Date;
+    quote?: string;
+    quotee?: string;
     commentCount: number;
-    likeCount: number;
-    keywords: string[];
+    reactionCount: number;
     previewURL: string;
 };
 export type ArticleDetailsProp = {
@@ -29,6 +42,6 @@ export type SmallArticleItemType = {
 
 export type IconsType = {
     date: Date;
-    likes: number;
+    reactions: number;
     comments: number;
 };

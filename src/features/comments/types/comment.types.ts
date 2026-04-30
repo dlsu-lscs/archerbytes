@@ -1,11 +1,15 @@
 export type CommentType = {
     id?: number;
-    avatarURL: string;
-    userId: string;
-    occupation: string;
-    isAuthor: boolean;
+    articleId: number;
+    userId: number;
+    replyTo?: number | null;
     content: string;
-    likeCount: number;
+    createdAt: Date;
+    updatedAt: Date;
+    avatarURL?: string;
+    occupation?: string;
+    isAuthor?: boolean;
+    reactionCount: number;
     replyCount: number;
 };
 
