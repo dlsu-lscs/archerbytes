@@ -13,18 +13,18 @@ export const reactionTypeEnum = z.enum(reactionTypes);
 
 export const createArticleReactionSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
-  articleId: z.string().min(1, 'Article ID is required'),
+  articleId: z.number().int().positive('Article ID is required'),
   reactionType: reactionTypeEnum,
 });
 
 export const deleteArticleReactionSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
-  articleId: z.string().min(1, 'Article ID is required'),
+  articleId: z.number().int().positive('Article ID is required'),
 });
 
 export const updateArticleReactionSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
-  articleId: z.string().min(1, 'Article ID is required'),
+  articleId: z.number().int().positive('Article ID is required'),
   reactionType: reactionTypeEnum,
 });
 

@@ -23,19 +23,28 @@ const DEFAULT_VISIBLE_STATUS = 'published' as const;
 
 type SortOption = 'newest' | 'oldest' | 'popular';
 
+type ArticleAuthor = {
+  id: string;
+  name: string;
+  avatarURL: string | null;
+  occupation: string | null;
+};
+
 type ListArticlePayload = Partial<
   Omit<
     ArticleDetailsType,
     | 'quote'
     | 'quotee'
+    | 'author'
     | 'avatarURL'
     | 'occupation'
-    | 'keywords'
     | 'previewURL'
     | 'readingTime'
   >
 > &
-  Pick<ArticleDetailsType, 'title' | 'author' | 'commentCount' | 'reactionCount'>;
+  Pick<ArticleDetailsType, 'title' | 'commentCount' | 'reactionCount'> & {
+    author: ArticleAuthor;
+  };
 
 type ListArticleRow = ListArticlePayload & {
   id: number;
@@ -118,7 +127,12 @@ async function listArticlesWithCount(options: {
       .select({
         id: articles.id,
         title: articles.title,
-        author: user.name,
+        author: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
         subtitle: articles.subtitle,
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
@@ -139,13 +153,17 @@ async function listArticlesWithCount(options: {
         eq(articles.categoryId, articleCategories.id),
       )
       .innerJoin(user, eq(articles.userId, user.id))
-      .leftJoin(
-        articleReactions,
-        sql`${articleReactions.articleId} = ${articles.id}::text`,
-      )
-      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
+      .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(whereClause)
-      .groupBy(articles.id, articleCategories.id, user.id)
+      .groupBy(
+        articles.id,
+        articleCategories.id,
+        user.id,
+        user.name,
+        user.image,
+        user.occupation,
+      )
       .orderBy(
         desc(sql`count(distinct ${articleReactions.id})`),
         desc(articles.publishedAt),
@@ -158,7 +176,12 @@ async function listArticlesWithCount(options: {
       .select({
         id: articles.id,
         title: articles.title,
-        author: user.name,
+        author: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
         subtitle: articles.subtitle,
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
@@ -179,13 +202,17 @@ async function listArticlesWithCount(options: {
         eq(articles.categoryId, articleCategories.id),
       )
       .innerJoin(user, eq(articles.userId, user.id))
-      .leftJoin(
-        articleReactions,
-        sql`${articleReactions.articleId} = ${articles.id}::text`,
-      )
-      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
+      .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(whereClause)
-      .groupBy(articles.id, articleCategories.id, user.id)
+      .groupBy(
+        articles.id,
+        articleCategories.id,
+        user.id,
+        user.name,
+        user.image,
+        user.occupation,
+      )
       .orderBy(...applySort(options.sort))
       .limit(options.limit)
       .offset(offset);
@@ -218,6 +245,7 @@ export async function getArticleBySlug(
               name: true,
               email: true,
               image: true,
+              occupation: true,
             },
           },
         },
@@ -233,20 +261,23 @@ export async function getArticleBySlug(
         commentCount: sql<number>`count(distinct ${comments.id})::int`,
       })
       .from(articles)
-      .leftJoin(
-        articleReactions,
-        sql`${articleReactions.articleId} = ${articles.id}::text`,
-      )
-      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
+      .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(eq(articles.id, article.id))
       .groupBy(articles.id)
       .limit(1);
 
     const counts = rows[0] ?? { reactionCount: 0, commentCount: 0 };
+    const { user: articleUser, ...articleWithoutUser } = article;
 
     return {
-      ...article,
-      author: article.user.name,
+      ...articleWithoutUser,
+      author: {
+        id: articleUser.id,
+        name: articleUser.name,
+        avatarURL: articleUser.image,
+        occupation: articleUser.occupation,
+      },
       reactionCount: counts.reactionCount,
       commentCount: counts.commentCount,
     };

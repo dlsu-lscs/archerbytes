@@ -9,6 +9,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { comments } from './comments.entity';
+import { articles } from './article.entity';
 
 export const reactionTypeEnum = pgEnum('reaction_type', [
   'like',
@@ -25,7 +26,9 @@ export const articleReactions = pgTable(
   {
     id: serial('id').primaryKey(),
     userId: text('user_id').notNull(),
-    articleId: text('article_id').notNull(),
+    articleId: integer('article_id')
+      .notNull()
+      .references(() => articles.id, { onDelete: 'cascade' }),
     reactionType: reactionTypeEnum('reaction_type').notNull(),
     createdAt: timestamp('created_at')
       .notNull()

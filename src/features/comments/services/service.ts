@@ -1,5 +1,5 @@
 import { db } from '@/config/database';
-import { comments } from '@/lib/db/schema';
+import { comments, user, commentReactions } from '@/lib/db/schema';
 import { eq, sql, and } from 'drizzle-orm';
 import type { CreateCommentInput, UpdateCommentInput } from '../types';
 
@@ -29,18 +29,39 @@ export async function createComment(data: CreateCommentInput) {
         replyTo: data.replyTo ?? null,
       })
       .returning();
-    return inserted.length > 0 ? inserted[0] : null;
+
+    if (inserted.length === 0) return null;
+    const id = inserted[0].id as number;
+    return await getCommentById(id);
   } catch (error) {
     console.error('Error creating comment:', error);
     throw error;
   }
 }
 
-export async function getCommentsByArticleID(articleId: string) {
+export async function getCommentsByArticleID(articleId: number) {
   try {
+    const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
+    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
+
     return db
-      .select()
+      .select({
+        id: comments.id,
+        content: comments.content,
+        replyTo: comments.replyTo,
+        createdAt: comments.createdAt,
+        updatedAt: comments.updatedAt,
+        reactionCount: reactionCountSelect,
+        replyCount: replyCountSelect,
+        user: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
+      })
       .from(comments)
+      .innerJoin(user, eq(comments.userId, user.id))
       .where(
         and(
           eq(comments.articleId, articleId),
@@ -56,7 +77,30 @@ export async function getCommentsByArticleID(articleId: string) {
 
 export async function getCommentById(id: number) {
   try {
-    const rows = await db.select().from(comments).where(eq(comments.id, id));
+    const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
+    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
+
+    const rows = await db
+      .select({
+        id: comments.id,
+        content: comments.content,
+        replyTo: comments.replyTo,
+        createdAt: comments.createdAt,
+        updatedAt: comments.updatedAt,
+        reactionCount: reactionCountSelect,
+        replyCount: replyCountSelect,
+        user: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
+      })
+      .from(comments)
+      .innerJoin(user, eq(comments.userId, user.id))
+      .where(eq(comments.id, id))
+      .limit(1);
+
     return rows[0] ?? null;
   } catch (error) {
     console.error('Error fetching comment by ID:', error);
@@ -66,9 +110,27 @@ export async function getCommentById(id: number) {
 
 export async function getReplies(parentId: number) {
   try {
+    const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
+    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
+
     return db
-      .select()
+      .select({
+        id: comments.id,
+        content: comments.content,
+        replyTo: comments.replyTo,
+        createdAt: comments.createdAt,
+        updatedAt: comments.updatedAt,
+        reactionCount: reactionCountSelect,
+        replyCount: replyCountSelect,
+        user: {
+          id: user.id,
+          name: user.name,
+          avatarURL: user.image,
+          occupation: user.occupation,
+        },
+      })
       .from(comments)
+      .innerJoin(user, eq(comments.userId, user.id))
       .where(eq(comments.replyTo, parentId))
       .orderBy(comments.createdAt);
   } catch (error) {
@@ -92,7 +154,8 @@ export async function updateComment(
       .where(and(eq(comments.id, id), eq(comments.userId, userId)))
       .returning();
 
-    return updated.length > 0 ? updated[0] : null;
+    if (updated.length === 0) return null;
+    return await getCommentById(id);
   } catch (error) {
     console.error('Error updating comment:', error);
     throw error;
@@ -101,11 +164,15 @@ export async function updateComment(
 
 export async function deleteComment(id: number, userId: string) {
   try {
+    const existing = await getCommentById(id);
+    if (!existing) return null;
+
     const deleted = await db
       .delete(comments)
       .where(and(eq(comments.id, id), eq(comments.userId, userId)))
       .returning();
-    return deleted.length > 0 ? deleted[0] : null;
+
+    return deleted.length > 0 ? existing : null;
   } catch (error) {
     console.error('Error deleting comment:', error);
     throw error;
