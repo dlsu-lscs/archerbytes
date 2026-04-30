@@ -139,11 +139,8 @@ async function listArticlesWithCount(options: {
         eq(articles.categoryId, articleCategories.id),
       )
       .innerJoin(user, eq(articles.userId, user.id))
-      .leftJoin(
-        articleReactions,
-        sql`${articleReactions.articleId} = ${articles.id}::text`,
-      )
-      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
+      .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(whereClause)
       .groupBy(articles.id, articleCategories.id, user.id)
       .orderBy(
@@ -179,11 +176,8 @@ async function listArticlesWithCount(options: {
         eq(articles.categoryId, articleCategories.id),
       )
       .innerJoin(user, eq(articles.userId, user.id))
-      .leftJoin(
-        articleReactions,
-        sql`${articleReactions.articleId} = ${articles.id}::text`,
-      )
-      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
+      .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(whereClause)
       .groupBy(articles.id, articleCategories.id, user.id)
       .orderBy(...applySort(options.sort))
@@ -233,11 +227,8 @@ export async function getArticleBySlug(
         commentCount: sql<number>`count(distinct ${comments.id})::int`,
       })
       .from(articles)
-      .leftJoin(
-        articleReactions,
-        sql`${articleReactions.articleId} = ${articles.id}::text`,
-      )
-      .leftJoin(comments, sql`${comments.articleId} = ${articles.id}::text`)
+      .leftJoin(articleReactions, eq(articleReactions.articleId, articles.id))
+      .leftJoin(comments, eq(comments.articleId, articles.id))
       .where(eq(articles.id, article.id))
       .groupBy(articles.id)
       .limit(1);
