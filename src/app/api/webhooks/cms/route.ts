@@ -1,9 +1,9 @@
-
 import { NextRequest } from 'next/server';
 import { WebhookPayloadSchema } from '@/lib/webhooks/types';
 import { validateWebhookAuth } from '@/lib/webhooks/auth';
 import { accepted, badRequest, unauthorized } from '@/lib/webhooks/response';
-
+import { handleArticleEvent } from '@/lib/webhooks/handlers/article.handler';
+import { handleCategoryEvent } from '@/lib/webhooks/handlers/category.handler';
 
 export async function POST(req: NextRequest) {
   const authResult = validateWebhookAuth(req);
@@ -33,6 +33,17 @@ export async function POST(req: NextRequest) {
     'articleId' in webhookPayload ? webhookPayload.articleId : webhookPayload.categoryId
   } at ${webhookPayload.timestamp}`);
 
+  (async () => {
+    try {
+      if (webhookPayload.event === 'article') {
+        await handleArticleEvent(webhookPayload);
+      } else if (webhookPayload.event === 'category') {
+        await handleCategoryEvent(webhookPayload);
+      }
+    } catch (error) {
+      console.error(`[Webhook] Processing failed for ${webhookPayload.event}:`, error);
+    }
+  })();
 
   return accepted('Webhook received and queued for processing');
 }
