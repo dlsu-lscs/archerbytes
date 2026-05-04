@@ -2,6 +2,14 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { POST } from '@/app/api/webhooks/cms/route';
 import { NextRequest } from 'next/server';
 
+vi.mock('@/config/database', () => ({
+  db: {},
+}));
+
+vi.mock('@/lib/cms-api', () => ({
+  cmsApiClient: {},
+}));
+
 beforeEach(() => {
   process.env.WEBHOOK_SECRET = 'test-webhook-secret-123';
 });
@@ -34,7 +42,8 @@ describe('CMS Webhook Endpoint', () => {
   describe('Authentication', () => {
     it('should return 401 when Authorization header is missing', async () => {
       const req = createMockRequest({
-        event: 'article.created',
+        event: 'article',
+        action: 'created',
         articleId: '123',
         timestamp: new Date().toISOString(),
       });
@@ -50,7 +59,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 401 when Authorization header has invalid format', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
@@ -65,7 +75,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 401 when Bearer token is incorrect', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
@@ -80,7 +91,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should accept valid Bearer token', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
@@ -134,7 +146,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 400 when articleId is missing for article event', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           timestamp: new Date().toISOString(),
         },
         { authHeader: validAuthHeader }
@@ -148,7 +161,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 400 when timestamp is invalid', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '123',
           timestamp: 'not-a-valid-timestamp',
         },
@@ -163,7 +177,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 400 for unsupported event type', async () => {
       const req = createMockRequest(
         {
-          event: 'unknown.event',
+          event: 'unknown',
+          action: 'created',
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
@@ -182,7 +197,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 202 for valid article.created event', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: 'my-article-slug',
           timestamp: new Date().toISOString(),
         },
@@ -201,7 +217,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 202 for valid article.updated event', async () => {
       const req = createMockRequest(
         {
-          event: 'article.updated',
+          event: 'article',
+          action: 'updated',
           articleId: '456',
           timestamp: new Date().toISOString(),
         },
@@ -216,7 +233,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 202 for valid article.deleted event', async () => {
       const req = createMockRequest(
         {
-          event: 'article.deleted',
+          event: 'article',
+          action: 'deleted',
           articleId: '789',
           timestamp: new Date().toISOString(),
         },
@@ -231,7 +249,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 202 for valid category.created event', async () => {
       const req = createMockRequest(
         {
-          event: 'category.created',
+          event: 'category',
+          action: 'created',
           categoryId: 'tech-news',
           timestamp: new Date().toISOString(),
         },
@@ -248,7 +267,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 202 for valid category.updated event', async () => {
       const req = createMockRequest(
         {
-          event: 'category.updated',
+          event: 'category',
+          action: 'updated',
           categoryId: '100',
           timestamp: new Date().toISOString(),
         },
@@ -263,7 +283,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should return 202 for valid category.deleted event', async () => {
       const req = createMockRequest(
         {
-          event: 'category.deleted',
+          event: 'category',
+          action: 'deleted',
           categoryId: '200',
           timestamp: new Date().toISOString(),
         },
@@ -278,7 +299,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should include webhook ID for tracking', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: 'test-article',
           timestamp: new Date().toISOString(),
         },
@@ -294,7 +316,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should accept optional cms field', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '123',
           timestamp: new Date().toISOString(),
           cms: 'payload-cms',
@@ -314,7 +337,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should handle numeric articleId as string', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '12345',
           timestamp: new Date().toISOString(),
         },
@@ -329,7 +353,8 @@ describe('CMS Webhook Endpoint', () => {
     it('should reject empty articleId', async () => {
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '',
           timestamp: new Date().toISOString(),
         },
@@ -347,7 +372,8 @@ describe('CMS Webhook Endpoint', () => {
 
       const req = createMockRequest(
         {
-          event: 'article.created',
+          event: 'article',
+          action: 'created',
           articleId: '123',
           timestamp: futureDate.toISOString(),
         },
