@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 export const ArticleWebhookPayloadSchema = z.object({
-  event: z.enum(['article.created', 'article.updated', 'article.deleted']),
+  event: z.literal('article'),
+  action: z.enum(['created', 'updated', 'deleted']),
   articleId: z.string().min(1, 'articleId is required'),
   timestamp: z.iso.datetime(),
   cms: z.string().optional(),
@@ -10,7 +11,8 @@ export const ArticleWebhookPayloadSchema = z.object({
 export type ArticleWebhookPayload = z.infer<typeof ArticleWebhookPayloadSchema>;
 
 export const CategoryWebhookPayloadSchema = z.object({
-  event: z.enum(['category.created', 'category.updated', 'category.deleted']),
+  event: z.literal('category'),
+  action: z.enum(['created', 'updated', 'deleted']),
   categoryId: z.string().min(1, 'categoryId is required'),
   timestamp: z.iso.datetime(),
   cms: z.string().optional(),
