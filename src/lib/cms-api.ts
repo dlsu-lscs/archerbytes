@@ -37,6 +37,17 @@ class CMSApiClient {
     this.baseUrl = url.replace(/\/+$/, '');
   }
 
+  private getHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+    const cmsApiToken = process.env.CMS_API_TOKEN
+    if (cmsApiToken) {
+      headers['Authorization'] = `Bearer ${cmsApiToken}`
+    }
+    return headers
+  }
+
   async fetchArticle(articleId: string | number): Promise<CMSArticle> {
     const normalizedArticleId = String(articleId).trim();
     const url = this.isNumericId(normalizedArticleId)
@@ -45,7 +56,7 @@ class CMSApiClient {
 
     const response = await fetch(url, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers: this.getHeaders(),
       signal: AbortSignal.timeout(10000),
     });
 
@@ -67,7 +78,7 @@ class CMSApiClient {
 
     const response = await fetch(url, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers: this.getHeaders(),
       signal: AbortSignal.timeout(10000),
     });
 
