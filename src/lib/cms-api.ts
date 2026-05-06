@@ -41,11 +41,21 @@ class CMSApiClient {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     }
-    const cmsApiToken = process.env.CMS_API_TOKEN
-    if (cmsApiToken) {
-      headers['Authorization'] = `Bearer ${cmsApiToken}`
+    const cmsApiKey = process.env.CMS_API_KEY
+    if (cmsApiKey) {
+      headers['Authorization'] = `users API-Key ${cmsApiKey}`
     }
     return headers
+  }
+
+  private normalizeArticle(article: CMSArticle): CMSArticle {
+    const { deleted_at, ...normalized } = article as CMSArticle & { deleted_at?: unknown }
+    return normalized as CMSArticle
+  }
+
+  private normalizeCategory(category: CMSCategory): CMSCategory {
+    const { deleted_at, ...normalized } = category as CMSCategory & { deleted_at?: unknown }
+    return normalized as CMSCategory
   }
 
   async fetchArticle(articleId: string | number): Promise<CMSArticle> {
@@ -70,7 +80,7 @@ class CMSApiClient {
       throw new Error(`CMS article not found for identifier: ${normalizedArticleId}`);
     }
 
-    return article;
+    return this.normalizeArticle(article);
   }
 
   async fetchCategory(categoryId: string | number): Promise<CMSCategory> {
@@ -92,7 +102,7 @@ class CMSApiClient {
       throw new Error(`CMS category not found for identifier: ${String(categoryId).trim()}`);
     }
 
-    return category;
+    return this.normalizeCategory(category);
   }
 
   private extractCMSData<T>(data: unknown): T {
