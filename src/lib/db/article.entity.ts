@@ -40,7 +40,6 @@ export const articles = pgTable(
     metaImageUrl: varchar('meta_image_url', { length: 1000 }),
     status: articleStatusEnum('status').notNull().default('draft'),
     publishedAt: timestamp('published_at'),
-    deletedAt: timestamp('deleted_at'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
