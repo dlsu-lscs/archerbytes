@@ -100,6 +100,20 @@ export class CMSSyncService {
     }
   }
 
+  static async deleteCategory(categoryId: string | number): Promise<void> {
+    const cmsCategoryId = typeof categoryId === 'string' ? parseInt(categoryId, 10) : categoryId;
+    
+    const result = await db
+      .update(articleCategories)
+      .set({ deletedAt: new Date() })
+      .where(eq(articleCategories.cmsCategoryId, cmsCategoryId))
+      .returning({ id: articleCategories.id });
+
+    if (!result.length) {
+      console.warn(`[CMS Sync] Category not found for deletion: ${categoryId}`);
+    }
+  }
+
   private static extractImageUrl(image: unknown): string | null {
     if (!image) return null;
     if (typeof image === 'string') return image;

@@ -7,6 +7,8 @@ export async function handleCategoryEvent(payload: CategoryWebhookPayload): Prom
   try {
     if (action === 'created' || action === 'updated') {
       await CMSSyncService.syncCategory(categoryId);
+    } else if (action === 'deleted') {
+      await CMSSyncService.deleteCategory(categoryId);
     }
   } catch (error) {
     console.error(`[Webhook Handler] Failed to handle category:${action}:`, { categoryId, error });

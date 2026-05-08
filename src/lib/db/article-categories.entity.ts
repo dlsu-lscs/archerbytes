@@ -10,8 +10,10 @@ export const articleCategories = pgTable('article_categories', {
   description: text('description'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  deletedAt: timestamp('deleted_at'),
 }, (table) => [
   index('article_categories_cms_category_id_idx').on(table.cmsCategoryId),
+  index('article_categories_deleted_at_idx').on(table.deletedAt),
 ]);
 
 export const articleCategoriesRelations = relations(
