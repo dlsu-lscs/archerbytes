@@ -10,19 +10,30 @@ export class CMSSyncService {
     const cmsArticle = await cmsApiClient.fetchArticle(articleId);
     const cmsArticleId = typeof cmsArticle.id === 'string' ? parseInt(cmsArticle.id, 10) : cmsArticle.id;
 
-    const categoryId = typeof cmsArticle.category === 'number' 
+    const cmsCategoryId = typeof cmsArticle.category === 'number' 
       ? cmsArticle.category 
       : cmsArticle.category.id;
 
-    const existingCategory = await db
+    let existingCategory = await db
       .select({ id: articleCategories.id })
       .from(articleCategories)
-      .where(eq(articleCategories.id, categoryId))
+      .where(eq(articleCategories.cmsCategoryId, cmsCategoryId))
       .limit(1);
 
     if (!existingCategory.length) {
-      await CMSSyncService.syncCategory(categoryId);
+      await CMSSyncService.syncCategory(cmsCategoryId);
+      existingCategory = await db
+        .select({ id: articleCategories.id })
+        .from(articleCategories)
+        .where(eq(articleCategories.cmsCategoryId, cmsCategoryId))
+        .limit(1);
+      
+      if (!existingCategory.length) {
+        throw new Error(`Failed to sync article: category ${cmsCategoryId} not found after sync attempt`);
+      }
     }
+
+    const localCategoryId = existingCategory[0].id;
 
     const articleData = {
       cmsArticleId,
@@ -30,7 +41,7 @@ export class CMSSyncService {
       subtitle: cmsArticle.subtitle,
       slug: cmsArticle.slug,
       content: JSON.stringify(cmsArticle.content),
-      categoryId,
+      categoryId: localCategoryId,
       userId: SYSTEM_USER_ID,
       featuredImageUrl: this.extractImageUrl(cmsArticle.featuredImage),
       tags: cmsArticle.tags || [],
