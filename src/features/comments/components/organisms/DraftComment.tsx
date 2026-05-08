@@ -1,6 +1,4 @@
 'use client';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import {
     Collapsible,
     CollapsibleContent,
@@ -8,29 +6,36 @@ import {
 } from '@/components/ui/collapsible';
 
 import Comment from '../molecules/Comment';
+import { useAuthStore } from '@/store/use-auth-store';
 
 export default function DraftComment() {
-    const [isOpen, setIsOpen] = useState(false);
+    const user = useAuthStore((state) => state.user);
 
-    const comment1 = {
-        avatarURL: '/lscs-logo.png',
-        userId: 'Alec Nono',
-        occupation: 'Frontend Engineer',
-        isAuthor: false,
-        content: 'I love LSCS! Pogi talaga mga nasa Research and Development',
-        likeCount: 5000,
-        replyCount: 10,
-    };
+    const draft = user
+        ? {
+            articleId: 0,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            user: {
+                id: user.id,
+                name: user.name || 'Guest',
+                avatarURL: user.image,
+                email: user.email,
+            },
+            isAuthor: false,
+            content: '',
+            reactionCount: 0,
+            replyCount: 0,
+        }
+        : undefined;
 
     return (
         <Collapsible className="flex flex-col gap-5">
-            <CollapsibleTrigger>
-                <Button className="py-6 px-5 w-full justify-start text-neutral-950 bg-neutral-300 rounded-sm">
-                    Share your thoughts here...
-                </Button>
+            <CollapsibleTrigger className="py-6 px-5 w-full justify-start text-neutral-950 bg-neutral-300 rounded-sm">
+                Share your thoughts here...
             </CollapsibleTrigger>
             <CollapsibleContent>
-                <Comment comment={comment1} isDraft={true} />
+                <Comment comment={draft} isDraft={true} />
             </CollapsibleContent>
         </Collapsible>
     );

@@ -21,8 +21,6 @@ import { FaRegCommentAlt } from 'react-icons/fa';
 
 import { CommentProp } from '../../types/comment.types';
 
-import { createComment } from '../../services/service';
-
 export default function Comment({
     comment,
     children,
@@ -34,7 +32,7 @@ export default function Comment({
         <div className="flex flex-col gap-[10px]">
             <Card
                 className={clsx({
-                    'bg-blue-300': comment.isAuthor === true,
+                    'bg-blue-300': comment?.isAuthor === true,
                 })}
             >
                 <CardContent className="flex rounded-2xl relative">
@@ -49,19 +47,21 @@ export default function Comment({
                         className="size-8 md:size-12 my-[3px] shrink-0 rounded-full mr-3"
                         height={128}
                         width={128}
-                        src={comment.avatarURL}
+                        src={comment?.user?.avatarURL ?? ''}
                         alt="Avatar"
                     />
                     <div className="flex flex-col gap-[15px] w-full">
                         <div className="flex justify-between">
                             <div>
-                                <h3 className="text-md font-bold">{comment.userId}</h3>
-                                {comment.isAuthor === true ? (
+                                <h3 className="text-md font-bold">{comment?.user?.name}</h3>
+                                {comment?.isAuthor === true ? (
                                     <p className="text-sm font-light">
-                                        Author - {comment.occupation}
+                                        Author - {comment?.user?.email?.split('@')?.[0] ?? 'User'}
                                     </p>
                                 ) : (
-                                    <p className="text-sm font-light">{comment.occupation}</p>
+                                    <p className="text-sm font-light">
+                                        {comment?.user?.email?.split('@')?.[0] ?? 'User'}
+                                    </p>
                                 )}
                             </div>
                             <BsThreeDots size={24} />
@@ -72,22 +72,20 @@ export default function Comment({
                                 placeholder="Share your thoughts here..."
                             />
                         ) : (
-                            <div className="text-sm">{comment.content}</div>
+                            <div className="text-sm">{comment?.content}</div>
                         )}
 
                         {isDraft === true ? (
-                            <Button className="px-10 w-fit">
-                                Reply
-                            </Button>
+                            <Button className="px-10 w-fit">Reply</Button>
                         ) : (
                             <div className="flex gap-5">
                                 <div className="flex gap-2 items-center">
                                     <BiLike size={16} />
-                                    <p>{comment.likeCount}</p>
+                                    <p>{comment?.reactionCount}</p>
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <FaRegCommentAlt size={16} />
-                                    <p>{comment.replyCount}</p>
+                                    <p>{comment?.replyCount}</p>
                                 </div>
                             </div>
                         )}

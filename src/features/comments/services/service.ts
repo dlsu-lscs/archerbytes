@@ -57,7 +57,7 @@ export async function getCommentsByArticleID(articleId: number) {
           id: user.id,
           name: user.name,
           avatarURL: user.image,
-          occupation: user.occupation,
+          email: user.email,
         },
       })
       .from(comments)
@@ -93,7 +93,7 @@ export async function getCommentById(id: number) {
           id: user.id,
           name: user.name,
           avatarURL: user.image,
-          occupation: user.occupation,
+          email: user.email,
         },
       })
       .from(comments)
@@ -126,7 +126,7 @@ export async function getReplies(parentId: number) {
           id: user.id,
           name: user.name,
           avatarURL: user.image,
-          occupation: user.occupation,
+          email: user.email,
         },
       })
       .from(comments)

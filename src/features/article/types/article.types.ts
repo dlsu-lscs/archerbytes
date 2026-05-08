@@ -1,47 +1,48 @@
 export type ArticleDetailsType = {
-    id: number;
-    title: string;
-    subtitle: string;
-    slug: string;
-    content: string;
-    categoryId: number;
-    userId: string;
-    featuredImageUrl: string | null;
-    tags: string[];
-    metaTitle: string | null;
-    metaDescription: string | null;
-    metaImageUrl: string | null;
-    status: 'draft' | 'published';
-    publishedAt: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-    author: string;
-    avatarURL: string | null;
-    occupation: string | null;
-    readingTime: number;
-    quote?: string;
-    quotee?: string;
-    commentCount: number;
-    reactionCount: number;
-    previewURL: string;
+  id: number;
+  title: string;
+  subtitle: string;
+  slug: string;
+  content: string;
+  categoryId: number;
+  userId: string;
+  featuredImageUrl: string | null;
+  tags: string[];
+  metaTitle: string | null;
+  metaDescription: string | null;
+  metaImageUrl: string | null;
+  status: 'draft' | 'published';
+  publishedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  author: string;
+  avatarURL: string | null;
+  occupation: string | null;
+  readingTime: number;
+  quote?: string;
+  quotee?: string;
+  commentCount: number;
+  reactionCount: number;
+  previewURL: string;
 };
+
 export type ArticleDetailsProp = {
-    article: ArticleDetailsType;
+  article: ArticleDetailsType;
 };
 
 export type BreadcrumbsType = {
-    link: string;
+  link: string;
 };
 
 export type SmallArticleItemType = {
-    topic: string;
-    title: string;
-    author: string;
-    date: string;
+  topic: string;
+  title: string;
+  author: string;
+  date: string;
 };
 
 export type IconsType = {
-    date: Date;
-    reactions: number;
-    comments: number;
+  date: Date;
+  reactions: number;
+  comments: number;
 };

@@ -1,3 +1,5 @@
+'use client';
+
 import Sidebar from '@/components/organisms/Sidebar';
 import RelatedSidebar from '@/components/organisms/RelatedSidebar';
 import ArticleHeader from '@/features/article/components/organisms/ArticleHeader';
