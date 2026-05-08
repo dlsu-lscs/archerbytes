@@ -117,14 +117,14 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
                 <div className="md:mt-2 md:py-2 pb-3">
 
                     {comment.replyTo !== null && (
-                        <div className="absolute md:-left-[16px] left-[9px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
+                        <div className="absolute md:-left-[16px] left-[9px] md:-top-3 md:bottom-0 bottom-16 h-full w-[2px] bg-neutral-300" />
                     )}
                     <div className='relative'>
 
                         {comment.replyTo !== null && (
                             <>
-                                <div className="absolute md:-left-[16px] left-[9px] -bottom-2 w-[2px] h-[calc(100%_-_30px)] bg-neutral-50 z-10" />
-                                <div className="absolute md:-left-[16px] left-[9px] -top-2 md:w-13 w-5 h-16 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl z-20" />
+                                <div className="absolute md:-left-[16px] left-[9px] md:-bottom-2 bottom-12 w-[2px] md:h-[calc(100%_-_30px)] h-[calc(100%_-_40px)] bg-neutral-50 z-10" />
+                                <div className="absolute md:-left-[16px] left-[9px] -top-3 md:w-13 w-5 md:h-16 h-15 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl z-20" />
                             </>
                         )}
                         <CommentForm
@@ -135,7 +135,7 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
                             onSuccess={() => setIsReplying(false)}
                         />
                         <Button
-                            className="mt-2 px-4 py-1 text-sm bg-neutral-400"
+                            className="mt-2 px-4 py-1 text-sm bg-neutral-400 z-30"
                             onClick={() => setIsReplying(false)}
                         >
                             Cancel
