@@ -21,6 +21,7 @@ export const articles = pgTable(
   'articles',
   {
     id: serial('id').primaryKey(),
+    cmsArticleId: integer('cms_article_id').unique(),
     title: varchar('title', { length: 500 }).notNull(),
     subtitle: varchar('subtitle', { length: 500 }).notNull(),
     slug: varchar('slug', { length: 500 }).notNull().unique(),
@@ -42,8 +43,10 @@ export const articles = pgTable(
     publishedAt: timestamp('published_at'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
+    deletedAt: timestamp('deleted_at'),
   },
   (table) => [
+    index('articles_cms_article_id_idx').on(table.cmsArticleId),
     index('articles_status_idx').on(table.status),
     index('articles_published_at_idx').on(table.publishedAt.desc()),
     index('articles_category_id_idx').on(table.categoryId),
@@ -51,6 +54,7 @@ export const articles = pgTable(
       table.status,
       table.publishedAt.desc(),
     ),
+    index('articles_deleted_at_idx').on(table.deletedAt),
   ],
 );
 

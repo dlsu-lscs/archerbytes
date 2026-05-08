@@ -8,6 +8,7 @@ const SYSTEM_USER_ID = process.env.SYSTEM_USER_ID || 'system';
 export class CMSSyncService {
   static async syncArticle(articleId: string | number): Promise<{ id: number; slug: string }> {
     const cmsArticle = await cmsApiClient.fetchArticle(articleId);
+    const cmsArticleId = typeof cmsArticle.id === 'string' ? parseInt(cmsArticle.id, 10) : cmsArticle.id;
 
     const categoryId = typeof cmsArticle.category === 'number' 
       ? cmsArticle.category 
@@ -24,6 +25,7 @@ export class CMSSyncService {
     }
 
     const articleData = {
+      cmsArticleId,
       title: cmsArticle.title,
       subtitle: cmsArticle.subtitle,
       slug: cmsArticle.slug,
@@ -46,7 +48,7 @@ export class CMSSyncService {
       .insert(articles)
       .values(articleData)
       .onConflictDoUpdate({
-        target: articles.slug,
+        target: articles.cmsArticleId,
         set: articleData,
       })
       .returning({ id: articles.id, slug: articles.slug });
@@ -60,8 +62,10 @@ export class CMSSyncService {
 
   static async syncCategory(categoryId: string | number): Promise<{ id: number; name: string }> {
     const cmsCategory = await cmsApiClient.fetchCategory(categoryId);
+    const cmsCategoryId = typeof cmsCategory.id === 'string' ? parseInt(cmsCategory.id, 10) : cmsCategory.id;
 
     const categoryData = {
+      cmsCategoryId,
       name: cmsCategory.name,
       slug: this.slugify(cmsCategory.name),
     };
@@ -70,7 +74,7 @@ export class CMSSyncService {
       .insert(articleCategories)
       .values(categoryData)
       .onConflictDoUpdate({
-        target: articleCategories.slug,
+        target: articleCategories.cmsCategoryId,
         set: categoryData,
       })
       .returning({ id: articleCategories.id, name: articleCategories.name });
@@ -83,10 +87,12 @@ export class CMSSyncService {
   }
 
   static async deleteArticle(articleId: string | number): Promise<void> {
+    const cmsArticleId = typeof articleId === 'string' ? parseInt(articleId, 10) : articleId;
+    
     const result = await db
       .update(articles)
       .set({ deletedAt: new Date() })
-      .where(eq(articles.slug, String(articleId)))
+      .where(eq(articles.cmsArticleId, cmsArticleId))
       .returning({ id: articles.id });
 
     if (!result.length) {
