@@ -35,4 +35,5 @@ export type CommentProp = {
   comment?: CommentType;
   replies?: CommentProp[];
   isDraft?: boolean;
+  articleId?: number;
 };

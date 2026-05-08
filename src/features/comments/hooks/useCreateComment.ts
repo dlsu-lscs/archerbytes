@@ -39,6 +39,12 @@ export function useCreateComment() {
       queryClient.invalidateQueries({
         queryKey: ['comments', String(variables.data.articleId)],
       });
+
+      if (variables.data.replyTo) {
+        queryClient.invalidateQueries({
+          queryKey: ['replies', variables.data.replyTo],
+        });
+      }
     },
   });
 }

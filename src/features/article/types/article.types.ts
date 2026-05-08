@@ -8,11 +8,13 @@ export type ArticleDetailsType = {
   userId: string;
   featuredImageUrl: string | null;
   tags: string[];
+  keywords: string[];
   metaTitle: string | null;
   metaDescription: string | null;
   metaImageUrl: string | null;
   status: 'draft' | 'published';
   publishedAt: Date | null;
+  publicationDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
   author: string;
@@ -23,6 +25,7 @@ export type ArticleDetailsType = {
   quotee?: string;
   commentCount: number;
   reactionCount: number;
+  likeCount: number;
   previewURL: string;
 };
 
@@ -44,5 +47,6 @@ export type SmallArticleItemType = {
 export type IconsType = {
   date: Date;
   reactions: number;
+  likes: number;
   comments: number;
 };
