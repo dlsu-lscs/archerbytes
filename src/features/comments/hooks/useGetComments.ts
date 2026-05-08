@@ -1,12 +1,13 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type {
-  CommentRecord,
-  GetCommentsResponse,
-} from '../types/comment.types';
+import type { CommentType } from '../types/comment.types';
 
-async function fetchComments(articleId: number) {
+interface GetCommentsResponse {
+  data: CommentType[];
+}
+
+async function fetchComments(articleId: number): Promise<CommentType[]> {
   const response = await fetch(`/api/comments?articleId=${articleId}`);
 
   if (!response.ok) {
@@ -18,14 +19,16 @@ async function fetchComments(articleId: number) {
 }
 
 export function useGetComments(articleId: string | undefined) {
-  const query = useQuery<CommentRecord[], Error>({
+  const query = useQuery<CommentType[], Error>({
     queryKey: ['comments', articleId],
-    queryFn: () => fetchComments(articleId),
+    queryFn: () => fetchComments(Number(articleId)),
     enabled: Boolean(articleId),
   });
 
+  const rootComments = query.data?.filter((c) => c.replyTo === null) ?? [];
+
   return {
     ...query,
-    data: query.data ?? [],
+    data: rootComments,
   };
 }

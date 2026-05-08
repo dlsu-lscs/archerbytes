@@ -1,32 +1,29 @@
-import {
-    Card,
-    CardAction,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+'use client';
+
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 
 import Image from 'next/image';
 
-import React from 'react';
 import clsx from 'clsx';
 
 import { BsThreeDots } from 'react-icons/bs';
 import { BiLike } from 'react-icons/bi';
 import { FaRegCommentAlt } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 import { CommentProp } from '../../types/comment.types';
+import { useGetReplies } from '../../hooks/useGetReplies';
 
-export default function Comment({
-    comment,
-    children,
-    isDraft = false,
-}: CommentProp) {
-    const hasReplies = !!children;
+export default function Comment({ comment, isDraft = false }: CommentProp) {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const { data: fetchedReplies, isLoading } = useGetReplies(comment?.id!, {
+        enabled: isExpanded,
+    });
+
+    const hasReplies = (comment?.replyCount ?? 0) > 0;
 
     return (
         <div className="flex flex-col gap-[10px]">
@@ -39,7 +36,7 @@ export default function Comment({
                     <div
                         className={clsx(
                             `absolute md:left-[47px] left-[40px] md:top-[51px] top-[35px] h-full w-[2px] bg-neutral-300`,
-                            { hidden: !hasReplies },
+                            { hidden: !hasReplies || !isExpanded },
                         )}
                     ></div>
 
@@ -87,29 +84,48 @@ export default function Comment({
                                     <FaRegCommentAlt size={16} />
                                     <p>{comment?.replyCount}</p>
                                 </div>
+                                {hasReplies && (
+                                    <button
+                                        className="flex gap-2 items-center text-sm text-neutral-600 hover:text-neutral-900"
+                                        onClick={() => setIsExpanded(!isExpanded)}
+                                    >
+                                        {isExpanded ? (
+                                            <>
+                                                <FaChevronUp size={12} />
+                                                <span>Hide replies</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaChevronDown size={12} />
+                                                <span>View replies</span>
+                                            </>
+                                        )}
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>
                 </CardContent>
             </Card>
-            {/* this function draws lines */}
-            {hasReplies ? (
-                React.Children.map(children, (child, index) => {
-                    const count = React.Children.count(children);
+            {isExpanded &&
+                !isLoading &&
+                fetchedReplies &&
+                fetchedReplies.map((reply, index) => {
+                    const count = fetchedReplies.length;
                     const isLast = index === count - 1;
 
                     return (
-                        <div className="relative md:ml-16 ml-8" key={index}>
+                        <div className="relative md:ml-16 ml-8" key={reply.id}>
                             {!isLast && (
                                 <div className="absolute md:-left-[16px] left-[9px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
-                            )}{' '}
+                            )}
                             <div className="absolute md:-left-[16px] left-[9px] md:w-13 w-5 h-16 md:-top-3 -top-5 bottom-0 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl" />
-                            {child}
+                            <Comment comment={reply} />
                         </div>
                     );
-                })
-            ) : (
-                <></>
+                })}
+            {isLoading && isExpanded && (
+                <div className="ml-12 mt-4 text-sm text-neutral-500">Loading replies...</div>
             )}
         </div>
     );

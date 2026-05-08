@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-
 export type CommentRecord = {
   id: number;
   userId: string;
@@ -30,10 +28,11 @@ export type CommentType = {
   isAuthor?: boolean;
   reactionCount: number;
   replyCount: number;
+  replies?: CommentType[];
 };
 
 export type CommentProp = {
   comment?: CommentType;
-  children?: ReactNode;
+  replies?: CommentProp[];
   isDraft?: boolean;
 };
