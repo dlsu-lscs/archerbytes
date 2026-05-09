@@ -64,6 +64,27 @@
       "when": 1777550000000,
       "tag": "0008_add_user_occupation",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1778224311517,
+      "tag": "0009_tricky_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1778224381894,
+      "tag": "0010_flowery_tyger_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1778225998428,
+      "tag": "0011_magical_silver_surfer",
+      "breakpoints": true
     }
   ]
 }
