@@ -7,14 +7,16 @@ interface UpdateCommentVariables {
   commentId: number;
   userId: string;
   data: UpdateCommentInput;
+  articleId: number;
+  replyTo?: number | null;
 }
 
 async function updateCommentRequest(variables: UpdateCommentVariables) {
-  const { commentId, data } = variables;
+  const { commentId, userId, data } = variables;
   const response = await fetch(`/api/comments/${commentId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ userId, ...data }),
   });
 
   if (!response.ok) {
@@ -33,8 +35,17 @@ export function useUpdateComment() {
 
   return useMutation({
     mutationFn: updateCommentRequest,
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
+    onSuccess: (result, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['comments', String(variables.articleId)],
+      });
+
+      if (variables.replyTo) {
+        queryClient.invalidateQueries({
+          queryKey: ['replies', variables.replyTo],
+        });
+      }
+
       queryClient.setQueryData(['comment', result.id], result);
     },
   });

@@ -6,6 +6,8 @@ import type { CommentRecord } from '../types';
 interface DeleteCommentVariables {
   commentId: number;
   userId: string;
+  articleId: number;
+  replyTo?: number | null;
 }
 
 async function deleteCommentRequest(variables: DeleteCommentVariables) {
@@ -32,8 +34,16 @@ export function useDeleteComment() {
 
   return useMutation({
     mutationFn: deleteCommentRequest,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
+    onSuccess: (_result, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['comments', String(variables.articleId)],
+      });
+
+      if (variables.replyTo) {
+        queryClient.invalidateQueries({
+          queryKey: ['replies', variables.replyTo],
+        });
+      }
     },
   });
 }
