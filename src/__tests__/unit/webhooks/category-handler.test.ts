@@ -14,6 +14,7 @@ vi.mock('@/config/database', () => ({
   db: {
     insert: vi.fn().mockReturnThis(),
     update: vi.fn().mockReturnThis(),
+    set: vi.fn().mockReturnThis(),
     select: vi.fn().mockReturnThis(),
     from: vi.fn().mockReturnThis(),
     where: vi.fn().mockReturnThis(),
