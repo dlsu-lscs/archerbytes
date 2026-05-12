@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   pgEnum,
   pgTable,
@@ -40,6 +41,7 @@ export const articles = pgTable(
     metaDescription: varchar('meta_description', { length: 500 }),
     metaImageUrl: varchar('meta_image_url', { length: 1000 }),
     status: articleStatusEnum('status').notNull().default('draft'),
+    isEdited: boolean('is_edited').notNull().default(false),
     publishedAt: timestamp('published_at'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),

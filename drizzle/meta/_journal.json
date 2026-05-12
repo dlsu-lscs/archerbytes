@@ -85,6 +85,20 @@
       "when": 1778225998428,
       "tag": "0011_magical_silver_surfer",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1778225998429,
+      "tag": "0012_humble_iron_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1778550394363,
+      "tag": "0013_happy_weapon_omega",
+      "breakpoints": true
     }
   ]
 }

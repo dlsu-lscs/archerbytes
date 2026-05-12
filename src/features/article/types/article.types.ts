@@ -12,6 +12,7 @@ export type ArticleDetailsType = {
     metaDescription: string | null;
     metaImageUrl: string | null;
     status: 'draft' | 'published';
+    isEdited: boolean;
     publishedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;

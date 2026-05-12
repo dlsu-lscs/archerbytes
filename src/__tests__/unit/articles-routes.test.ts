@@ -28,7 +28,7 @@ describe('articles API routes', () => {
 
   test('GET /api/articles returns paginated data', async () => {
     vi.mocked(ArticleService.list).mockResolvedValue({
-      items: [{ id: 1, title: 'A' }],
+      items: [{ id: 1, title: 'A', isEdited: true }],
       total: 1,
       page: 1,
       limit: 10,
@@ -41,6 +41,7 @@ describe('articles API routes', () => {
     expect(res.status).toBe(200);
     expect(json.meta).toEqual({ total: 1, page: 1, limit: 10, pages: 1 });
     expect(json.data).toHaveLength(1);
+    expect(json.data[0].isEdited).toBe(true);
   });
 
   test('GET /api/articles returns 400 for invalid query params', async () => {

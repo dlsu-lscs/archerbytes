@@ -2,6 +2,7 @@ import {
   pgTable,
   serial,
   text,
+  boolean,
   timestamp,
   integer,
   type AnyPgColumn,
@@ -21,6 +22,7 @@ export const comments = pgTable('comments', {
     onDelete: 'cascade',
   }),
   content: text('content').notNull(),
+  isEdited: boolean('is_edited').notNull().default(false),
   createdAt: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
