@@ -3,6 +3,7 @@ export type CommentType = {
     articleId: number;
     replyTo?: number | null;
     content: string;
+    isEdited: boolean;
     createdAt: Date;
     updatedAt: Date;
     user: {

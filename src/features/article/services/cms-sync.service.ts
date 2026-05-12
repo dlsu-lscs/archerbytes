@@ -60,7 +60,10 @@ export class CMSSyncService {
       .values(articleData)
       .onConflictDoUpdate({
         target: articles.cmsArticleId,
-        set: articleData,
+        set: {
+          ...articleData,
+          isEdited: true,
+        },
       })
       .returning({ id: articles.id, slug: articles.slug });
 

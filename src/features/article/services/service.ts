@@ -137,6 +137,7 @@ async function listArticlesWithCount(options: {
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
         status: articles.status,
+        isEdited: articles.isEdited,
         publishedAt: articles.publishedAt,
         createdAt: articles.createdAt,
         category: {
@@ -186,6 +187,7 @@ async function listArticlesWithCount(options: {
         slug: articles.slug,
         featuredImageUrl: articles.featuredImageUrl,
         status: articles.status,
+        isEdited: articles.isEdited,
         publishedAt: articles.publishedAt,
         createdAt: articles.createdAt,
         category: {

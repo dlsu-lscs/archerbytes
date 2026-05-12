@@ -49,6 +49,7 @@ export async function getCommentsByArticleID(articleId: number) {
         id: comments.id,
         content: comments.content,
         replyTo: comments.replyTo,
+        isEdited: comments.isEdited,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
         reactionCount: reactionCountSelect,
@@ -85,6 +86,7 @@ export async function getCommentById(id: number) {
         id: comments.id,
         content: comments.content,
         replyTo: comments.replyTo,
+        isEdited: comments.isEdited,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
         reactionCount: reactionCountSelect,
@@ -118,6 +120,7 @@ export async function getReplies(parentId: number) {
         id: comments.id,
         content: comments.content,
         replyTo: comments.replyTo,
+        isEdited: comments.isEdited,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
         reactionCount: reactionCountSelect,
@@ -149,6 +152,7 @@ export async function updateComment(
       .update(comments)
       .set({
         ...(data.content !== undefined ? { content: data.content.trim() } : {}),
+        isEdited: true,
         updatedAt: sql`now()`,
       })
       .where(and(eq(comments.id, id), eq(comments.userId, userId)))
