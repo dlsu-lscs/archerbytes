@@ -132,6 +132,15 @@ src/
 > [!NOTE]
 > All curl examples use `curl.exe` which works in both PowerShell and Command Prompt on Windows. On Unix-based systems (macOS/Linux), use `curl` instead.
 
+### Quick Links
+- [Auth Endpoints](#auth-endpoints)
+- [Comment Endpoints](#comment-endpoints)
+- [Comment Reaction Endpoints](#comment-reaction-endpoints)
+- [Article Reaction Endpoints](#article-reaction-endpoints)
+- [Article Endpoints](#article-endpoints)
+- [Category Endpoints](#category-endpoints)
+- [Bookmarks Endpoints](#bookmarks-endpoints)
+
 ## Auth Endpoints
 
 ### Testing Authentication
@@ -1336,6 +1345,199 @@ curl.exe -X GET "http://localhost:3000/api/categories/by-id/1/articles?page=1&li
 ```json
 {
   "error": "Failed to list category articles"
+}
+```
+
+---
+
+## Bookmarks Endpoints
+
+### Overview
+
+The Bookmarks API provides endpoints for users to manage their bookmarked articles. Users can create, remove, and retrieve bookmarks with pagination support.
+
+**Base URL:** `http://localhost:3000/api/bookmarks`
+
+**Authentication:** All endpoints require user authentication via session cookies.
+
+### POST `/api/bookmarks`
+
+- creates a new bookmark or re-activates an existing inactive bookmark for an article
+
+- `request`:
+
+```bash
+curl.exe -X POST http://localhost:3000/api/bookmarks ^
+  -H "Content-Type: application/json" ^
+  -d "{\"articleId\":42}"
+```
+
+- **Request Body Fields:**
+  - `articleId` (number, required): Positive integer ID of the article to bookmark
+
+- `response` (201 Created):
+
+```json
+{
+  "data": {
+    "bookmark": {
+      "id": 1,
+      "userId": "user-123",
+      "articleId": 42,
+      "isBookmarked": true,
+      "bookmarkedAt": "2026-05-14T13:18:54.516Z",
+      "createdAt": "2026-05-14T13:18:54.516Z",
+      "updatedAt": "2026-05-14T13:18:54.516Z"
+    }
+  }
+}
+```
+
+- `error responses`:
+
+```json
+{
+  "error": "Invalid articleId"
+}
+```
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+```json
+{
+  "error": "Article not found"
+}
+```
+
+```json
+{
+  "error": "Failed to create bookmark"
+}
+```
+
+### DELETE `/api/bookmarks`
+
+- removes a bookmark by setting its `isBookmarked` flag to false (soft delete). The bookmark record is retained for analytics.
+
+- `request`:
+
+```bash
+curl.exe -X DELETE "http://localhost:3000/api/bookmarks?articleId=42"
+```
+
+- **Query Parameters:**
+  - `articleId` (number, required): Positive integer ID of the article to unbookmark
+
+- `response` (200 OK):
+
+```json
+{
+  "data": {
+    "bookmark": {
+      "id": 1,
+      "userId": "user-123",
+      "articleId": 42,
+      "isBookmarked": false,
+      "bookmarkedAt": "2026-05-14T13:25:00.000Z",
+      "createdAt": "2026-05-14T13:18:54.516Z",
+      "updatedAt": "2026-05-14T13:25:00.000Z"
+    }
+  }
+}
+```
+
+- `error responses`:
+
+```json
+{
+  "error": "Invalid articleId"
+}
+```
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+```json
+{
+  "error": "Bookmark not found"
+}
+```
+
+```json
+{
+  "error": "Failed to remove bookmark"
+}
+```
+
+### GET `/api/bookmarks`
+
+- returns a paginated list of active bookmarks for the authenticated user, including article metadata
+
+- `request`:
+
+```bash
+curl.exe -X GET "http://localhost:3000/api/bookmarks?limit=10&offset=0"
+```
+
+- **Query Parameters:**
+  - `limit` (number, optional): Number of bookmarks per page. Default: `10`, Min: `1`, Max: `100`
+  - `offset` (number, optional): Number of bookmarks to skip. Default: `0`, Min: `0`
+
+- `response` (200 OK):
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "userId": "user-123",
+        "articleId": 42,
+        "isBookmarked": true,
+        "bookmarkedAt": "2026-05-14T13:18:54.516Z",
+        "createdAt": "2026-05-14T13:18:54.516Z",
+        "updatedAt": "2026-05-14T13:18:54.516Z",
+        "article": {
+          "id": 42,
+          "title": "Getting Started with TypeScript",
+          "slug": "getting-started-typescript",
+          "excerpt": "Learn the basics of TypeScript"
+        }
+      }
+    ],
+    "pagination": {
+      "total": 25,
+      "limit": 10,
+      "offset": 0
+    }
+  }
+}
+```
+
+- `error responses`:
+
+```json
+{
+  "error": "Invalid pagination parameters"
+}
+```
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+```json
+{
+  "error": "Failed to fetch bookmarks"
 }
 ```
 
