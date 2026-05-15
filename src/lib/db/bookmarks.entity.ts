@@ -22,20 +22,15 @@ export const bookmarks = pgTable(
     articleId: integer('article_id')
       .notNull()
       .references(() => articles.id, { onDelete: 'cascade' }),
-    isBookmarked: boolean('is_bookmarked').notNull().default(true),
     bookmarkedAt: timestamp('bookmarked_at')
       .notNull()
       .default(sql`now()`),
     createdAt: timestamp('created_at')
       .notNull()
       .default(sql`now()`),
-    updatedAt: timestamp('updated_at')
-      .notNull()
-      .default(sql`now()`),
   },
   (table) => [
     unique('bookmarks_user_article_unique').on(table.userId, table.articleId),
     index('bookmarks_user_article_idx').on(table.userId, table.articleId),
-    index('bookmarks_user_bookmarked_idx').on(table.userId, table.isBookmarked),
   ],
 );

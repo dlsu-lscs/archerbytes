@@ -33,10 +33,8 @@ export const bookmarkResponseSchema = z.object({
   id: z.number().int(),
   userId: z.string().min(1),
   articleId: z.number().int(),
-  isBookmarked: z.boolean(),
   bookmarkedAt: z.date(),
   createdAt: z.date(),
-  updatedAt: z.date(),
 });
 
 export const bookmarkArticleSchema = z.object({

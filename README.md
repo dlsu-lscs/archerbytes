@@ -1384,10 +1384,8 @@ curl.exe -X POST http://localhost:3000/api/bookmarks ^
       "id": 1,
       "userId": "user-123",
       "articleId": 42,
-      "isBookmarked": true,
       "bookmarkedAt": "2026-05-14T13:18:54.516Z",
-      "createdAt": "2026-05-14T13:18:54.516Z",
-      "updatedAt": "2026-05-14T13:18:54.516Z"
+      "createdAt": "2026-05-14T13:18:54.516Z"
     }
   }
 }
@@ -1415,13 +1413,19 @@ curl.exe -X POST http://localhost:3000/api/bookmarks ^
 
 ```json
 {
+  "error": "Bookmark already exists"
+}
+```
+
+```json
+{
   "error": "Failed to create bookmark"
 }
 ```
 
 ### DELETE `/api/bookmarks`
 
-- removes a bookmark by setting its `isBookmarked` flag to false (soft delete). The bookmark record is retained for analytics.
+- permanently removes a bookmark (hard delete). The bookmark record is deleted from the database.
 
 - `request`:
 
@@ -1485,10 +1489,8 @@ curl.exe -X GET "http://localhost:3000/api/bookmarks?limit=10&offset=0"
       "id": 1,
       "userId": "user-123",
       "articleId": 42,
-      "isBookmarked": true,
       "bookmarkedAt": "2026-05-14T13:18:54.516Z",
       "createdAt": "2026-05-14T13:18:54.516Z",
-      "updatedAt": "2026-05-14T13:18:54.516Z",
       "article": {
         "id": 42,
         "title": "Getting Started with TypeScript",

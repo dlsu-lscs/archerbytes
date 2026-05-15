@@ -65,10 +65,8 @@ describe('bookmarks API routes', () => {
         id: 1,
         userId: 'user-123',
         articleId: 42,
-        isBookmarked: true,
         bookmarkedAt: now,
         createdAt: now,
-        updatedAt: now,
       };
       vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
       vi.mocked(BookmarkService.create).mockResolvedValue(mockBookmark as never);
@@ -86,11 +84,10 @@ describe('bookmarks API routes', () => {
       expect(json.data.bookmark).toBeDefined();
       expect(json.data.bookmark.id).toBe(1);
       expect(json.data.bookmark.articleId).toBe(42);
-      expect(json.data.bookmark.isBookmarked).toBe(true);
       expect(vi.mocked(BookmarkService.create)).toHaveBeenCalledWith('user-123', 42);
     });
 
-    test('re-bookmarks article and updates timestamp', async () => {
+    test('re-bookmarks article after deletion', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
@@ -98,13 +95,11 @@ describe('bookmarks API routes', () => {
       const bookmarkedAt = new Date('2026-05-14T12:30:00Z');
 
       const mockBookmark = {
-        id: 1,
+        id: 2,
         userId: 'user-123',
         articleId: 42,
-        isBookmarked: true,
         bookmarkedAt,
         createdAt,
-        updatedAt: bookmarkedAt,
       };
       vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
       vi.mocked(BookmarkService.create).mockResolvedValue(mockBookmark as never);
@@ -119,9 +114,28 @@ describe('bookmarks API routes', () => {
       const json = await res.json();
 
       expect(res.status).toBe(201);
-      expect(new Date(json.data.bookmark.bookmarkedAt).getTime()).not.toBe(
-        new Date(json.data.bookmark.createdAt).getTime(),
+      expect(json.data.bookmark.id).toBe(2);
+    });
+
+    test('returns 409 when bookmark already exists', async () => {
+      const { requireAuth } = await import('@/lib/util/auth/session');
+      vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
+      vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
+      vi.mocked(BookmarkService.create).mockRejectedValue(
+        new Error('Bookmark already exists'),
       );
+
+      const req = new NextRequest('http://localhost:3000/api/bookmarks', {
+        method: 'POST',
+        body: JSON.stringify({ articleId: 42 }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const res = await bookmarksPOST(req);
+      const json = await res.json();
+
+      expect(res.status).toBe(409);
+      expect(json.error).toBe('Bookmark already exists');
     });
 
     test('returns 401 when not authenticated', async () => {
@@ -243,19 +257,14 @@ describe('bookmarks API routes', () => {
         id: 1,
         userId: 'user-123',
         articleId: 42,
-        isBookmarked: true,
         bookmarkedAt: now,
         createdAt: now,
-        updatedAt: now,
       };
 
-      const removedBookmark = {
-        ...existingBookmark,
-        isBookmarked: false,
-      };
-
-      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(existingBookmark as never);
-      vi.mocked(BookmarkService.remove).mockResolvedValue(removedBookmark as never);
+      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(
+        existingBookmark as never,
+      );
+      vi.mocked(BookmarkService.remove).mockResolvedValue(existingBookmark as never);
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
         method: 'DELETE',
@@ -328,48 +337,22 @@ describe('bookmarks API routes', () => {
       expect(json.error).toBe('Bookmark not found');
     });
 
-    test('returns 404 when bookmark is already inactive', async () => {
-      const { requireAuth } = await import('@/lib/util/auth/session');
-      vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-
-      const inactiveBookmark = {
-        id: 1,
-        userId: 'user-123',
-        articleId: 42,
-        isBookmarked: false,
-        bookmarkedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(inactiveBookmark as never);
-
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
-        method: 'DELETE',
-      });
-
-      const res = await bookmarksDELETE(req);
-      const json = await res.json();
-
-      expect(res.status).toBe(404);
-      expect(json.error).toBe('Bookmark not found');
-    });
-
     test('returns 500 when service throws', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
+      const now = new Date();
       const existingBookmark = {
         id: 1,
         userId: 'user-123',
         articleId: 42,
-        isBookmarked: true,
-        bookmarkedAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        bookmarkedAt: now,
+        createdAt: now,
       };
 
-      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(existingBookmark as never);
+      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(
+        existingBookmark as never,
+      );
       vi.mocked(BookmarkService.remove).mockRejectedValue(new Error('db failure'));
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
@@ -395,10 +378,8 @@ describe('bookmarks API routes', () => {
           id: 1,
           userId: 'user-123',
           articleId: 42,
-          isBookmarked: true,
           bookmarkedAt: new Date(),
           createdAt: new Date(),
-          updatedAt: new Date(),
           article: {
             id: 42,
             title: 'Article 1',

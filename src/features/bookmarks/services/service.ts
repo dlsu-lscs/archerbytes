@@ -24,26 +24,21 @@ export async function getBookmarkByUserAndArticle(
 
 export async function createBookmark(userId: string, articleId: number) {
   try {
-    const upserted = await db
+    const existing = await getBookmarkByUserAndArticle(userId, articleId);
+    if (existing) {
+      throw new Error('Bookmark already exists');
+    }
+
+    const inserted = await db
       .insert(bookmarks)
       .values({
         userId,
         articleId,
-        isBookmarked: true,
         bookmarkedAt: sql`now()`,
-        updatedAt: sql`now()`,
-      })
-      .onConflictDoUpdate({
-        target: [bookmarks.userId, bookmarks.articleId],
-        set: {
-          isBookmarked: true,
-          bookmarkedAt: sql`now()`,
-          updatedAt: sql`now()`,
-        },
       })
       .returning();
 
-    return upserted[0] ?? null;
+    return inserted[0] ?? null;
   } catch (error) {
     console.error('Error creating bookmark:', error);
     throw error;
@@ -52,19 +47,14 @@ export async function createBookmark(userId: string, articleId: number) {
 
 export async function removeBookmark(userId: string, articleId: number) {
   try {
-    const updated = await db
-      .update(bookmarks)
-      .set({
-        isBookmarked: false,
-        bookmarkedAt: sql`now()`,
-        updatedAt: sql`now()`,
-      })
+    const deleted = await db
+      .delete(bookmarks)
       .where(
         and(eq(bookmarks.userId, userId), eq(bookmarks.articleId, articleId)),
       )
       .returning();
 
-    return updated[0] ?? null;
+    return deleted[0] ?? null;
   } catch (error) {
     console.error('Error removing bookmark:', error);
     throw error;
@@ -80,22 +70,15 @@ export async function getBookmarksByUserId(
     const [{ total }] = await db
       .select({ total: count(bookmarks.id) })
       .from(bookmarks)
-      .where(
-        and(
-          eq(bookmarks.userId, userId),
-          eq(bookmarks.isBookmarked, true),
-        ),
-      );
+      .where(eq(bookmarks.userId, userId));
 
     const items = await db
       .select({
         id: bookmarks.id,
         userId: bookmarks.userId,
         articleId: bookmarks.articleId,
-        isBookmarked: bookmarks.isBookmarked,
         bookmarkedAt: bookmarks.bookmarkedAt,
         createdAt: bookmarks.createdAt,
-        updatedAt: bookmarks.updatedAt,
         article: {
           id: articles.id,
           title: articles.title,
@@ -109,12 +92,7 @@ export async function getBookmarksByUserId(
       })
       .from(bookmarks)
       .innerJoin(articles, eq(bookmarks.articleId, articles.id))
-      .where(
-        and(
-          eq(bookmarks.userId, userId),
-          eq(bookmarks.isBookmarked, true),
-        ),
-      )
+      .where(eq(bookmarks.userId, userId))
       .orderBy(desc(bookmarks.bookmarkedAt), desc(bookmarks.id))
       .limit(limit)
       .offset(offset);
@@ -143,7 +121,6 @@ export async function getBookmarkStatusByUserId(
     return await db
       .select({
         articleId: bookmarks.articleId,
-        isBookmarked: bookmarks.isBookmarked,
         bookmarkedAt: bookmarks.bookmarkedAt,
       })
       .from(bookmarks)

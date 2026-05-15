@@ -32,16 +32,23 @@ export async function POST(req: NextRequest) {
       return fail('Article not found', 404);
     }
 
-    const bookmark = await BookmarkService.create(
-      session.user.id,
-      parsedBody.articleId,
-    );
+    try {
+      const bookmark = await BookmarkService.create(
+        session.user.id,
+        parsedBody.articleId,
+      );
 
-    if (!bookmark) {
-      return fail('Failed to create bookmark', 500);
+      if (!bookmark) {
+        return fail('Failed to create bookmark', 500);
+      }
+
+      return ok({ bookmark }, 201);
+    } catch (serviceError) {
+      if (serviceError instanceof Error && serviceError.message === 'Bookmark already exists') {
+        return fail('Bookmark already exists', 409);
+      }
+      throw serviceError;
     }
-
-    return ok({ bookmark }, 201);
   } catch (error) {
     console.error('Error creating bookmark:', error);
 
@@ -68,7 +75,7 @@ export async function DELETE(req: NextRequest) {
       parsedBody.articleId,
     );
 
-    if (!existing || !existing.isBookmarked) {
+    if (!existing) {
       return fail('Bookmark not found', 404);
     }
 
