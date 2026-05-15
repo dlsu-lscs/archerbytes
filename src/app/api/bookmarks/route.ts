@@ -93,7 +93,7 @@ export async function DELETE(req: NextRequest) {
       return fail('Failed to remove bookmark', 500);
     }
 
-    return ok({ bookmark });
+    return new Response(null, { status: 204 });
   } catch (error) {
     console.error('Error removing bookmark:', error);
 

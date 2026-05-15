@@ -1432,23 +1432,9 @@ curl.exe -X DELETE "http://localhost:3000/api/bookmarks?articleId=42"
 - **Query Parameters:**
   - `articleId` (number, required): Positive integer ID of the article to unbookmark
 
-- `response` (200 OK):
+- `response` (204 No Content):
 
-```json
-{
-  "data": {
-    "bookmark": {
-      "id": 1,
-      "userId": "user-123",
-      "articleId": 42,
-      "isBookmarked": false,
-      "bookmarkedAt": "2026-05-14T13:25:00.000Z",
-      "createdAt": "2026-05-14T13:18:54.516Z",
-      "updatedAt": "2026-05-14T13:25:00.000Z"
-    }
-  }
-}
-```
+This endpoint returns no response body when the bookmark is successfully removed.
 
 - `error responses`:
 

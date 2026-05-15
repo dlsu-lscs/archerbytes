@@ -238,7 +238,7 @@ describe('bookmarks API routes', () => {
 
   // delete
   describe('DELETE /api/bookmarks', () => {
-    test('removes bookmark and returns 200 with bookmark data', async () => {
+    test('removes bookmark and returns 204 with no content', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
@@ -266,10 +266,8 @@ describe('bookmarks API routes', () => {
       });
 
       const res = await bookmarksDELETE(req);
-      const json = await res.json();
 
-      expect(res.status).toBe(200);
-      expect(json.data.bookmark.isBookmarked).toBe(false);
+      expect(res.status).toBe(204);
       expect(vi.mocked(BookmarkService.remove)).toHaveBeenCalledWith('user-123', 42);
     });
 
