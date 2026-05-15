@@ -289,6 +289,21 @@ export async function getArticleBySlug(
   }
 }
 
+export async function getArticleById(articleId: number) {
+  try {
+    const rows = await db
+      .select({ id: articles.id })
+      .from(articles)
+      .where(eq(articles.id, articleId))
+      .limit(1);
+
+    return rows[0] ?? null;
+  } catch (error) {
+    console.error('Error fetching article by ID:', error);
+    throw error;
+  }
+}
+
 export async function listArticles(query: ArticleListQuery) {
   try {
     return listArticlesWithCount({
@@ -427,6 +442,7 @@ export async function listCategoryArticles(
 export const ArticleService = {
   list: listArticles,
   getBySlug: getArticleBySlug,
+  getById: getArticleById,
   search: searchArticles,
   listByCategoryId: listArticlesByCategoryId,
 };

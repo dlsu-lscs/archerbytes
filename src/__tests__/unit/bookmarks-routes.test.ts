@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { BookmarkService } from '@/features/bookmarks/services/service';
+import { ArticleService } from '@/features/article/services/service';
 import { POST as bookmarksPOST, DELETE as bookmarksDELETE, GET as bookmarksGET } from '@/app/api/bookmarks/route';
 
 // mock the requireAuth function
@@ -15,6 +16,13 @@ vi.mock('@/features/bookmarks/services/service', () => ({
     remove: vi.fn(),
     listByUserId: vi.fn(),
     getByUserAndArticle: vi.fn(),
+  },
+}));
+
+// mock the ArticleService
+vi.mock('@/features/article/services/service', () => ({
+  ArticleService: {
+    getById: vi.fn(),
   },
 }));
 
@@ -62,6 +70,7 @@ describe('bookmarks API routes', () => {
         createdAt: now,
         updatedAt: now,
       };
+      vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
       vi.mocked(BookmarkService.create).mockResolvedValue(mockBookmark as never);
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks', {
@@ -97,6 +106,7 @@ describe('bookmarks API routes', () => {
         createdAt,
         updatedAt: bookmarkedAt,
       };
+      vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
       vi.mocked(BookmarkService.create).mockResolvedValue(mockBookmark as never);
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks', {
@@ -186,13 +196,7 @@ describe('bookmarks API routes', () => {
     test('returns 404 when article does not exist', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-
-      const { db } = await import('@/config/database');
-      vi.mocked(db.select).mockReturnValue({
-        from: vi.fn().mockReturnThis(),
-        where: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue([]),
-      } as never);
+      vi.mocked(ArticleService.getById).mockResolvedValue(null as never);
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks', {
         method: 'POST',
@@ -210,15 +214,7 @@ describe('bookmarks API routes', () => {
     test('returns 500 when service throws', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-
-      // mock db query to return article
-      const { db } = await import('@/config/database');
-      const mockSelectChain = {
-        from: vi.fn().mockReturnThis(),
-        where: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue([{ id: 42 }]),
-      };
-      vi.mocked(db.select).mockReturnValue(mockSelectChain as never);
+      vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
 
       vi.mocked(BookmarkService.create).mockRejectedValue(new Error('db failure'));
 

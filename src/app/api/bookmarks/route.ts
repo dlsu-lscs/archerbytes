@@ -1,26 +1,14 @@
 import { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
-import { eq } from 'drizzle-orm';
 import { requireAuth } from '@/lib/util/auth/session';
 import { fail, ok, okPaginated, buildPaginationMeta } from '@/lib/api/response';
-import { articles } from '@/lib/db/schema';
-import { db } from '@/config/database';
+import { ArticleService } from '@/features/article/services/service';
 import {
   createBookmarkSchema,
   paginationQuerySchema,
   removeBookmarkSchema,
 } from '@/features/bookmarks/types';
 import { BookmarkService } from '@/features/bookmarks/services/service';
-
-async function getArticleById(articleId: number) {
-  const rows = await db
-    .select({ id: articles.id })
-    .from(articles)
-    .where(eq(articles.id, articleId))
-    .limit(1);
-
-  return rows[0] ?? null;
-}
 
 function getBookmarkPage(limit: number, offset: number) {
   return Math.floor(offset / limit) + 1;
@@ -30,7 +18,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await requireAuth();
 
-    let body: unknown;
+    let body;
     try {
       body = await req.json();
     } catch {
@@ -38,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     const parsedBody = createBookmarkSchema.parse(body);
-    const article = await getArticleById(parsedBody.articleId);
+    const article = await ArticleService.getById(parsedBody.articleId);
 
     if (!article) {
       return fail('Article not found', 404);
