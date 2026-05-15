@@ -1494,29 +1494,28 @@ curl.exe -X GET "http://localhost:3000/api/bookmarks?limit=10&offset=0"
 
 ```json
 {
-  "data": {
-    "items": [
-      {
-        "id": 1,
-        "userId": "user-123",
-        "articleId": 42,
-        "isBookmarked": true,
-        "bookmarkedAt": "2026-05-14T13:18:54.516Z",
-        "createdAt": "2026-05-14T13:18:54.516Z",
-        "updatedAt": "2026-05-14T13:18:54.516Z",
-        "article": {
-          "id": 42,
-          "title": "Getting Started with TypeScript",
-          "slug": "getting-started-typescript",
-          "excerpt": "Learn the basics of TypeScript"
-        }
+  "data": [
+    {
+      "id": 1,
+      "userId": "user-123",
+      "articleId": 42,
+      "isBookmarked": true,
+      "bookmarkedAt": "2026-05-14T13:18:54.516Z",
+      "createdAt": "2026-05-14T13:18:54.516Z",
+      "updatedAt": "2026-05-14T13:18:54.516Z",
+      "article": {
+        "id": 42,
+        "title": "Getting Started with TypeScript",
+        "slug": "getting-started-typescript",
+        "excerpt": "Learn the basics of TypeScript"
       }
-    ],
-    "pagination": {
-      "total": 25,
-      "limit": 10,
-      "offset": 0
     }
+  ],
+  "meta": {
+    "total": 25,
+    "page": 1,
+    "limit": 10,
+    "pages": 3
   }
 }
 ```
