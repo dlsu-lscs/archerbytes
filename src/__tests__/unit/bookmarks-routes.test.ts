@@ -449,7 +449,6 @@ describe('bookmarks API routes', () => {
       const req = new NextRequest('http://localhost:3000/api/bookmarks');
 
       const res = await bookmarksGET(req);
-      const json = await res.json();
 
       expect(res.status).toBe(200);
       expect(vi.mocked(BookmarkService.listByUserId)).toHaveBeenCalledWith('user-123', 10, 0);
