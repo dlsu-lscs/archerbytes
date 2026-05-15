@@ -3,3 +3,4 @@ export * from './reactions.entity';
 export * from './auth-schema';
 export * from './article-categories.entity';
 export * from './article.entity';
+export * from './bookmarks.entity';

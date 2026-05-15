@@ -48,13 +48,25 @@ class CMSApiClient {
     return headers
   }
 
-  private normalizeArticle(article: CMSArticle): CMSArticle {
+  private normalizeArticle(article: CMSArticle): CMSArticle | null {
     const { deleted_at, ...normalized } = article as CMSArticle & { deleted_at?: unknown }
+    
+    // if the CMS marked the article as deleted, reject it
+    if (deleted_at) {
+      return null
+    }
+    
     return normalized as CMSArticle
   }
 
-  private normalizeCategory(category: CMSCategory): CMSCategory {
+  private normalizeCategory(category: CMSCategory): CMSCategory | null {
     const { deleted_at, ...normalized } = category as CMSCategory & { deleted_at?: unknown }
+    
+    // if the CMS marked the article as deleted, reject it
+    if (deleted_at) {
+      return null
+    }
+    
     return normalized as CMSCategory
   }
 
@@ -80,7 +92,12 @@ class CMSApiClient {
       throw new Error(`CMS article not found for identifier: ${normalizedArticleId}`);
     }
 
-    return this.normalizeArticle(article);
+    const normalizedArticle = this.normalizeArticle(article);
+    if (!normalizedArticle) {
+      throw new Error(`Article is deleted in CMS: ${normalizedArticleId}`);
+    }
+
+    return normalizedArticle;
   }
 
   async fetchCategory(categoryId: string | number): Promise<CMSCategory> {
@@ -102,7 +119,12 @@ class CMSApiClient {
       throw new Error(`CMS category not found for identifier: ${String(categoryId).trim()}`);
     }
 
-    return this.normalizeCategory(category);
+    const normalizedCategory = this.normalizeCategory(category);
+    if (!normalizedCategory) {
+      throw new Error(`Category is deleted in CMS: ${String(categoryId).trim()}`);
+    }
+
+    return normalizedCategory;
   }
 
   private extractCMSData<T>(data: unknown): T {
