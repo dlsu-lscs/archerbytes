@@ -17,18 +17,18 @@ export type CommentType = {
   articleId: number;
   replyTo?: number | null;
   content: string;
+  isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
   user: {
     id: string;
     name: string;
     avatarURL: string | null;
-    email: string | null;
+    occupation: string | null;
   };
   isAuthor?: boolean;
   reactionCount: number;
   replyCount: number;
-  replies?: CommentType[];
 };
 
 export type CommentProp = {

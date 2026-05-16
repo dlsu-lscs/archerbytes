@@ -3,6 +3,78 @@ import { comments, user, commentReactions } from '@/lib/db/schema';
 import { eq, sql, and } from 'drizzle-orm';
 import type { CreateCommentInput, UpdateCommentInput } from '../types';
 
+type CommentRow = {
+  id: number;
+  userId: string;
+  articleId: number;
+  replyTo: number | null;
+  content: string;
+  isEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+async function buildCommentResponse(commentRow: CommentRow) {
+  const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
+  const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
+
+  const rows = await db
+    .select({
+      id: comments.id,
+      articleId: comments.articleId,
+      content: comments.content,
+      replyTo: comments.replyTo,
+      isEdited: comments.isEdited,
+      createdAt: comments.createdAt,
+      updatedAt: comments.updatedAt,
+      reactionCount: reactionCountSelect,
+      replyCount: replyCountSelect,
+      user: {
+        id: user.id,
+        name: user.name,
+        avatarURL: user.image,
+        occupation: user.occupation,
+      },
+    })
+    .from(comments)
+    .innerJoin(user, eq(comments.userId, user.id))
+    .where(eq(comments.id, commentRow.id))
+    .limit(1);
+
+  if (rows[0]) {
+    return rows[0];
+  }
+
+  const [userRow] = await db
+    .select({
+      id: user.id,
+      name: user.name,
+      avatarURL: user.image,
+      occupation: user.occupation,
+    })
+    .from(user)
+    .where(eq(user.id, commentRow.userId))
+    .limit(1);
+
+  return {
+    id: commentRow.id,
+    articleId: commentRow.articleId,
+    content: commentRow.content,
+    replyTo: commentRow.replyTo,
+    isEdited: commentRow.isEdited,
+    createdAt: commentRow.createdAt,
+    updatedAt: commentRow.updatedAt,
+    reactionCount: 0,
+    replyCount: 0,
+    user: userRow ?? {
+      id: commentRow.userId,
+      name: '',
+      avatarURL: null,
+      occupation: null,
+    },
+  };
+}
+
 export async function createComment(data: CreateCommentInput) {
   try {
     if (data.replyTo) {
@@ -47,8 +119,10 @@ export async function getCommentsByArticleID(articleId: number) {
     return db
       .select({
         id: comments.id,
+        articleId: comments.articleId,
         content: comments.content,
         replyTo: comments.replyTo,
+        isEdited: comments.isEdited,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
         reactionCount: reactionCountSelect,
@@ -83,8 +157,10 @@ export async function getCommentById(id: number) {
     const rows = await db
       .select({
         id: comments.id,
+        articleId: comments.articleId,
         content: comments.content,
         replyTo: comments.replyTo,
+        isEdited: comments.isEdited,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
         reactionCount: reactionCountSelect,
@@ -116,8 +192,10 @@ export async function getReplies(parentId: number) {
     return db
       .select({
         id: comments.id,
+        articleId: comments.articleId,
         content: comments.content,
         replyTo: comments.replyTo,
+        isEdited: comments.isEdited,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
         reactionCount: reactionCountSelect,
@@ -149,13 +227,14 @@ export async function updateComment(
       .update(comments)
       .set({
         ...(data.content !== undefined ? { content: data.content.trim() } : {}),
+        isEdited: true,
         updatedAt: sql`now()`,
       })
       .where(and(eq(comments.id, id), eq(comments.userId, userId)))
       .returning();
 
     if (updated.length === 0) return null;
-    return await getCommentById(id);
+    return (await getCommentById(id)) ?? (await buildCommentResponse(updated[0] as CommentRow));
   } catch (error) {
     console.error('Error updating comment:', error);
     throw error;
