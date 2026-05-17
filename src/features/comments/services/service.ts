@@ -33,7 +33,7 @@ async function buildCommentResponse(commentRow: CommentRow) {
         id: user.id,
         name: user.name,
         avatarURL: user.image,
-        occupation: user.occupation,
+        email: user.email,
       },
     })
     .from(comments)
@@ -50,7 +50,7 @@ async function buildCommentResponse(commentRow: CommentRow) {
       id: user.id,
       name: user.name,
       avatarURL: user.image,
-      occupation: user.occupation,
+      email: user.email,
     })
     .from(user)
     .where(eq(user.id, commentRow.userId))
@@ -70,7 +70,7 @@ async function buildCommentResponse(commentRow: CommentRow) {
       id: commentRow.userId,
       name: '',
       avatarURL: null,
-      occupation: null,
+      email: null,
     },
   };
 }
@@ -234,7 +234,10 @@ export async function updateComment(
       .returning();
 
     if (updated.length === 0) return null;
-    return (await getCommentById(id)) ?? (await buildCommentResponse(updated[0] as CommentRow));
+    return (
+      (await getCommentById(id)) ??
+      (await buildCommentResponse(updated[0] as CommentRow))
+    );
   } catch (error) {
     console.error('Error updating comment:', error);
     throw error;
