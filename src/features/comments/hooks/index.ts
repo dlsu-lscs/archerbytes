@@ -5,3 +5,5 @@ export { useUpdateComment } from './useUpdateComment';
 export { useDeleteComment } from './useDeleteComment';
 export { useCommentUpdateAction } from './useCommentUpdateAction';
 export { useCommentDeleteAction } from './useCommentDeleteAction';
+export { useDraftCommentOpen } from './useDraftCommentOpen';
+export { useReplyToggle } from './useReplyToggle';

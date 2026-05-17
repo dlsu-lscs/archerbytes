@@ -166,7 +166,7 @@ export default function Navbar() {
       </Sheet>
       {isLoginOpen ? (
         <div
-          className="flex size-full absolute top-0 bg-neutral-500/50 backdrop-blur-xs justify-center items-center z-50 transition-all duration-150"
+          className="fixed inset-0 flex bg-neutral-500/50 backdrop-blur-xs justify-center items-center z-50 transition-all duration-150"
           onClick={() => setLoginClose()}
         >
           <Login />
