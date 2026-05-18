@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentService } from '@/features/comments/services/service';
 import { updateCommentSchema } from '@/features/comments/types';
+import { requireAuth } from '@/lib/util/auth/session';
 import { ZodError } from 'zod';
 
 export async function GET(
@@ -38,6 +39,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const session = await requireAuth();
     const { id: idParam } = await params;
     const id = Number(idParam);
     if (isNaN(id)) {
@@ -49,15 +51,12 @@ export async function PATCH(
 
     const body = await req.json();
 
-    if (!body.userId) {
-      return NextResponse.json(
-        { error: 'userId is required' },
-        { status: 400 },
-      );
-    }
-
     const validatedData = updateCommentSchema.parse(body);
-    const comment = await CommentService.update(id, body.userId, validatedData);
+    const comment = await CommentService.update(
+      id,
+      session.user.id,
+      validatedData,
+    );
 
     if (!comment) {
       return NextResponse.json(
@@ -69,6 +68,10 @@ export async function PATCH(
     return NextResponse.json({ data: comment });
   } catch (error) {
     console.error('Error updating comment:', error);
+
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
@@ -89,6 +92,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const session = await requireAuth();
     const { id: idParam } = await params;
     const id = Number(idParam);
     if (isNaN(id)) {
@@ -98,16 +102,9 @@ export async function DELETE(
       );
     }
 
-    const body = await req.json();
+    await req.json();
 
-    if (!body.userId) {
-      return NextResponse.json(
-        { error: 'userId is required' },
-        { status: 400 },
-      );
-    }
-
-    const comment = await CommentService.delete(id, body.userId);
+    const comment = await CommentService.delete(id, session.user.id);
 
     if (!comment) {
       return NextResponse.json(
@@ -122,6 +119,18 @@ export async function DELETE(
     });
   } catch (error) {
     console.error('Error deleting comment:', error);
+
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: error.issues },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
       { error: 'Failed to delete comment' },
       { status: 500 },
