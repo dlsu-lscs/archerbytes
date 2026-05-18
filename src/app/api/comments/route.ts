@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentService } from '@/features/comments/services/service';
 import { createCommentSchema } from '@/features/comments/types';
+import { requireAuth } from '@/lib/util/auth/session';
 import { ZodError } from 'zod';
 
 export async function GET(req: NextRequest) {
@@ -36,13 +37,21 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await requireAuth();
     const body = await req.json();
-    const validatedData = createCommentSchema.parse(body);
+    const validatedData = createCommentSchema.parse({
+      ...body,
+      userId: session.user.id,
+    });
     const data = await CommentService.create(validatedData);
 
     return NextResponse.json({ data }, { status: 201 });
   } catch (error) {
     console.error('Error creating comment:', error);
+
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
