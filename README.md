@@ -208,20 +208,22 @@ fetch('/api/auth/get-session', { credentials: 'include' })
 ### POST `/api/comments`
 
 - creates a new comment or reply to an existing comment
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X POST http://localhost:3000/api/comments ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"articleId\":\"article_456\",\"content\":\"This is a comment\",\"replyTo\":null}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"articleId\":\"article_456\",\"content\":\"This is a comment\",\"replyTo\":null}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID creating the comment
   - `articleId` (string, required): The article ID being commented on
   - `content` (string, required): The comment content
   - `replyTo` (number, optional): Parent comment ID if this is a reply
+  - `userId` is automatically derived from the authenticated session
 
 - `response`:
 
@@ -253,16 +255,18 @@ curl.exe -X POST http://localhost:3000/api/comments ^
 
 ### GET `/api/comments`
 
-- returns all parent comments for a specific article
+- returns paginated parent comments for a specific article
 
 - `request`:
 
 ```bash
-curl.exe -X GET "http://localhost:3000/api/comments?articleId=article_456"
+curl.exe -X GET "http://localhost:3000/api/comments?articleId=article_456&limit=10&offset=0"
 ```
 
 - **Query Parameters:**
   - `articleId` (string, required): The article ID to fetch comments for
+  - `limit` (number, optional): Items per page, max 100. Default: `10`
+  - `offset` (number, optional): Number of items to skip. Default: `0`
 
 - `response`:
 
@@ -276,7 +280,9 @@ curl.exe -X GET "http://localhost:3000/api/comments?articleId=article_456"
       "replyTo": null,
       "content": "This is a comment",
       "createdAt": "2025-11-01T12:00:00.000Z",
-      "updatedAt": "2025-11-01T12:00:00.000Z"
+      "updatedAt": "2025-11-01T12:00:00.000Z",
+      "reactionCount": 3,
+      "replyCount": 2
     },
     {
       "id": 2,
@@ -285,15 +291,36 @@ curl.exe -X GET "http://localhost:3000/api/comments?articleId=article_456"
       "replyTo": null,
       "content": "Amazing Article!",
       "createdAt": "2025-11-02T14:51:03.666Z",
-      "updatedAt": "2025-11-02T14:51:03.666Z"
+      "updatedAt": "2025-11-02T14:51:03.666Z",
+      "reactionCount": 1,
+      "replyCount": 0
     }
-  ]
+  ],
+  "meta": {
+    "total": 42,
+    "page": 1,
+    "limit": 10,
+    "pages": 5
+  }
 }
 ```
 
 ```json
 {
-  "error": "Article ID is required"
+  "error": "articleId query parameter is required"
+}```
+
+```json
+{
+  "error": "Validation failed",
+  "details": [
+    {
+      "code": "too_big",
+      "maximum": 100,
+      "path": ["limit"],
+      "message": "Limit must not exceed 100"
+    }
+  ]
 }
 ```
 
@@ -332,18 +359,20 @@ curl.exe -X GET http://localhost:3000/api/comments/1
 ### PATCH `/api/comments/[id]`
 
 - updates a comment
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X PATCH http://localhost:3000/api/comments/1 ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"content\":\"Updated comment content\"}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"content\":\"Updated comment content\"}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID that created the comment
   - `content` (string, required): The new comment content
+  - User ownership is verified against the authenticated session
 
 - `response`:
 
@@ -363,30 +392,29 @@ curl.exe -X PATCH http://localhost:3000/api/comments/1 ^
 
 ```json
 {
-  "error": "userId is required"
+  "error": "Unauthorized"
 }
 ```
 
 ```json
 {
-  "error": "Comment not found or you are not the owner"
+  "error": "Comment not found or you are not allowed to update it"
 }
 ```
 
 ### DELETE `/api/comments/[id]`
 
 - deletes a comment
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X DELETE http://localhost:3000/api/comments/1 ^
-  -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\"}"
+  -H "Cookie: <session-cookie>"
 ```
 
-- **Request Body Fields:**
-  - `userId` (string, required): The user ID that created the comment
+- User ownership is verified against the authenticated session
 
 - `response`:
 
@@ -413,13 +441,17 @@ curl.exe -X DELETE http://localhost:3000/api/comments/1 ^
 
 ### GET `/api/comments/[id]/replies`
 
-- returns all replies to a specific parent comment
+- returns paginated replies to a specific parent comment
 
 - `request`:
 
 ```bash
-curl.exe -X GET http://localhost:3000/api/comments/1/replies
+curl.exe -X GET "http://localhost:3000/api/comments/1/replies?limit=10&offset=0"
 ```
+
+- **Query Parameters:**
+  - `limit` (number, optional): Items per page, max 100. Default: `10`
+  - `offset` (number, optional): Number of items to skip. Default: `0`
 
 - `response`:
 
@@ -433,9 +465,17 @@ curl.exe -X GET http://localhost:3000/api/comments/1/replies
       "replyTo": 1,
       "content": "This is a reply",
       "createdAt": "2025-11-01T12:30:00.000Z",
-      "updatedAt": "2025-11-01T12:30:00.000Z"
+      "updatedAt": "2025-11-01T12:30:00.000Z",
+      "reactionCount": 0,
+      "replyCount": 0
     }
-  ]
+  ],
+  "meta": {
+    "total": 5,
+    "page": 1,
+    "limit": 10,
+    "pages": 1
+  }
 }
 ```
 
@@ -451,20 +491,22 @@ curl.exe -X GET http://localhost:3000/api/comments/1/replies
 
 ### POST `/api/comment-reactions`
 
-- creates or updates a reaction to a comment
+- creates a reaction to a comment
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X POST http://localhost:3000/api/comment-reactions ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"commentId\":1,\"reactionType\":\"like\"}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"commentId\":1,\"reactionType\":\"like\"}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID creating the reaction
   - `commentId` (number, required): The comment ID being reacted to
   - `reactionType` (string, required): Must be one of: "like", "heart", "care", "haha", "wow", "sad", "angry"
+  - `userId` is automatically derived from the authenticated session
 
 - `response`:
 
@@ -580,19 +622,21 @@ curl.exe -X GET "http://localhost:3000/api/comment-reactions?commentId=1&userId=
 ### PATCH `/api/comment-reactions`
 
 - updates a user's reaction type on a comment
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X PATCH http://localhost:3000/api/comment-reactions ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"commentId\":1,\"reactionType\":\"heart\"}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"commentId\":1,\"reactionType\":\"heart\"}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID who created the reaction
   - `commentId` (number, required): The comment ID
   - `reactionType` (string, required): New reaction type (one of: "like", "heart", "care", "haha", "wow", "sad", "angry")
+  - User ownership is verified against the authenticated session
 
 - `response`:
 
@@ -631,18 +675,20 @@ curl.exe -X PATCH http://localhost:3000/api/comment-reactions ^
 ### DELETE `/api/comment-reactions`
 
 - deletes a reaction from a comment
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X DELETE http://localhost:3000/api/comment-reactions ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"commentId\":1}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"commentId\":1}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID who created the reaction
   - `commentId` (number, required): The comment ID
+  - User ownership is verified against the authenticated session
 
 - `response`:
 
@@ -672,19 +718,21 @@ curl.exe -X DELETE http://localhost:3000/api/comment-reactions ^
 ### POST `/api/article-reactions`
 
 - creates a reaction to an article
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X POST http://localhost:3000/api/article-reactions ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"articleId\":\"article_456\",\"reactionType\":\"like\"}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"articleId\":\"article_456\",\"reactionType\":\"like\"}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID creating the reaction
   - `articleId` (string, required): The article ID being reacted to
   - `reactionType` (string, required): Must be one of: "like", "heart", "care", "haha", "wow", "sad", "angry"
+  - `userId` is automatically derived from the authenticated session
 
 - `response`:
 
@@ -788,19 +836,21 @@ curl.exe -X GET "http://localhost:3000/api/article-reactions?articleId=article_4
 ### PATCH `/api/article-reactions`
 
 - updates a user's reaction type on an article
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X PATCH http://localhost:3000/api/article-reactions ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"articleId\":\"article_456\",\"reactionType\":\"heart\"}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"articleId\":\"article_456\",\"reactionType\":\"heart\"}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID who created the reaction
   - `articleId` (string, required): The article ID
   - `reactionType` (string, required): New reaction type (one of: "like", "heart", "care", "haha", "wow", "sad", "angry")
+  - User ownership is verified against the authenticated session
 
 - `response`:
 
@@ -839,18 +889,20 @@ curl.exe -X PATCH http://localhost:3000/api/article-reactions ^
 ### DELETE `/api/article-reactions`
 
 - deletes a reaction from an article
+- **Requires authentication** (session cookie)
 
 - `request`:
 
 ```bash
 curl.exe -X DELETE http://localhost:3000/api/article-reactions ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":\"user_123\",\"articleId\":\"article_456\"}"
+  -H "Cookie: <session-cookie>" ^
+  -d "{\"articleId\":\"article_456\"}"
 ```
 
 - **Request Body Fields:**
-  - `userId` (string, required): The user ID who created the reaction
   - `articleId` (string, required): The article ID
+  - User ownership is verified against the authenticated session
 
 - `response`:
 
