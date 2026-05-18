@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { CommentService } from '@/features/comments/services/service';
 import { paginationQuerySchema } from '@/features/comments/types';
 import { buildPaginationMeta, fail, okPaginated } from '@/lib/api/response';

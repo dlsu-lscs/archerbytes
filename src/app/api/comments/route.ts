@@ -5,7 +5,7 @@ import {
   paginationQuerySchema,
 } from '@/features/comments/types';
 import { requireAuth } from '@/lib/util/auth/session';
-import { buildPaginationMeta, fail, ok, okPaginated } from '@/lib/api/response';
+import { buildPaginationMeta, fail, okPaginated } from '@/lib/api/response';
 import { ZodError } from 'zod';
 
 function getCommentPage(limit: number, offset: number) {

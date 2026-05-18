@@ -4,13 +4,11 @@ import { ReactionService } from '@/features/reactions/services/service';
 import { CommentService } from '@/features/comments/services/service';
 import {
   POST as commentReactionsPOST,
-  PATCH as commentReactionsPATCH,
   DELETE as commentReactionsDELETE,
 } from '@/app/api/comment-reactions/route';
 import {
   POST as articleReactionsPOST,
   PATCH as articleReactionsPATCH,
-  DELETE as articleReactionsDELETE,
 } from '@/app/api/article-reactions/route';
 
 vi.mock('@/lib/util/auth/session', () => ({
