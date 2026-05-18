@@ -1,7 +1,11 @@
 import { db } from '@/config/database';
 import { comments, user, commentReactions } from '@/lib/db/schema';
-import { eq, sql, and } from 'drizzle-orm';
-import type { CreateCommentInput, UpdateCommentInput } from '../types';
+import { and, count, desc, eq, sql } from 'drizzle-orm';
+import type {
+  CommentPaginationQuery,
+  CreateCommentInput,
+  UpdateCommentInput,
+} from '../types';
 
 type CommentRow = {
   id: number;
@@ -111,38 +115,58 @@ export async function createComment(data: CreateCommentInput) {
   }
 }
 
-export async function getCommentsByArticleID(articleId: number) {
-  try {
-    const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
-    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
+function buildCommentSelect() {
+  const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
+  const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
 
-    return db
-      .select({
-        id: comments.id,
-        articleId: comments.articleId,
-        content: comments.content,
-        replyTo: comments.replyTo,
-        isEdited: comments.isEdited,
-        createdAt: comments.createdAt,
-        updatedAt: comments.updatedAt,
-        reactionCount: reactionCountSelect,
-        replyCount: replyCountSelect,
-        user: {
-          id: user.id,
-          name: user.name,
-          avatarURL: user.image,
-          occupation: user.occupation,
-        },
-      })
+  return {
+    id: comments.id,
+    articleId: comments.articleId,
+    content: comments.content,
+    replyTo: comments.replyTo,
+    isEdited: comments.isEdited,
+    createdAt: comments.createdAt,
+    updatedAt: comments.updatedAt,
+    reactionCount: reactionCountSelect,
+    replyCount: replyCountSelect,
+    user: {
+      id: user.id,
+      name: user.name,
+      avatarURL: user.image,
+      occupation: user.occupation,
+    },
+  };
+}
+
+function getCommentBaseFilters(articleId: number) {
+  return and(eq(comments.articleId, articleId), sql`${comments.replyTo} IS NULL`);
+}
+
+export async function getCommentsByArticleID(
+  articleId: number,
+  query: CommentPaginationQuery,
+) {
+  try {
+    const [{ total }] = await db
+      .select({ total: count(comments.id) })
+      .from(comments)
+      .where(getCommentBaseFilters(articleId));
+
+    const items = await db
+      .select(buildCommentSelect())
       .from(comments)
       .innerJoin(user, eq(comments.userId, user.id))
-      .where(
-        and(
-          eq(comments.articleId, articleId),
-          sql`${comments.replyTo} IS NULL`,
-        ),
-      )
-      .orderBy(comments.createdAt);
+      .where(getCommentBaseFilters(articleId))
+      .orderBy(desc(comments.createdAt), desc(comments.id))
+      .limit(query.limit)
+      .offset(query.offset);
+
+    return {
+      items,
+      total,
+      limit: query.limit,
+      offset: query.offset,
+    };
   } catch (error) {
     console.error('Error fetching comments by article ID:', error);
     throw error;
@@ -184,33 +208,28 @@ export async function getCommentById(id: number) {
   }
 }
 
-export async function getReplies(parentId: number) {
+export async function getReplies(parentId: number, query: CommentPaginationQuery) {
   try {
-    const reactionCountSelect = sql<number>`(select count(distinct ${commentReactions.id})::int from ${commentReactions} where ${commentReactions.commentId} = ${comments.id})`;
-    const replyCountSelect = sql<number>`(select count(*)::int from ${comments} c where c.reply_to = ${comments.id})`;
+    const [{ total }] = await db
+      .select({ total: count(comments.id) })
+      .from(comments)
+      .where(eq(comments.replyTo, parentId));
 
-    return db
-      .select({
-        id: comments.id,
-        articleId: comments.articleId,
-        content: comments.content,
-        replyTo: comments.replyTo,
-        isEdited: comments.isEdited,
-        createdAt: comments.createdAt,
-        updatedAt: comments.updatedAt,
-        reactionCount: reactionCountSelect,
-        replyCount: replyCountSelect,
-        user: {
-          id: user.id,
-          name: user.name,
-          avatarURL: user.image,
-          occupation: user.occupation,
-        },
-      })
+    const items = await db
+      .select(buildCommentSelect())
       .from(comments)
       .innerJoin(user, eq(comments.userId, user.id))
       .where(eq(comments.replyTo, parentId))
-      .orderBy(comments.createdAt);
+      .orderBy(desc(comments.createdAt), desc(comments.id))
+      .limit(query.limit)
+      .offset(query.offset);
+
+    return {
+      items,
+      total,
+      limit: query.limit,
+      offset: query.offset,
+    };
   } catch (error) {
     console.error('Error fetching replies:', error);
     throw error;
