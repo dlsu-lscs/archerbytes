@@ -3,7 +3,7 @@ import type { ReactionType } from '@/features/reactions/types';
 export type CommentRecord = {
   id: number;
   userId: string;
-  articleId: string;
+  articleId: number;
   replyTo: number | null;
   content: string;
   createdAt: string;
@@ -22,7 +22,7 @@ export type CommentReactionSummary = {
 };
 
 export type CommentType = {
-  id?: number;
+  id: number;
   articleId: number;
   replyTo?: number | null;
   content: string;
