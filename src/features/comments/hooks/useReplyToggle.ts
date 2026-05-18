@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useAuthStore } from '@/store/use-auth-store';
+import { useSession } from '@/lib/auth/client';
 
 export function useReplyToggle() {
   const [isReplying, setIsReplying] = useState(false);
-  const user = useAuthStore((state) => state.user);
+  const { data: session } = useSession();
+  const user = session?.user;
   const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
 
   const toggleReply = () => {

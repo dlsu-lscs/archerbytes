@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthStore } from '@/store/use-auth-store';
+import { useSession } from '@/lib/auth/client';
 import { useUpdateComment } from './useUpdateComment';
 
 interface UseCommentUpdateActionParams {
@@ -18,7 +18,8 @@ export function useCommentUpdateAction({
   originalContent,
   onSuccess,
 }: UseCommentUpdateActionParams) {
-  const user = useAuthStore((state) => state.user);
+  const { data: session } = useSession();
+  const user = session?.user;
   const updateComment = useUpdateComment();
 
   const saveCommentEdit = (nextContent: string) => {

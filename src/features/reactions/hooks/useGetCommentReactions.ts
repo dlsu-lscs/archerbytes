@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/use-auth-store';
+import { useSession } from '@/lib/auth/client';
 import type { ReactionType } from '../types';
 import type { CommentReactionSummary } from '@/features/comments/types/comment.types';
 
@@ -65,7 +65,8 @@ export function useGetCommentReactions(
   commentId: number,
   options?: UseGetCommentReactionsOptions,
 ) {
-  const userId = useAuthStore((state) => state.user?.id);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   const query = useQuery<CommentReactionRecord[], Error>({
     queryKey: ['comment-reactions', commentId],

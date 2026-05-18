@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useSession } from '@/lib/auth/client';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/use-auth-store';
@@ -21,21 +20,11 @@ import Login from '@/features/auth/components/Login';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const user = session?.user;
 
-  const user = useAuthStore((state) => state.user);
   const isLoginOpen = useAuthStore((state) => state.isLoginOpen);
   const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
   const setLoginClose = useAuthStore((state) => state.setLoginClose);
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearUser = useAuthStore((state) => state.clearUser);
-
-  useEffect(() => {
-    if (session?.user) {
-      setUser(session.user as Parameters<typeof setUser>[0]);
-    } else {
-      clearUser();
-    }
-  }, [session, setUser, clearUser]);
 
   return (
     <>

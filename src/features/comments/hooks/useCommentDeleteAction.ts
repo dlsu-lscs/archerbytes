@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthStore } from '@/store/use-auth-store';
+import { useSession } from '@/lib/auth/client';
 import { useDeleteComment } from './useDeleteComment';
 
 interface UseCommentDeleteActionParams {
@@ -16,7 +16,8 @@ export function useCommentDeleteAction({
   replyTo,
   onSuccess,
 }: UseCommentDeleteActionParams) {
-  const user = useAuthStore((state) => state.user);
+  const { data: session } = useSession();
+  const user = session?.user;
   const deleteComment = useDeleteComment();
 
   const deleteCommentAction = () => {
