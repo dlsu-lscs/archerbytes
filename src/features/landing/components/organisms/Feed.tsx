@@ -18,8 +18,13 @@ import ArticleList from '../molecules/ArticleList';
 export default function Feed() {
     const [activeTab, setActiveTab] = useState('for-you');
     const [forYouSort, setForYouSort] = useState<option>('newest');
+    const [selectedCategory, setSelectedCategory] = useState(1);
     const sortParam: option = activeTab === 'trending' ? 'popular' : forYouSort;
-    const {data: articles, isLoading, isError} = useArticleList(sortParam);
+    const categoryParam = activeTab === 'by-category' ? selectedCategory : null;
+    const {data: articles, isLoading, isError} = useArticleList({
+        sort: sortParam,
+        categoryId: categoryParam
+    });
 
     return (
         <section className="flex flex-col gap-2.5">
@@ -87,9 +92,11 @@ export default function Feed() {
                 </TabsContent>
 
                 <TabsContent value="by-category" className="flex flex-col gap-2">
-                    <div className="py-10 text-center text-muted-foreground">
-                        WIP.
-                    </div>
+                    <ArticleList 
+                        articles={articles} 
+                        isLoading={isLoading} 
+                        isError={isError} 
+                    />
                 </TabsContent>
             </Tabs>
         </section>

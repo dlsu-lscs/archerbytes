@@ -3,10 +3,15 @@ import { FeedArticleType } from '../types/article.types';
 
 export type option = 'newest' | 'oldest' | 'popular';
 
-export default function useArticleList(sort: option = 'newest'){
+export interface ArticleQueryParams {
+  sort?: option;
+  categoryId?: number | null;
+}
+
+export default function useArticleList({sort = 'newest', categoryId = null}: ArticleQueryParams){
   return useQuery({
-    queryKey: ['articles', {sort}],
-    queryFn: () => getArticles(sort),
+    queryKey: ['articles', {sort, categoryId}],
+    queryFn: () => getArticles({sort, categoryId}),
     select: (data) => {
       return data.data.map((article: any) => ({
         ...article,
@@ -17,12 +22,16 @@ export default function useArticleList(sort: option = 'newest'){
   })
 }
 
-const getArticles = async (sort: option) => {
+const getArticles = async ({sort, categoryId}: ArticleQueryParams) => {
   const params = new URLSearchParams({
     limit: '10',
     status: 'published',
-    sort: sort,
+    sort: sort || 'newest',
   });
+
+  if (categoryId !== null && categoryId !== undefined) {
+        params.append('category', categoryId.toString());
+    }
 
   const res = await fetch(`api/articles?${params.toString()}`);
   
