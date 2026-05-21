@@ -23,7 +23,7 @@ export default function CarouselCard({ article }: ArticleDetailsProp) {
         <CarouselItem>
             <Card className="relative">
                 <Image
-                    src={article.previewURL}
+                    src={article.featuredImageUrl || '/image.jpg'}
                     alt={article.title}
                     fill
                     className="object-cover w-full z-5 rounded-xl brightness-50"
@@ -34,17 +34,13 @@ export default function CarouselCard({ article }: ArticleDetailsProp) {
                             <CardDescription>
                                 <div className="flex flex-col md:flex-row md:items-center gap-2">
                                     <p className="text-xs text-neutral-400">
-                                        By: {article.author}
+                                        By: {article.author.name}
                                     </p>
                                     <div className="hidden md:flex gap-2 w-25 md:w-100">
-                                        {article.keywords.slice(0, 3).map((item, index) => (
-                                            <TopicChip key={index}>{item}</TopicChip>
-                                        ))}
+                                        {article.category.name}
                                     </div>
                                     <div className="md:hidden flex gap-2 w-25 md:w-100">
-                                        {article.keywords.slice(0, 2).map((item, index) => (
-                                            <TopicChip key={index}>{item}</TopicChip>
-                                        ))}
+                                        {article.category.name}
                                     </div>
                                 </div>
                             </CardDescription>
