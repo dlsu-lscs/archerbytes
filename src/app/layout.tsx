@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from '@/components/organisms/Navbar';
 import Footer from '@/components/organisms/Footer';
 import PrivacyPolicy from '@/components/organisms/PrivacyPolicy';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -32,7 +33,9 @@ export default function RootLayout({
             >
                 <div className="flex flex-col min-h-screen">
                     <Navbar />
-                    <main className="flex flex-col grow">{children}</main>
+                    <QueryProvider>
+                        <main className="flex flex-col grow">{children}</main>
+                    </QueryProvider>
                     <PrivacyPolicy />
                 </div>
                 <Footer />
