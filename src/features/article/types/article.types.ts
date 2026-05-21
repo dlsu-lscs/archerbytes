@@ -26,6 +26,36 @@ export type ArticleDetailsType = {
     reactionCount: number;
     previewURL: string;
 };
+
+export type articleAuthorType = {
+    id: string;
+    name: string;
+    avatarURL: string | null;
+    occupation: string | null;
+}
+
+export type articleCategoryType = {
+    id: number;
+    name: string;
+    slug: string;
+}
+
+export type FeedArticleType = {
+    id: number;
+    title: string;
+    subtitle: string;
+    slug: string;
+    featuredImageUrl: string | null;
+    status: 'draft' | 'published';
+    isEdited: boolean;
+    publishedAt: Date;
+    createdAt: Date;
+    author: articleAuthorType,
+    category: articleCategoryType,
+    reactionCount: number;
+    commentCount: number;
+}
+
 export type ArticleDetailsProp = {
     article: ArticleDetailsType;
 };
