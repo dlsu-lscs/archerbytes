@@ -11,9 +11,22 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import CarouselCard from '../molecules/CarouselCard';
 import useFeaturedArticles from '@/features/article/queries/useFeaturesArticles';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ArticleCarousel() {
     const { data: articles, isLoading, isError } = useFeaturedArticles();
+
+    if (isError) {
+        return null;
+    }
+
+    if (isLoading) {
+        return (
+            <div className="col-span-full mx-5 lg:mx-30 py-5">
+                <Skeleton className="w-full h-75 rounded-xl bg-neutral-300 dark:bg-neutral-700" />
+            </div>
+        );
+    }
 
     return (
         <Carousel className="col-span-full mx-5 lg:mx-30 py-5">

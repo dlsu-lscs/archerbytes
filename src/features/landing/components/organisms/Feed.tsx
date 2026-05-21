@@ -1,6 +1,5 @@
 'use client';
 
-import ArticleItem from '../molecules/ArticleItem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useArticleList from '@/features/article/queries/useArticleList';
 import {
@@ -14,6 +13,7 @@ import SortDropdown from '../atoms/SortDropdown';
 import Featured from '../molecules/Featured';
 import { useState } from 'react';
 import { option } from '@/features/article/queries/useArticleList';
+import ArticleList from '../molecules/ArticleList';
 
 export default function Feed() {
     const [activeTab, setActiveTab] = useState('for-you');
@@ -71,15 +71,19 @@ export default function Feed() {
                 </TabsList>
                 <TabsContent value="for-you" className="flex flex-col gap-2">
                     <Featured />
-                    {articles?.map((article) => (
-                        <ArticleItem key={article.id} article={article} />
-                    ))}
+                    <ArticleList 
+                        articles={articles} 
+                        isLoading={isLoading} 
+                        isError={isError} 
+                    />
                 </TabsContent>
 
                 <TabsContent value="trending" className="flex flex-col gap-2">
-                    {articles?.map((article) => (
-                        <ArticleItem key={article.id} article={article} />
-                    ))}
+                    <ArticleList 
+                        articles={articles} 
+                        isLoading={isLoading} 
+                        isError={isError} 
+                    />
                 </TabsContent>
 
                 <TabsContent value="by-category" className="flex flex-col gap-2">

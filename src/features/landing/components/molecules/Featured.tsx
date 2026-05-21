@@ -8,18 +8,31 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 import useFeaturedArticles from '@/features/article/queries/useFeaturesArticles';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import FeaturedCard from './FeaturedCard';
 
 export default function Featured() {
     const {data: featuredArticles, isLoading, isError} = useFeaturedArticles();
 
+    if (isError) {
+        return null;
+    }
+
     return (
         <Carousel className="py-5 mt-5">
             <CarouselContent className="">
-                {featuredArticles?.map((article) => (
-                    <FeaturedCard key={article.id} article={article} />
-                ))}
+                {isLoading ? (
+                    [1, 2, 3, 4].map((i) => (
+                        <CarouselItem key={i} className="basis-2/4 lg:basis-2/7 w-50 md:w-35">
+                            <Skeleton className="h-55 w-full rounded-xl bg-neutral-300 dark:bg-neutral-700" />
+                        </CarouselItem>
+                    ))
+                ) : (
+                    featuredArticles?.map((article) => (
+                        <FeaturedCard key={article.id} article={article} />
+                    ))
+                )}
             </CarouselContent>
             <div className="absolute right-16 -top-2">
                 <CarouselPrevious className="left-0 right-0 top-0 bottom-0 bg-transparent hover:bg-transparent border-0 shadow-none" />
