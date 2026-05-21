@@ -1,6 +1,8 @@
+'use client';
+
 import ArticleItem from '../molecules/ArticleItem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArticleDetailsType } from '@/features/article/types/article.types';
+import useArticleList from '@/features/article/queries/useArticleList';
 import {
     Select,
     SelectContent,
@@ -9,25 +11,17 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import Featured from '../molecules/Featured';
+import { useState } from 'react';
+import { option } from '@/features/article/queries/useArticleList';
 
 export default function Feed() {
-    const placeholderArticle: ArticleDetailsType = {
-        title: 'Top 10 LSCS Research and Development Officers of all time',
-        quote:
-            'Research and Development is the best committee in the whole universe',
-        quotee: 'Ian Gabriel Ilagan',
-        author: 'Charles Cordez',
-        avatarURL: '/lscs-logo.png',
-        occupation: 'DevOps Engineer',
-        readingTime: 6,
-        publicationDate: new Date('2025-10-29'),
-        commentCount: 100,
-        likeCount: 100,
-    };
+    const [activeTab, setActiveTab] = useState('for-you');
+    const sortParam: option = activeTab === 'trending' ? 'popular' : 'newest';
+    const {data: articles, isLoading, isError} = useArticleList(sortParam);
 
     return (
         <section className="flex flex-col gap-[10px]">
-            <Tabs defaultValue="for-you " className="lg:max-w-[50vw]">
+            <Tabs defaultValue='for-you' value={activeTab} onValueChange={setActiveTab} className="lg:max-w-[50vw]">
                 <TabsList className="w-full">
                     <div className="hidden md:block">
                         <TabsTrigger value="for-you">For you</TabsTrigger>
@@ -35,14 +29,14 @@ export default function Feed() {
                         <TabsTrigger value="by-category">By category</TabsTrigger>
                     </div>
                     <div className="md:hidden border-b-2 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] items-center justify-end gap-1.5 px-2 py-1 grow">
-                        <Select>
+                        <Select value={activeTab} onValueChange={setActiveTab}>
                             <SelectTrigger className="border-0 shadow-none">
                                 <SelectValue placeholder="For you" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="for-you">For you</SelectItem>
                                 <SelectItem value="trending">Trending</SelectItem>
-                                <SelectItem value="system">By category</SelectItem>
+                                <SelectItem value="by-category">By category</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -50,11 +44,21 @@ export default function Feed() {
                 </TabsList>
                 <TabsContent value="for-you" className="flex flex-col gap-2">
                     <Featured />
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
+                    {articles?.map((article) => (
+                        <ArticleItem key={article.id} article={article} />
+                    ))}
+                </TabsContent>
+
+                <TabsContent value="trending" className="flex flex-col gap-2">
+                    {articles?.map((article) => (
+                        <ArticleItem key={article.id} article={article} />
+                    ))}
+                </TabsContent>
+
+                <TabsContent value="by-category" className="flex flex-col gap-2">
+                    <div className="py-10 text-center text-muted-foreground">
+                        Category filtering coming soon.
+                    </div>
                 </TabsContent>
             </Tabs>
         </section>

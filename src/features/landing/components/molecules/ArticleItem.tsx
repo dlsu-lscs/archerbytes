@@ -18,7 +18,7 @@ import Image from 'next/image';
 
 import { ArticleDetailsProp } from '@/features/article/types/article.types';
 
-export default function ArticleItem({ article }: ArticleDetailsProp) {
+export default function ArticleItem({article}: ArticleDetailsProp) {
     return (
         <Card className="flex flex-col px-8 py-10 gap-0 border-0 shadow-none rounded-none border-b-2 border-solid">
             <div className="flex justify-end items-center gap-1">
@@ -33,23 +33,18 @@ export default function ArticleItem({ article }: ArticleDetailsProp) {
                             className="hidden md:block size-4 shrink-0 rounded-full"
                             height={128}
                             width={128}
-                            src={article.avatarURL}
+                            src={article.author.avatarURL || '/lscs-logo.png'}
                             alt="Avatar"
                         />
-                        <p className="font-light">{article.author}</p>
+                        <p className="font-light">{article.author.name}</p>
                     </div>
                     <div>
                         <h5 className="font-bold">{article.title}</h5>
-                        <p className="text-sm">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
-                            incidunt aspernatur deserunt voluptas aut eaque corporis labore a
-                            fugiat inventore ratione consectetur, obcaecati rerum quas
-                            laudantium aperiam, fuga molestiae nemo!
-                        </p>
+                        <p className="text-sm">{article.subtitle}</p>
                     </div>
                     <IconGroup
-                        date={article.publicationDate}
-                        likes={article.likeCount}
+                        date={article.publishedAt}
+                        reactions={article.reactionCount}
                         comments={article.commentCount}
                     />
                 </CardContent>
@@ -57,7 +52,7 @@ export default function ArticleItem({ article }: ArticleDetailsProp) {
                     className="hidden md:block w-48 aspect-video shrink-0 rounded-xl"
                     height={480}
                     width={854}
-                    src={'/image.jpg'}
+                    src={article.featuredImageUrl || '/image.jpg'}
                     alt="Preview"
                 />
             </div>
