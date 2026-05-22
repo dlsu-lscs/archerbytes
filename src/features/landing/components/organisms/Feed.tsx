@@ -10,7 +10,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import SortDropdown from '../atoms/SortDropdown';
-import Featured from '../molecules/Featured';
 import { useState } from 'react';
 import { option } from '@/features/article/queries/useArticleList';
 import ArticleList from '../molecules/ArticleList';
@@ -19,7 +18,7 @@ import CategoryDropdown from '../atoms/CategoryDropdown';
 export default function Feed() {
     const [activeTab, setActiveTab] = useState('for-you');
     const [forYouSort, setForYouSort] = useState<option>('newest');
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(1);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
     const forYouQuery = useArticleList({ sort: forYouSort });
     const trendingQuery = useArticleList({ sort: 'popular' });
@@ -74,7 +73,6 @@ export default function Feed() {
                     </div>
                 </TabsList>
                 <TabsContent value="for-you" className="flex flex-col gap-2">
-                    <Featured />
                     <ArticleList 
                         articles={forYouQuery.data}
                         isLoading={forYouQuery.isLoading}

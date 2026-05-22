@@ -27,7 +27,7 @@ export default function CategoryDropdown({value, onChange}: CategoryDropdownProp
     <DropdownMenu>
       <DropdownMenuTrigger 
         disabled={isLoading || isError}
-        className="flex items-center justify-between rounded-full border-2 border-gray-300 bg-transparent px-3 h-8 w-32 text-sm outline-none focus:ring-1 focus:ring-ring hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center justify-between rounded-full border-2 border-gray-300 bg-transparent px-3 h-9 w-36 text-sm outline-none focus:ring-1 focus:ring-ring hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <span className='truncate'>{activeCategory}</span>
         <ChevronDown className="h-3 w-3 opacity-50 shrink-0 ml-1" />
@@ -37,6 +37,7 @@ export default function CategoryDropdown({value, onChange}: CategoryDropdownProp
           onClick={() => onChange(null)}
           className='text-xs cursor-pointer'
         >
+          All Categories
         </DropdownMenuItem>   
         {categories?.map((category) => (
           <DropdownMenuItem
