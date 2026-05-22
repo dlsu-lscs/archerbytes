@@ -76,3 +76,12 @@ export type IconsType = {
     reactions: number;
     comments: number;
 };
+
+export type CategoryType = {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    createdAt: Date;
+    articleCount: number;
+}
