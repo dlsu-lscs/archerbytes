@@ -13,7 +13,10 @@ export default function useArticleList({sort = 'newest', categoryId = null}: Art
     queryKey: ['articles', {sort, categoryId}],
     queryFn: () => getArticles({sort, categoryId}),
     select: (data) => {
-      return data.data.map((article: any) => ({
+      return data.data.map((article: Omit<FeedArticleType, 'publishedAt' | 'createdAt'> & {
+          publishedAt: string;
+          createdAt: string;
+      }) => ({
         ...article,
         publishedAt: new Date(article.publishedAt),
         createdAt: new Date(article.createdAt),

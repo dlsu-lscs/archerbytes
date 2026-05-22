@@ -3,12 +3,10 @@
 import {
     Carousel,
     CarouselContent,
-    CarouselItem,
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
 
-import { Card, CardContent } from '@/components/ui/card';
 import CarouselCard from '../molecules/CarouselCard';
 import useFeaturedArticles from '@/features/article/queries/useFeaturesArticles';
 import { Skeleton } from '@/components/ui/skeleton';

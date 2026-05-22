@@ -18,7 +18,7 @@ import ArticleList from '../molecules/ArticleList';
 export default function Feed() {
     const [activeTab, setActiveTab] = useState('for-you');
     const [forYouSort, setForYouSort] = useState<option>('newest');
-    const [selectedCategory, setSelectedCategory] = useState(1);
+    const [selectedCategory] = useState(1);
     const sortParam: option = activeTab === 'trending' ? 'popular' : forYouSort;
     const categoryParam = activeTab === 'by-category' ? selectedCategory : null;
     const {data: articles, isLoading, isError} = useArticleList({

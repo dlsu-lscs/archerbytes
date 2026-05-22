@@ -1,19 +1,11 @@
-import TopicChip from '@/components/atoms/TopicChip';
 import {
     Card,
-    CardAction,
     CardContent,
     CardDescription,
-    CardFooter,
-    CardHeader,
     CardTitle,
 } from '@/components/ui/card';
 import {
-    Carousel,
-    CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from '@/components/ui/carousel';
 import { ArticleDetailsProp } from '@/features/article/types/article.types';
 import Image from 'next/image';

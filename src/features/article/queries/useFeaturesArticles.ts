@@ -6,7 +6,10 @@ export default function useFeaturedArticles(){
     queryKey: ['articles', 'featured'],
     queryFn: getFeaturedArticles,
     select: (data) => {
-      return data.data.map((article: any) => ({
+      return data.data.map((article: Omit<FeedArticleType, 'publishedAt' | 'createdAt'> & {
+          publishedAt: string;
+          createdAt: string;
+      }) => ({
         ...article,
         publishedAt: new Date(article.publishedAt),
         createdAt: new Date(article.createdAt),

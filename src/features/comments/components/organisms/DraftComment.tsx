@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Collapsible,
@@ -10,8 +9,6 @@ import {
 import Comment from '../molecules/Comment';
 
 export default function DraftComment() {
-    const [isOpen, setIsOpen] = useState(false);
-
     const comment1 = {
         avatarURL: '/lscs-logo.png',
         userId: 'Alec Nono',

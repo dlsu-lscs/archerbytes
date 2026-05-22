@@ -1,7 +1,6 @@
 import Breadcrumbs from '@/features/article/components/atoms/Breadcrumbs';
 import Keywords from '@/features/article/components/atoms/Keywords';
 import ArticleDetails from '../molecules/ArticleDetails';
-import { ArticleDetailsProp } from '@/features/article/types/article.types';
 import { ArticleDetailsType } from '@/features/article/types/article.types';
 
 import { IoHeartCircleSharp } from 'react-icons/io5';

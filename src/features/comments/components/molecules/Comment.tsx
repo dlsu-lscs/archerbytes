@@ -1,11 +1,6 @@
 import {
     Card,
-    CardAction,
     CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -20,8 +15,6 @@ import { BiLike } from 'react-icons/bi';
 import { FaRegCommentAlt } from 'react-icons/fa';
 
 import { CommentProp } from '../../types/comment.types';
-
-import { createComment } from '../../services/service';
 
 export default function Comment({
     comment,
