@@ -35,11 +35,38 @@ async function updateCommentReactionRequest(
   return json.data;
 }
 
+type ReactionRecord = {
+  id: number;
+  userId: string;
+  commentId: number;
+  reactionType: ReactionType;
+  createdAt: string;
+};
+
 export function useUpdateCommentReaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateCommentReactionRequest,
+    onMutate: async (variables) => {
+      const queryKey = ['comment-reactions', variables.commentId];
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<ReactionRecord[]>(queryKey);
+      queryClient.setQueryData<ReactionRecord[]>(queryKey, (old = []) =>
+        old.map((r) =>
+          r.userId === variables.userId
+            ? { ...r, reactionType: variables.reactionType }
+            : r,
+        ),
+      );
+      return { previous };
+    },
+    onError: (_err, variables, context) => {
+      queryClient.setQueryData(
+        ['comment-reactions', variables.commentId],
+        context?.previous,
+      );
+    },
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['comment-reactions', variables.commentId],

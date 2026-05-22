@@ -32,11 +32,34 @@ async function deleteCommentReactionRequest(
   return json.data;
 }
 
+type ReactionRecord = {
+  id: number;
+  userId: string;
+  commentId: number;
+  reactionType: string;
+  createdAt: string;
+};
+
 export function useDeleteCommentReaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteCommentReactionRequest,
+    onMutate: async (variables) => {
+      const queryKey = ['comment-reactions', variables.commentId];
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<ReactionRecord[]>(queryKey);
+      queryClient.setQueryData<ReactionRecord[]>(queryKey, (old = []) =>
+        old.filter((r) => r.userId !== variables.userId),
+      );
+      return { previous };
+    },
+    onError: (_err, variables, context) => {
+      queryClient.setQueryData(
+        ['comment-reactions', variables.commentId],
+        context?.previous,
+      );
+    },
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['comment-reactions', variables.commentId],
