@@ -20,9 +20,19 @@ export default function Feed() {
     const [forYouSort, setForYouSort] = useState<option>('newest');
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
-    const forYouQuery = useArticleList({ sort: forYouSort });
-    const trendingQuery = useArticleList({ sort: 'popular' });
-    const categoryQuery = useArticleList({ sort: 'newest', categoryId: selectedCategory });
+    const forYouQuery = useArticleList({ 
+        sort: forYouSort,
+        enabled: activeTab === 'for-you'
+    });
+    const trendingQuery = useArticleList({
+        sort: 'popular',
+        enabled: activeTab === 'trending'
+    });
+    const categoryQuery = useArticleList({
+        sort: 'newest',
+        categoryId: selectedCategory,
+        enabled: activeTab === 'by-category'
+    });
 
     return (
         <section className="flex flex-col gap-2.5">

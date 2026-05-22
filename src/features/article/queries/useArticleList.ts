@@ -6,12 +6,14 @@ export type option = 'newest' | 'oldest' | 'popular';
 export interface ArticleQueryParams {
   sort?: option;
   categoryId?: number | null;
+  enabled?: boolean;
 }
 
-export default function useArticleList({sort = 'newest', categoryId = null}: ArticleQueryParams){
+export default function useArticleList({sort = 'newest', categoryId = null, enabled = true}: ArticleQueryParams){
   return useQuery({
     queryKey: ['articles', {sort, categoryId}],
     queryFn: () => getArticles({sort, categoryId}),
+    enabled: enabled,
     select: (data) => {
       return data.data.map((article: Omit<FeedArticleType, 'publishedAt' | 'createdAt'> & {
           publishedAt: string;
