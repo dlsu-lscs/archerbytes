@@ -19,12 +19,10 @@ export default function Feed() {
     const [activeTab, setActiveTab] = useState('for-you');
     const [forYouSort, setForYouSort] = useState<option>('newest');
     const [selectedCategory] = useState(1);
-    const sortParam: option = activeTab === 'trending' ? 'popular' : forYouSort;
-    const categoryParam = activeTab === 'by-category' ? selectedCategory : null;
-    const {data: articles, isLoading, isError} = useArticleList({
-        sort: sortParam,
-        categoryId: categoryParam
-    });
+
+    const forYouQuery = useArticleList({ sort: forYouSort });
+    const trendingQuery = useArticleList({ sort: 'popular' });
+    const categoryQuery = useArticleList({ sort: 'newest', categoryId: selectedCategory });
 
     return (
         <section className="flex flex-col gap-2.5">
@@ -77,25 +75,25 @@ export default function Feed() {
                 <TabsContent value="for-you" className="flex flex-col gap-2">
                     <Featured />
                     <ArticleList 
-                        articles={articles} 
-                        isLoading={isLoading} 
-                        isError={isError} 
+                        articles={forYouQuery.data}
+                        isLoading={forYouQuery.isLoading}
+                        isError={forYouQuery.isError}
                     />
                 </TabsContent>
 
                 <TabsContent value="trending" className="flex flex-col gap-2">
                     <ArticleList 
-                        articles={articles} 
-                        isLoading={isLoading} 
-                        isError={isError} 
+                        articles={trendingQuery.data}
+                        isLoading={trendingQuery.isLoading}
+                        isError={trendingQuery.isError}
                     />
                 </TabsContent>
 
                 <TabsContent value="by-category" className="flex flex-col gap-2">
                     <ArticleList 
-                        articles={articles} 
-                        isLoading={isLoading} 
-                        isError={isError} 
+                        articles={categoryQuery.data}
+                        isLoading={categoryQuery.isLoading}
+                        isError={categoryQuery.isError}
                     />
                 </TabsContent>
             </Tabs>
