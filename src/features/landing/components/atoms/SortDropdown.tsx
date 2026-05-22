@@ -18,7 +18,7 @@ interface SortDropdownProps {
 export default function SortDropdown({ value, onChange, align = 'end' }: SortDropdownProps) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center justify-between rounded-full border border-input bg-transparent px-3 h-6 w-28 text-[9px] outline-none focus:ring-1 focus:ring-ring hover:bg-accent hover:text-accent-foreground">
+            <DropdownMenuTrigger className="flex items-center justify-between rounded-full border border-input bg-transparent px-3 h-6 w-30 text-sm outline-none focus:ring-1 focus:ring-ring hover:bg-accent hover:text-accent-foreground">
                 {value === 'newest' ? 'Newest First' : 'Oldest First'}
                 <ChevronDown className="h-3 w-3 opacity-50" />
             </DropdownMenuTrigger>

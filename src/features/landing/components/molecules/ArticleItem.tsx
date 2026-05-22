@@ -16,7 +16,7 @@ import { ArticleDetailsProp } from '@/features/article/types/article.types';
 export default function ArticleItem({article}: ArticleDetailsProp) {
     return (
         <Card className="flex flex-col px-8 py-10 gap-0 border-0 shadow-none rounded-none border-b-2 border-solid">
-            <div className="flex justify-end items-center gap-1">
+            <div className="flex justify-end items-center gap-1 mb-3">
                 <LuCircleMinus />
                 <FaRegBookmark />
                 <HiOutlineDotsHorizontal />

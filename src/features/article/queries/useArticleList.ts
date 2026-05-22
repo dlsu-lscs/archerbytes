@@ -36,7 +36,7 @@ const getArticles = async ({sort, categoryId}: ArticleQueryParams) => {
         params.append('category', categoryId.toString());
     }
 
-  const res = await fetch(`api/articles?${params.toString()}`);
+  const res = await fetch(`/api/articles?${params.toString()}`);
   
   if (!res.ok){
     throw new Error('Failed to fetch articles');

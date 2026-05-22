@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/carousel';
 
 import CarouselCard from '../molecules/CarouselCard';
-import useFeaturedArticles from '@/features/article/queries/useFeaturesArticles';
+import useFeaturedArticles from '@/features/article/queries/useFeaturedArticles';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ArticleCarousel() {

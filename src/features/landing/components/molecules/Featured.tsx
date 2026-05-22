@@ -7,7 +7,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-import useFeaturedArticles from '@/features/article/queries/useFeaturesArticles';
+import useFeaturedArticles from '@/features/article/queries/useFeaturedArticles';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import FeaturedCard from './FeaturedCard';
