@@ -101,7 +101,7 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
                         src={comment?.user?.avatarURL || '/globe.svg'}
                         alt="Avatar"
                     />
-                    <div className="flex flex-col gap-[15px] w-full">
+                    <div className="flex flex-col gap-[15px] w-full min-w-0">
                         <div className="flex justify-between">
                             <div>
                                 <h3 className="text-md font-bold">{comment?.user?.name}</h3>
@@ -185,7 +185,7 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
                                 </div>
                             </div>
                         ) : (
-                            <div className="text-sm">{comment.content}</div>
+                            <div className="text-sm break-words">{comment.content}</div>
                         )}
 
                         <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
