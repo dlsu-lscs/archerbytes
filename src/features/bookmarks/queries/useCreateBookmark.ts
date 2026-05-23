@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
-import { BookmarkType } from "../types/bookmarks.types";
+import { BookmarkType, BookmarkMetaType } from "../types/bookmarks.types";
 import { toast } from "sonner";
 
 const queryKey: QueryKey = ['bookmarks']
 
 interface CacheData {
   data: BookmarkType[];
-  meta?: any;
+  meta: BookmarkMetaType;
 }
 
 export default function useAddBookmark() {

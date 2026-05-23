@@ -13,3 +13,10 @@ export type BookmarkType = {
   createdAt: Date;
   article: BookmarkArticleType;
 }
+
+export type BookmarkMetaType = {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}

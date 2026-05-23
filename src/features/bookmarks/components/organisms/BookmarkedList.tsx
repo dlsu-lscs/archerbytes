@@ -42,7 +42,7 @@ export default function BookmarkedList() {
 
       {!isLoading && !isError && bookmarks?.length === 0 && (
           <div className="text-center py-10 text-gray-500">
-              <p>You haven't saved any articles yet.</p>
+              <p>You haven&apos;t saved any articles yet.</p>
           </div>
       )}
 
