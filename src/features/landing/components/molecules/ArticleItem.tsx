@@ -1,6 +1,5 @@
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { LuCircleMinus } from 'react-icons/lu';
-import { FaRegBookmark } from 'react-icons/fa6';
 
 import {
     Card,
@@ -22,6 +21,7 @@ export default function ArticleItem({article}: ArticleDetailsProp) {
     const addBookmark = useAddBookmark();
     const deleteBookmark = useDeleteBookmark();
     const isBookmarked = bookmarks?.some((bookmark) => bookmark.articleId === article.id) || false;
+    const isPending = addBookmark.isPending || deleteBookmark.isPending;
 
     const handleToggleBookmark = () => {
         if(isBookmarked) {
@@ -38,6 +38,7 @@ export default function ArticleItem({article}: ArticleDetailsProp) {
                 <BookmarkButton
                     isBookmarked={isBookmarked}
                     onToggle={handleToggleBookmark}
+                    disabled={isPending}
                 />
                 <HiOutlineDotsHorizontal />
             </div>

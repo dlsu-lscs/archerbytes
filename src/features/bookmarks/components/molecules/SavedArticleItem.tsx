@@ -1,6 +1,5 @@
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { LuCircleMinus } from 'react-icons/lu';
-import { FaBookmark } from 'react-icons/fa6';
 
 import {
     Card,
@@ -8,12 +7,16 @@ import {
 } from '@/components/ui/card';
 
 import { BookmarkType } from '../../types/bookmarks.types';
+import useDeleteBookmark from '../../queries/useDeleteBookmark';
+import BookmarkButton from '../atoms/BookmarkButton';
 
 interface SavedArticleItemProps {
     bookmark: BookmarkType;
 }
 
 export default function SavedArticleItem({bookmark}: SavedArticleItemProps) {
+    const deleteBookmark = useDeleteBookmark();
+
   const formattedDate = new Intl.DateTimeFormat('en-US', {
         month: 'short',
         day: 'numeric',
@@ -24,7 +27,11 @@ export default function SavedArticleItem({bookmark}: SavedArticleItemProps) {
       <Card className="flex flex-col px-8 py-10 gap-0 border-0 shadow-none rounded-none border-b-2 border-solid">
           <div className="flex justify-end items-center gap-1 mb-3 text-muted-foreground">
               <LuCircleMinus className="cursor-pointer hover:text-foreground" />
-              <FaBookmark className="text-primary cursor-pointer" />
+              <BookmarkButton 
+                  isBookmarked={true}
+                  onToggle={() => deleteBookmark.mutate(bookmark.articleId)}
+                  disabled={deleteBookmark.isPending}
+              />
               <HiOutlineDotsHorizontal className="cursor-pointer hover:text-foreground" />
           </div>
           
