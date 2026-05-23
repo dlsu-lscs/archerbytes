@@ -1,6 +1,6 @@
 'use client';
 import CommentItem from '@/features/comments/components/molecules/CommentItem';
-import DraftComment from './DraftComment';
+import CommentForm from '../molecules/CommentForm';
 import { useGetComments } from '../../hooks/useGetComments';
 
 interface DiscussionProps {
@@ -15,7 +15,7 @@ export default function Discussion({ articleId }: DiscussionProps) {
       <h3 className="text-2xl font-bold text-neutral-950">
         Discussion ({data.length})
       </h3>
-      <DraftComment articleId={articleId} />
+      <CommentForm articleId={articleId} expandable />
       <div className="flex flex-col gap-[10px]">
         {data.map((comment) => (
           <CommentItem
