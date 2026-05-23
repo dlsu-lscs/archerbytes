@@ -1,3 +1,5 @@
+'use client';
+
 import {
     Carousel,
     CarouselContent,
@@ -5,49 +7,32 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ArticleDetailsType } from '@/features/article/types/article.types';
+import useFeaturedArticles from '@/features/article/queries/useFeaturedArticles';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import FeaturedCard from './FeaturedCard';
 
 export default function Featured() {
-    const placeholderArticle: ArticleDetailsType = {
-        title: 'Top 10 LSCS Research and Development Officers of all time',
-        quote:
-            'Research and Development is the best committee in the whole universe',
-        quotee: 'Ian Gabriel Ilagan',
-        author: 'Charles Cordez',
-        avatarURL: '/lscs-logo.png',
-        occupation: 'DevOps Engineer',
-        readingTime: 6,
-        publicationDate: new Date('2025-10-29'),
-        commentCount: 100,
-        likeCount: 100,
-        keywords: [
-            'Computer',
-            'Programming',
-            'Coding',
-            'Frontend',
-            'Backend',
-            'UI/UX',
-        ],
-        previewURL: '/image.jpg',
-    };
+    const {data: featuredArticles, isLoading, isError} = useFeaturedArticles();
+
+    if (isError) {
+        return null;
+    }
 
     return (
         <Carousel className="py-5 mt-5">
             <CarouselContent className="">
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
-                <FeaturedCard article={placeholderArticle} />
+                {isLoading ? (
+                    [1, 2, 3, 4].map((i) => (
+                        <CarouselItem key={i} className="basis-2/4 lg:basis-2/7 w-50 md:w-35">
+                            <Skeleton className="h-55 w-full rounded-xl bg-neutral-300 dark:bg-neutral-700" />
+                        </CarouselItem>
+                    ))
+                ) : (
+                    featuredArticles?.map((article) => (
+                        <FeaturedCard key={article.id} article={article} />
+                    ))
+                )}
             </CarouselContent>
             <div className="absolute right-16 -top-2">
                 <CarouselPrevious className="left-0 right-0 top-0 bottom-0 bg-transparent hover:bg-transparent border-0 shadow-none" />

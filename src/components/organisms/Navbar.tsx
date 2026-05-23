@@ -21,7 +21,7 @@ import Login from '@/features/auth/components/Login';
 export default function Navbar() {
     const [login, setLogin] = useState(false);
 
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     const user = session?.user;
 

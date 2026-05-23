@@ -1,6 +1,7 @@
-import ArticleItem from '../molecules/ArticleItem';
+'use client';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArticleDetailsType } from '@/features/article/types/article.types';
+import useArticleList from '@/features/article/queries/useArticleList';
 import {
     Select,
     SelectContent,
@@ -8,53 +9,107 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import Featured from '../molecules/Featured';
+import SortDropdown from '../atoms/SortDropdown';
+import { useState } from 'react';
+import { option } from '@/features/article/queries/useArticleList';
+import ArticleList from '../molecules/ArticleList';
+import CategoryDropdown from '../atoms/CategoryDropdown';
 
 export default function Feed() {
-    const placeholderArticle: ArticleDetailsType = {
-        title: 'Top 10 LSCS Research and Development Officers of all time',
-        quote:
-            'Research and Development is the best committee in the whole universe',
-        quotee: 'Ian Gabriel Ilagan',
-        author: 'Charles Cordez',
-        avatarURL: '/lscs-logo.png',
-        occupation: 'DevOps Engineer',
-        readingTime: 6,
-        publicationDate: new Date('2025-10-29'),
-        commentCount: 100,
-        likeCount: 100,
-    };
+    const [activeTab, setActiveTab] = useState('for-you');
+    const [forYouSort, setForYouSort] = useState<option>('newest');
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+    const forYouQuery = useArticleList({ 
+        sort: forYouSort,
+        enabled: activeTab === 'for-you'
+    });
+    const trendingQuery = useArticleList({
+        sort: 'popular',
+        enabled: activeTab === 'trending'
+    });
+    const categoryQuery = useArticleList({
+        sort: 'newest',
+        categoryId: selectedCategory,
+        enabled: activeTab === 'by-category'
+    });
 
     return (
-        <section className="flex flex-col gap-[10px]">
-            <Tabs defaultValue="for-you " className="lg:max-w-[50vw]">
-                <TabsList className="w-full">
-                    <div className="hidden md:block">
+        <section className="flex flex-col gap-2.5">
+            <Tabs defaultValue='for-you' value={activeTab} onValueChange={setActiveTab} className="lg:max-w-[50vw]">
+                <TabsList className="w-full flex justify-between items-center">
+                    <div className="hidden md:flex">
                         <TabsTrigger value="for-you">For you</TabsTrigger>
                         <TabsTrigger value="trending">Trending</TabsTrigger>
                         <TabsTrigger value="by-category">By category</TabsTrigger>
                     </div>
-                    <div className="md:hidden border-b-2 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] items-center justify-end gap-1.5 px-2 py-1 grow">
-                        <Select>
-                            <SelectTrigger className="border-0 shadow-none">
-                                <SelectValue placeholder="For you" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="for-you">For you</SelectItem>
-                                <SelectItem value="trending">Trending</SelectItem>
-                                <SelectItem value="system">By category</SelectItem>
-                            </SelectContent>
-                        </Select>
+                    
+                    <div className="hidden md:inline-flex border-b-2 text-foreground dark:text-muted-foreground h-[calc(100%-1px)] items-center justify-end gap-1.5 px-2 py-1 grow">
+                        {activeTab === 'for-you' && (
+                            <div className="ml-auto flex items-center pr-2">
+                                <SortDropdown 
+                                    value={forYouSort} 
+                                    onChange={setForYouSort} 
+                                    align="end" 
+                                />
+                            </div>
+                        )}
                     </div>
-                    <div className="hidden md:inline-flex border-b-2 text-foreground dark:text-muted-foreground h-[calc(100%-1px)] items-center justify-end gap-1.5 px-2 py-1 grow"></div>
+
+                    <div className="flex md:hidden w-full border-b-2 text-foreground dark:text-muted-foreground items-center justify-between h-[calc(100%-1px)] px-2 py-1 grow">
+                        
+                        <div className="flex items-center">
+                            {activeTab === 'for-you' && (
+                                <SortDropdown 
+                                    value={forYouSort} 
+                                    onChange={setForYouSort} 
+                                    align="start" 
+                                />
+                            )}
+                        </div>
+
+                        <div className="flex items-center">
+                            <Select value={activeTab} onValueChange={setActiveTab}>
+                                <SelectTrigger className="border-0 shadow-none h-8 w-32.5">
+                                    <SelectValue placeholder="For you" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="for-you">For you</SelectItem>
+                                    <SelectItem value="trending">Trending</SelectItem>
+                                    <SelectItem value="by-category">By category</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
                 </TabsList>
                 <TabsContent value="for-you" className="flex flex-col gap-2">
-                    <Featured />
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
-                    <ArticleItem article={placeholderArticle}></ArticleItem>
+                    <ArticleList 
+                        articles={forYouQuery.data}
+                        isLoading={forYouQuery.isLoading}
+                        isError={forYouQuery.isError}
+                    />
+                </TabsContent>
+
+                <TabsContent value="trending" className="flex flex-col gap-2">
+                    <ArticleList 
+                        articles={trendingQuery.data}
+                        isLoading={trendingQuery.isLoading}
+                        isError={trendingQuery.isError}
+                    />
+                </TabsContent>
+
+                <TabsContent value="by-category" className="flex flex-col gap-2">
+                    <div className="flex sm:justify-start md:justify-end w-full pt-1 pb-2">
+                        <CategoryDropdown
+                            value={selectedCategory}
+                            onChange={setSelectedCategory}
+                        />
+                    </div>
+                    <ArticleList 
+                        articles={categoryQuery.data}
+                        isLoading={categoryQuery.isLoading}
+                        isError={categoryQuery.isError}
+                    />
                 </TabsContent>
             </Tabs>
         </section>

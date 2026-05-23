@@ -1,19 +1,11 @@
-import TopicChip from '@/components/atoms/TopicChip';
 import {
     Card,
-    CardAction,
     CardContent,
     CardDescription,
-    CardFooter,
-    CardHeader,
     CardTitle,
 } from '@/components/ui/card';
 import {
-    Carousel,
-    CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from '@/components/ui/carousel';
 import { ArticleDetailsProp } from '@/features/article/types/article.types';
 import Image from 'next/image';
@@ -23,7 +15,7 @@ export default function FeaturedCard({ article }: ArticleDetailsProp) {
         <CarouselItem className="basis-2/4 lg:basis-2/7 w-50 md:w-35">
             <Card className="relative py-0 h-55 w-full flex flex-col justify-end">
                 <Image
-                    src={article.previewURL}
+                    src={article.featuredImageUrl || '/image.jpg'}
                     alt={article.title}
                     fill
                     className="object-cover z-5 rounded-xl brightness-50"
@@ -34,12 +26,10 @@ export default function FeaturedCard({ article }: ArticleDetailsProp) {
                             <CardDescription>
                                 <div className="flex flex-col items-start gap-1">
                                     <p className="text-xs text-neutral-400">
-                                        By: {article.author}
+                                        By: {article.author.name}
                                     </p>
                                     <div className="flex gap-2">
-                                        {article.keywords.slice(0, 1).map((item, index) => (
-                                            <TopicChip key={index}>{item}</TopicChip>
-                                        ))}
+                                        {article.category.name}
                                     </div>
                                 </div>
                             </CardDescription>
