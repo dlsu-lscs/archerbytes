@@ -1,11 +1,11 @@
-'use client'
-
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, QueryKey } from '@tanstack/react-query';
 import { BookmarkType } from '../types/bookmarks.types';
+
+const queryKey: QueryKey = ['bookmarks']
 
 export default function useBookmarkedArticles() {
   return useQuery({
-    queryKey: ['bookmarks'],
+    queryKey: queryKey,
     queryFn: getBookmarkedArticles,
     select: (data) => {
       return data.data.map((bookmark: Omit<BookmarkType, 'bookmarkedAt' | 'createdAt'> & {

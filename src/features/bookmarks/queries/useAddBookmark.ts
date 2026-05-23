@@ -1,16 +1,43 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
 import { BookmarkType } from "../types/bookmarks.types";
+
+const queryKey: QueryKey = ['bookmarks']
+
+interface CacheData {
+  data: BookmarkType[];
+  meta?: any;
+}
 
 export default function useAddBookmark() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (articleId: number) => addBookmark(articleId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
+    onMutate: async (articleId) => {
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousState = queryClient.getQueryData<CacheData>(queryKey);
+
+      if(previousState) {
+        queryClient.setQueryData<CacheData>(queryKey, (prev) => {
+          if(!prev) return prev;
+          return {
+            ...prev,
+            data: [
+              ...prev.data,
+              { articleId } as BookmarkType 
+            ]
+          };
+        });
+      }
+
+      return {previousState};
     },
-    onError: (error) => {
-      console.error(error.message);
+    onError: (error, variables, context) => {
+      queryClient.setQueryData(queryKey, context?.previousState);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
     },
   })
 }
