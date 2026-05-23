@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ReactionService } from '@/features/reactions/services/service';
+import { requireAuth } from '@/lib/util/auth/session';
 import {
   createCommentReactionSchema,
   deleteCommentReactionSchema,
@@ -49,8 +50,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await requireAuth();
     const body = await req.json();
-    const validatedData = createCommentReactionSchema.parse(body);
+    const validatedData = createCommentReactionSchema.parse({
+      ...body,
+      userId: session.user.id,
+    });
 
     const commentExists = await CommentService.getById(validatedData.commentId);
     if (!commentExists) {
@@ -69,6 +74,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ data: reaction }, { status: 201 });
   } catch (error) {
     console.error('Error creating comment reaction:', error);
+
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
@@ -104,8 +113,12 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    const session = await requireAuth();
     const body = await req.json();
-    const validatedData = updateCommentReactionSchema.parse(body);
+    const validatedData = updateCommentReactionSchema.parse({
+      ...body,
+      userId: session.user.id,
+    });
     const reaction = await ReactionService.updateCommentReaction(validatedData);
 
     if (!reaction) {
@@ -118,6 +131,10 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ data: reaction });
   } catch (error) {
     console.error('Error updating comment reaction:', error);
+
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     if (error instanceof ZodError) {
       return NextResponse.json(
@@ -135,8 +152,12 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const session = await requireAuth();
     const body = await req.json();
-    const validatedData = deleteCommentReactionSchema.parse(body);
+    const validatedData = deleteCommentReactionSchema.parse({
+      ...body,
+      userId: session.user.id,
+    });
     const reaction = await ReactionService.deleteCommentReaction(validatedData);
 
     if (!reaction) {
@@ -152,6 +173,10 @@ export async function DELETE(req: NextRequest) {
     });
   } catch (error) {
     console.error('Error deleting comment reaction:', error);
+
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     if (error instanceof ZodError) {
       return NextResponse.json(

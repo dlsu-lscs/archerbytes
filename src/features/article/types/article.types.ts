@@ -60,7 +60,7 @@ export type FeedArticleType = {
 }
 
 export type ArticleDetailsProp = {
-    article: ArticleDetailsType;
+    article: FeedArticleType;
 };
 
 export type FeedArticleProp = {

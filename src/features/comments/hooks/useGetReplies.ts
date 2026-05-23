@@ -11,7 +11,7 @@ async function fetchReplies(commentId: number): Promise<CommentType[]> {
   }
 
   const json = await response.json();
-  return json.data.items;
+  return json.data;
 }
 
 interface UseGetRepliesOptions {

@@ -1,7 +1,7 @@
 import TopicChip from '../atoms/TopicChip';
-import { ArticleDetailsProp } from '@/features/article/types/article.types';
+import { ArticleDetailsType } from '@/features/article/types/article.types';
 
-export default function ArticleDetails({ article }: ArticleDetailsProp) {
+export default function ArticleDetails({ article }: { article: ArticleDetailsType }) {
   return (
     <div className="flex flex-col gap-[10px] text-neutral-950">
       <TopicChip>Gaming</TopicChip>
