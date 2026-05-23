@@ -5,6 +5,7 @@ import Navbar from '@/components/organisms/Navbar';
 import Footer from '@/components/organisms/Footer';
 import PrivacyPolicy from '@/components/organisms/PrivacyPolicy';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -37,6 +38,7 @@ export default function RootLayout({
                         <main className="flex flex-col grow">{children}</main>
                     </QueryProvider>
                     <PrivacyPolicy />
+                    <Toaster position='top-center'/>
                 </div>
                 <Footer />
             </body>

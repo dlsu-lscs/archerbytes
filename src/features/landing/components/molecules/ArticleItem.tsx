@@ -12,8 +12,8 @@ import Image from 'next/image';
 
 import { ArticleDetailsProp } from '@/features/article/types/article.types';
 import BookmarkButton from '@/features/bookmarks/components/atoms/BookmarkButton';
-import useBookmarkedArticles from '@/features/bookmarks/queries/useBookmarkedArticles';
-import useAddBookmark from '@/features/bookmarks/queries/useAddBookmark';
+import useBookmarkedArticles from '@/features/bookmarks/queries/useBookmarks';
+import useAddBookmark from '@/features/bookmarks/queries/useCreateBookmark';
 import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
 
 export default function ArticleItem({article}: ArticleDetailsProp) {

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
 import { BookmarkType } from "../types/bookmarks.types";
+import { toast } from "sonner";
 
 const queryKey: QueryKey = ['bookmarks']
 
@@ -35,6 +36,7 @@ export default function useAddBookmark() {
     },
     onError: (error, variables, context) => {
       queryClient.setQueryData(queryKey, context?.previousState);
+      toast.error("Failed to save article. Please try again");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });

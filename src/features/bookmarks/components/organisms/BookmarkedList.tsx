@@ -2,7 +2,7 @@
 
 import SavedArticleItem from "../molecules/SavedArticleItem";
 import ArticleItemSkeleton from "@/features/landing/components/atoms/ArticleItemSkeleton";
-import useBookmarkedArticles from "../../queries/useBookmarkedArticles";
+import useBookmarkedArticles from "../../queries/useBookmarks";
 
 export default function BookmarkedList() {
   const {data: bookmarks, isLoading, isError} = useBookmarkedArticles();
@@ -34,9 +34,6 @@ export default function BookmarkedList() {
               {bookmarks.map((bookmark) => (
                 <SavedArticleItem key={bookmark.id} bookmark={bookmark} />
               ))}
-              <p>sample</p>
-              <p>sample</p>
-              <p>sample</p>
           </div>
       )}
 </div>
