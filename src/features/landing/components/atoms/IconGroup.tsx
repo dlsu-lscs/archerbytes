@@ -4,7 +4,7 @@ import { ImBubble } from 'react-icons/im';
 
 import { IconsType } from '@/features/article/types/article.types';
 
-export default function IconGroup({ date, likes, comments }: IconsType) {
+export default function IconGroup({ date, reactions, comments }: IconsType) {
     return (
         <div className="flex gap-2 items-center">
             <div className="flex gap-1 items-center">
@@ -18,7 +18,7 @@ export default function IconGroup({ date, likes, comments }: IconsType) {
             </div>
             <div className="flex gap-1 items-center">
                 <IoHeartCircleSharp />
-                <p>{likes}</p>
+                <p>{reactions}</p>
             </div>
             <div className="flex gap-1 items-center">
                 <ImBubble />

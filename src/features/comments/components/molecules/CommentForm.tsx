@@ -69,7 +69,7 @@ export default function CommentForm({
                     className="size-8 md:size-12 my-[3px] shrink-0 rounded-full mr-3 z-30"
                     height={128}
                     width={128}
-                    src={user?.image || ''}
+                    src={user?.image || '/lscs-logo.png'}
                     alt="Avatar"
                 />
                 <div className="flex flex-col gap-3 w-full">

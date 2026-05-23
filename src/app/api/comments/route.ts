@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentService } from '@/features/comments/services/service';
-import { createCommentSchema } from '@/features/comments/types';
+import { createCommentSchema, paginationQuerySchema } from '@/features/comments/types';
 import { ZodError } from 'zod';
 
 export async function GET(req: NextRequest) {
@@ -22,7 +22,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const data = await CommentService.getByArticleID(articleId);
+    const limit = Number(req.nextUrl.searchParams.get('limit') ?? 10);
+    const offset = Number(req.nextUrl.searchParams.get('offset') ?? 0);
+    const query = paginationQuerySchema.parse({ limit, offset });
+
+    const data = await CommentService.getByArticleID(articleId, query);
 
     return NextResponse.json({ data }, { status: 200 });
   } catch (error) {

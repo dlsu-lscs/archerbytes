@@ -40,6 +40,7 @@ export default function ArticleHeader() {
     metaDescription: null,
     metaImageUrl: null,
     status: 'published',
+    isEdited: false,
     publishedAt: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),

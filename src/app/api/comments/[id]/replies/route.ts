@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CommentService } from '@/features/comments/services/service';
+import { paginationQuerySchema } from '@/features/comments/types';
 
 export async function GET(
   req: NextRequest,
@@ -21,7 +22,11 @@ export async function GET(
       );
     }
 
-    const replies = await CommentService.getReplies(numericId);
+    const limit = Number(req.nextUrl.searchParams.get('limit') ?? 10);
+    const offset = Number(req.nextUrl.searchParams.get('offset') ?? 0);
+    const query = paginationQuerySchema.parse({ limit, offset });
+
+    const replies = await CommentService.getReplies(numericId, query);
 
     return NextResponse.json({ data: replies }, { status: 200 });
   } catch (error) {
