@@ -3,12 +3,29 @@
 import SavedArticleItem from "../molecules/SavedArticleItem";
 import ArticleItemSkeleton from "@/features/landing/components/atoms/ArticleItemSkeleton";
 import useBookmarkedArticles from "../../queries/useBookmarks";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function BookmarkedList() {
-  const {data: bookmarks, isLoading, isError} = useBookmarkedArticles();
+  const router = useRouter();
+  const {data: bookmarks, isLoading, isError, error} = useBookmarkedArticles();
+
+  useEffect(() => {
+    if(isError && error?.message === 'Unauthorized') {
+      toast.error("Please log in to view your bookmarks.");
+      router.push('/login');
+    }
+  }, [isError, error, router]);
 
   return (
     <div>
+      {isError && error?.message === 'Unauthorized' && (
+        <div className="text-center py-10 text-gray-500">
+          Redirecting to login...
+        </div>
+      )}
+
       {isError && (
           <p className="text-red-500">
               Failed to load your bookmarks. Please try again later.

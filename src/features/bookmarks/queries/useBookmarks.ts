@@ -7,6 +7,10 @@ export default function useBookmarkedArticles() {
   return useQuery({
     queryKey: queryKey,
     queryFn: getBookmarkedArticles,
+    retry: (failureCount, error) => {
+      if (error.message === 'Unauthorized') return false;
+      return failureCount < 3;
+    },
     select: (data) => {
       return data.data.map((bookmark: Omit<BookmarkType, 'bookmarkedAt' | 'createdAt'> & {
         bookmarkedAt: string;
@@ -27,6 +31,10 @@ const getBookmarkedArticles = async () => {
   })
 
   const res = await fetch(`/api/bookmarks?${params.toString()}`);
+
+  if (res.status === 401) {
+    throw new Error('Unauthorized');
+  }
 
   if(!res.ok){
     throw new Error('Failed to fetch saved articles');
