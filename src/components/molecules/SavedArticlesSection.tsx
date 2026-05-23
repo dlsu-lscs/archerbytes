@@ -24,24 +24,28 @@ export default function SavedArticlesSection({
             </div>
             <div className="flex flex-col gap-6">
                 <SmallArticleItem
+                    id={1}
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
                     date="Oct 11"
                 />
                 <SmallArticleItem
+                    id={1}
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
                     date="Oct 11"
                 />
                 <SmallArticleItem
+                    id={1}
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"
                     date="Oct 11"
                 />
                 <SmallArticleItem
+                    id={1}
                     topic="Genre"
                     title="CCPROG2: Everything you need to pass"
                     author="Airon Bantillo"

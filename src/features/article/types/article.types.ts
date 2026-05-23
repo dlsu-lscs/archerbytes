@@ -65,6 +65,7 @@ export type BreadcrumbsType = {
 };
 
 export type SmallArticleItemType = {
+    id: number;
     topic: string;
     title: string;
     author: string;
