@@ -12,13 +12,33 @@ import IconGroup from '../atoms/IconGroup';
 import Image from 'next/image';
 
 import { ArticleDetailsProp } from '@/features/article/types/article.types';
+import BookmarkButton from '@/features/bookmarks/components/atoms/BookmarkButton';
+import useBookmarkedArticles from '@/features/bookmarks/queries/useBookmarkedArticles';
+import useAddBookmark from '@/features/bookmarks/queries/useAddBookmark';
+import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
 
 export default function ArticleItem({article}: ArticleDetailsProp) {
+    const {data: bookmarks} = useBookmarkedArticles();
+    const addBookmark = useAddBookmark();
+    const deleteBookmark = useDeleteBookmark();
+    const isBookmarked = bookmarks?.some((bookmark) => bookmark.articleId === article.id) || false;
+
+    const handleToggleBookmark = () => {
+        if(isBookmarked) {
+            deleteBookmark.mutate(article.id);
+        } else {
+            addBookmark.mutate(article.id);
+        }
+    }
+
     return (
         <Card className="flex flex-col px-8 py-10 gap-0 border-0 shadow-none rounded-none border-b-2 border-solid">
             <div className="flex justify-end items-center gap-1 mb-3">
                 <LuCircleMinus />
-                <FaRegBookmark />
+                <BookmarkButton
+                    isBookmarked={isBookmarked}
+                    onToggle={handleToggleBookmark}
+                />
                 <HiOutlineDotsHorizontal />
             </div>
             <div className="flex justify-between items-center gap-12">
