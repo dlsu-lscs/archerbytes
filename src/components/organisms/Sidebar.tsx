@@ -1,16 +1,26 @@
+'use client'
+
 import { HiOutlineHome } from 'react-icons/hi';
 import { GoPerson } from 'react-icons/go';
 import { IoBookmarkOutline } from 'react-icons/io5';
 import { BsQuestionLg } from 'react-icons/bs';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import SidebarItem from '../molecules/SidebarItem';
 
 export default function Sidebar() {
+    const pathname = usePathname();
+
     return (
         <div className="flex flex-col gap-2 grow max-w-52 text-lg p-5 z-10">
-            <SidebarItem icon={<HiOutlineHome />} title="HOME" isSelected={true} />
+            <Link href={'/'}>
+                <SidebarItem icon={<HiOutlineHome />} title="HOME" isSelected={pathname === '/'} />
+            </Link>
             <SidebarItem icon={<GoPerson />} title="PROFILE" />
-            <SidebarItem icon={<IoBookmarkOutline />} title="SAVED" />
+            <Link href={'/bookmarks'}>
+                <SidebarItem icon={<IoBookmarkOutline />} title="SAVED" isSelected={pathname === '/bookmarks'} />
+            </Link>
             <SidebarItem icon={<BsQuestionLg />} title="FAQS" />
             <SidebarItem
                 icon={

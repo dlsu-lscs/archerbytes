@@ -15,7 +15,7 @@ import BookmarkButton from '@/features/bookmarks/components/atoms/BookmarkButton
 import useBookmarkedArticles from '@/features/bookmarks/queries/useBookmarks';
 import useAddBookmark from '@/features/bookmarks/queries/useCreateBookmark';
 import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
-import { toast } from 'sonner';
+import { useAuthStore } from '@/store/use-auth-store';
 
 export default function ArticleItem({article}: ArticleDetailsProp) {
     const {data: bookmarks, error: authError} = useBookmarkedArticles();
@@ -23,10 +23,11 @@ export default function ArticleItem({article}: ArticleDetailsProp) {
     const deleteBookmark = useDeleteBookmark();
     const isBookmarked = bookmarks?.some((bookmark) => bookmark.articleId === article.id) || false;
     const isPending = addBookmark.isPending || deleteBookmark.isPending;
+    const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
 
     const handleToggleBookmark = () => {
         if (authError?.message === 'Unauthorized') {
-            toast.error("Please log in to save articles.");
+            setLoginOpen();
             return;
         }
 
