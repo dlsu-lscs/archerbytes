@@ -19,7 +19,10 @@ export default function BookmarkButton({isBookmarked, onToggle, disabled, size =
   return (
     <button
         type="button"
-        onClick={onToggle}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
         disabled={disabled}
         aria-label={isBookmarked ? "Unsave article" : "Save article"}
         aria-pressed={isBookmarked}

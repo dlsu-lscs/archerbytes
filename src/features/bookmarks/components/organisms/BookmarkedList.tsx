@@ -18,14 +18,16 @@ export default function BookmarkedList() {
     }
   }, [isError, error, router]);
 
+  if(isError && error?.message === 'Unauthorized'){
+    return(
+      <div className="text-center py-10 text-gray-500">
+        Redirecting to login...
+      </div>
+    )
+  }
+
   return (
     <div>
-      {isError && error?.message === 'Unauthorized' && (
-        <div className="text-center py-10 text-gray-500">
-          Redirecting to login...
-        </div>
-      )}
-
       {isError && (
           <p className="text-red-500">
               Failed to load your bookmarks. Please try again later.
