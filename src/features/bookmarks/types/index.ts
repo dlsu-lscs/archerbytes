@@ -44,7 +44,7 @@ export const bookmarkArticleSchema = z.object({
   slug: z.string(),
   featuredImageUrl: z.string().nullable(),
   status: z.string(),
-  isEdited: z.boolean().optional(),
+  isEdited: z.boolean(),
   publishedAt: z.date().nullable(),
   createdAt: z.date(),
   author: z.object({
