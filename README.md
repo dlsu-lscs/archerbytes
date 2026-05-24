@@ -1520,7 +1520,7 @@ This endpoint returns no response body when the bookmark is successfully removed
 
 ### GET `/api/bookmarks`
 
-- returns a paginated list of active bookmarks for the authenticated user, including article metadata
+- returns a paginated list of active bookmarks for the authenticated user, including the full article payload
 
 - `request`:
 
@@ -1546,8 +1546,26 @@ curl.exe -X GET "http://localhost:3000/api/bookmarks?limit=10&offset=0"
       "article": {
         "id": 42,
         "title": "Getting Started with TypeScript",
+        "subtitle": "Learn the basics of TypeScript",
         "slug": "getting-started-typescript",
-        "excerpt": "Learn the basics of TypeScript"
+        "featuredImageUrl": "https://example.com/typescript-cover.jpg",
+        "status": "published",
+        "isEdited": false,
+        "publishedAt": "2026-05-14T10:00:00.000Z",
+        "createdAt": "2026-05-14T09:30:00.000Z",
+        "author": {
+          "id": "user-789",
+          "name": "Rainer Gonzaga",
+          "avatarURL": "https://example.com/avatar.jpg",
+          "occupation": "Frontend Engineer"
+        },
+        "category": {
+          "id": 5,
+          "name": "Web Development",
+          "slug": "web-development"
+        },
+        "reactionCount": 24,
+        "commentCount": 8
       }
     }
   ],
