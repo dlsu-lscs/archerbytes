@@ -1,13 +1,28 @@
+'use client'
+
 import Image from 'next/image';
 import SmallArticleItem from '../atoms/SmallArticleItem';
+import useBookmarks from '@/features/bookmarks/queries/useBookmarks';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useSession } from '@/lib/auth/client';
 
-type SavedArticlesSectionType = {
-    count: number;
-};
+export default function SavedArticlesSection() {
+    const pathname = usePathname();
+    const {data: session} = useSession();
+    const {data: bookmarks, isLoading} = useBookmarks();
 
-export default function SavedArticlesSection({
-    count,
-}: SavedArticlesSectionType) {
+    const displayedBookmarks = bookmarks?.slice(0, 3) || [];
+    const totalSaved = bookmarks?.length || 0;
+
+    if(pathname === '/bookmarks' || !session?.user){
+        return null;
+    }
+
+    if (!isLoading && (!bookmarks || bookmarks.length === 0)) {
+        return null;
+    }
+
     return (
         <div className="flex flex-col gap-[10px]">
             <div className="flex justify-between items-center text-primary">
@@ -23,36 +38,39 @@ export default function SavedArticlesSection({
                 <p className="font-light text-md">Clear</p>
             </div>
             <div className="flex flex-col gap-6">
-                <SmallArticleItem
-                    id={1}
-                    topic="Genre"
-                    title="CCPROG2: Everything you need to pass"
-                    author="Airon Bantillo"
-                    date="Oct 11"
-                />
-                <SmallArticleItem
-                    id={1}
-                    topic="Genre"
-                    title="CCPROG2: Everything you need to pass"
-                    author="Airon Bantillo"
-                    date="Oct 11"
-                />
-                <SmallArticleItem
-                    id={1}
-                    topic="Genre"
-                    title="CCPROG2: Everything you need to pass"
-                    author="Airon Bantillo"
-                    date="Oct 11"
-                />
-                <SmallArticleItem
-                    id={1}
-                    topic="Genre"
-                    title="CCPROG2: Everything you need to pass"
-                    author="Airon Bantillo"
-                    date="Oct 11"
-                />
+                {isLoading ? (
+                    <div className="animate-pulse flex flex-col gap-4">
+                        <div className="h-16 bg-gray-200 rounded-md"></div>
+                        <div className="h-16 bg-gray-200 rounded-md"></div>
+                    </div>
+                ) : (
+                    displayedBookmarks?.map((bookmark) => {
+                        const formattedDate = new Intl.DateTimeFormat('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                        }).format(bookmark.bookmarkedAt ? new Date(bookmark.bookmarkedAt) : new Date());
+
+                        return (
+                            <SmallArticleItem 
+                                key={bookmark.id}
+                                id={bookmark.articleId}
+                                topic='Article'
+                                title={bookmark.article.title}
+                                author='Xandrei Pogi'
+                                date={formattedDate}
+                            />
+                        )
+                    })
+                )}
             </div>
-            <p className="text-sm font-light text-primary">See all ({count})</p>
+
+            {totalSaved > 3 && (
+                <Link href="/bookmarks">
+                    <p className="text-sm font-light text-primary hover:underline cursor-pointer mt-2">
+                        See all ({totalSaved})
+                    </p>
+                </Link>
+            )}
         </div>
     );
 }
