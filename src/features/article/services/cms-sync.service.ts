@@ -1,18 +1,24 @@
 import { db } from '@/config/database';
-import { articles, articleCategories } from '@/lib/db/schema';
+import { articles, articleCategories, user } from '@/lib/db/schema';
 import { cmsApiClient } from '@/lib/cms-api';
 import { eq } from 'drizzle-orm';
 
 const SYSTEM_USER_ID = process.env.SYSTEM_USER_ID || 'system';
 
 export class CMSSyncService {
-  static async syncArticle(articleId: string | number): Promise<{ id: number; slug: string }> {
+  static async syncArticle(
+    articleId: string | number,
+  ): Promise<{ id: number; slug: string }> {
     const cmsArticle = await cmsApiClient.fetchArticle(articleId);
-    const cmsArticleId = typeof cmsArticle.id === 'string' ? parseInt(cmsArticle.id, 10) : cmsArticle.id;
+    const cmsArticleId =
+      typeof cmsArticle.id === 'string'
+        ? parseInt(cmsArticle.id, 10)
+        : cmsArticle.id;
 
-    const cmsCategoryId = typeof cmsArticle.category === 'number' 
-      ? cmsArticle.category 
-      : cmsArticle.category.id;
+    const cmsCategoryId =
+      typeof cmsArticle.category === 'number'
+        ? cmsArticle.category
+        : cmsArticle.category.id;
 
     let existingCategory = await db
       .select({ id: articleCategories.id })
@@ -27,20 +33,35 @@ export class CMSSyncService {
         .from(articleCategories)
         .where(eq(articleCategories.cmsCategoryId, cmsCategoryId))
         .limit(1);
-      
+
       if (!existingCategory.length) {
-        throw new Error(`Failed to sync article: category ${cmsCategoryId} not found after sync attempt`);
+        throw new Error(
+          `Failed to sync article: category ${cmsCategoryId} not found after sync attempt`,
+        );
       }
     }
 
     const localCategoryId = existingCategory[0].id;
+
+    const systemUserExists = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.id, SYSTEM_USER_ID))
+      .limit(1);
+
+    if (!systemUserExists.length) {
+      throw new Error(
+        `SYSTEM_USER_ID (${SYSTEM_USER_ID}) not found in user table. ` +
+          `Ensure this user exists in the database or set SYSTEM_USER_ID env var to an existing user ID.`,
+      );
+    }
 
     const articleData = {
       cmsArticleId,
       title: cmsArticle.title,
       subtitle: cmsArticle.subtitle,
       slug: cmsArticle.slug,
-      content: JSON.stringify(cmsArticle.content),
+      content: JSON.stringify(cmsArticle.mdContent),
       categoryId: localCategoryId,
       userId: SYSTEM_USER_ID,
       featuredImageUrl: this.extractImageUrl(cmsArticle.featuredImage),
@@ -49,9 +70,10 @@ export class CMSSyncService {
       metaDescription: cmsArticle.meta?.description || null,
       metaImageUrl: this.extractImageUrl(cmsArticle.meta?.image),
       status: (cmsArticle._status || 'draft') as 'draft' | 'published',
-      publishedAt: cmsArticle._status === 'published' 
-        ? new Date(cmsArticle.updatedAt) 
-        : null,
+      publishedAt:
+        cmsArticle._status === 'published'
+          ? new Date(cmsArticle.updatedAt)
+          : null,
       updatedAt: new Date(cmsArticle.updatedAt),
     };
 
@@ -74,9 +96,14 @@ export class CMSSyncService {
     return result[0];
   }
 
-  static async syncCategory(categoryId: string | number): Promise<{ id: number; name: string }> {
+  static async syncCategory(
+    categoryId: string | number,
+  ): Promise<{ id: number; name: string }> {
     const cmsCategory = await cmsApiClient.fetchCategory(categoryId);
-    const cmsCategoryId = typeof cmsCategory.id === 'string' ? parseInt(cmsCategory.id, 10) : cmsCategory.id;
+    const cmsCategoryId =
+      typeof cmsCategory.id === 'string'
+        ? parseInt(cmsCategory.id, 10)
+        : cmsCategory.id;
 
     const categoryData = {
       cmsCategoryId,
@@ -101,8 +128,9 @@ export class CMSSyncService {
   }
 
   static async deleteArticle(articleId: string | number): Promise<void> {
-    const cmsArticleId = typeof articleId === 'string' ? parseInt(articleId, 10) : articleId;
-    
+    const cmsArticleId =
+      typeof articleId === 'string' ? parseInt(articleId, 10) : articleId;
+
     const result = await db
       .update(articles)
       .set({ deletedAt: new Date() })
@@ -115,8 +143,9 @@ export class CMSSyncService {
   }
 
   static async deleteCategory(categoryId: string | number): Promise<void> {
-    const cmsCategoryId = typeof categoryId === 'string' ? parseInt(categoryId, 10) : categoryId;
-    
+    const cmsCategoryId =
+      typeof categoryId === 'string' ? parseInt(categoryId, 10) : categoryId;
+
     const result = await db
       .update(articleCategories)
       .set({ deletedAt: new Date() })

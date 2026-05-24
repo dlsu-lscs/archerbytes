@@ -387,8 +387,22 @@ describe('bookmarks API routes', () => {
             slug: 'article-1',
             featuredImageUrl: 'http://example.com/img1.jpg',
             status: 'published',
+            isEdited: false,
             publishedAt: new Date(),
             createdAt: new Date(),
+            author: {
+              id: 'user-789',
+              name: 'Author Name',
+              avatarURL: 'http://example.com/avatar.jpg',
+              occupation: 'Engineer',
+            },
+            category: {
+              id: 5,
+              name: 'Web Development',
+              slug: 'web-development',
+            },
+            reactionCount: 24,
+            commentCount: 8,
           },
         },
       ];

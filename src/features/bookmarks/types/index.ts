@@ -44,8 +44,22 @@ export const bookmarkArticleSchema = z.object({
   slug: z.string(),
   featuredImageUrl: z.string().nullable(),
   status: z.string(),
+  isEdited: z.boolean(),
   publishedAt: z.date().nullable(),
   createdAt: z.date(),
+  author: z.object({
+    id: z.string(),
+    name: z.string(),
+    avatarURL: z.string().nullable(),
+    occupation: z.string().nullable(),
+  }),
+  category: z.object({
+    id: z.number().int(),
+    name: z.string(),
+    slug: z.string(),
+  }),
+  reactionCount: z.number().int().nonnegative(),
+  commentCount: z.number().int().nonnegative(),
 });
 
 export const bookmarkWithArticleSchema = bookmarkResponseSchema.extend({
