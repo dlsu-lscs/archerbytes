@@ -1,6 +1,7 @@
 import { db } from '@/config/database';
 import { user } from '@/lib/db/auth-schema';
 import { eq } from 'drizzle-orm';
+import type { UpdateUserProfileInput } from '@/features/auth/types';
 
 export async function getUserById(userId: string) {
   try {
@@ -32,20 +33,30 @@ export async function getUserByEmail(email: string) {
   }
 }
 
-export async function updateUserName(userId: string, name: string) {
+export async function updateUserProfile(userId: string, data: UpdateUserProfileInput) {
   try {
-    const updated = await db
-      .update(user)
-      .set({
-        name,
-        updatedAt: new Date(),
-      })
-      .where(eq(user.id, userId))
-      .returning();
+    type SetObj = Partial<{
+      occupation: string | null;
+      image: string | null;
+      updatedAt: Date;
+    }>;
+
+    const setObj: SetObj = {};
+
+    if (data.occupation !== undefined) setObj.occupation = data.occupation ?? null;
+    if (data.image !== undefined) setObj.image = data.image ?? null;
+
+    if (Object.keys(setObj).length === 0) {
+      return null;
+    }
+
+    setObj.updatedAt = new Date();
+
+    const updated = await db.update(user).set(setObj as Record<string, unknown>).where(eq(user.id, userId)).returning();
 
     return updated[0] ?? null;
   } catch (error) {
-    console.error('Error updating user name:', error);
+    console.error('Error updating user profile:', error);
     return null;
   }
 }

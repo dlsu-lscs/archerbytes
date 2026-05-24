@@ -9,3 +9,8 @@ export interface AuthSession {
   session: Session;
   user: User;
 }
+
+export type UpdateUserProfileInput = {
+  occupation?: string;
+  image?: string;
+};
