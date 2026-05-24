@@ -58,6 +58,7 @@ export default function SavedArticlesSection() {
                                 title={bookmark.article.title}
                                 author={bookmark.article.author.name}
                                 date={formattedDate}
+                                avatarURL={bookmark.article.author?.avatarURL}
                             />
                         )
                     })

@@ -8,6 +8,7 @@ import useBookmarks from '@/features/bookmarks/queries/useBookmarks';
 import useCreateBookmark from '@/features/bookmarks/queries/useCreateBookmark';
 import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
 import { useAuthStore } from '@/store/use-auth-store';
+import Image from 'next/image';
 
 export default function SmallArticleItem({
     id,
@@ -15,6 +16,7 @@ export default function SmallArticleItem({
     title,
     author,
     date,
+    avatarURL
 }: SmallArticleItemType) {
     const { data: bookmarks, error: authError } = useBookmarks();
     const addBookmark = useCreateBookmark();
@@ -41,7 +43,13 @@ export default function SmallArticleItem({
         <div className="flex flex-col gap-1 text-neutral-950">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <div className="size-4 shrink-0 rounded-full bg-neutral-400"></div>
+                    <Image 
+                        src={avatarURL || '/lscs-logo.png'}
+                        alt={`${author}'s avatar`}
+                        width={16}
+                        height={16}
+                        className="size-4 shrink-0 rounded-full object-cover bg-neutral-200"
+                    />
                     <p className="font-light text-xs">{author}</p>
                 </div>
                 <BookmarkButton 

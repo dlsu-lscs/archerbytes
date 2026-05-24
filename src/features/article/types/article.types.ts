@@ -77,6 +77,7 @@ export type SmallArticleItemType = {
     title: string;
     author: string;
     date: string;
+    avatarURL: string | null;
 };
 
 export type IconsType = {
