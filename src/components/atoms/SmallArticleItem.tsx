@@ -47,6 +47,7 @@ export default function SmallArticleItem({
                     isBookmarked={isBookmarked} 
                     onToggle={handleToggleBookmark} 
                     disabled={isPending} 
+                    size='small'
                 />
             </div>
             <h6 className="text-md font-bold align-middle">{title}</h6>

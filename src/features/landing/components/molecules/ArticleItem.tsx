@@ -45,6 +45,7 @@ export default function ArticleItem({article}: ArticleDetailsProp) {
                     isBookmarked={isBookmarked}
                     onToggle={handleToggleBookmark}
                     disabled={isPending}
+                    size='medium'
                 />
                 <HiOutlineDotsHorizontal />
             </div>

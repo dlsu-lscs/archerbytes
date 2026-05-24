@@ -79,6 +79,7 @@ export default function ArticleHeader() {
                         isBookmarked={isBookmarked} 
                         onToggle={handleToggleBookmark} 
                         disabled={isPending} 
+                        size='large'
                     />
                     <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
                 </div>
