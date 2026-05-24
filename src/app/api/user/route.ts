@@ -2,7 +2,10 @@ import { z } from 'zod';
 
 import { requireAuth } from '@/lib/util/auth/session';
 import { ok, fail } from '@/lib/api/response';
-import { uploadProfileImage } from '@/lib/storage/s3';
+import {
+  deleteProfileImage,
+  uploadProfileImage,
+} from '@/lib/storage/s3';
 import { updateUserProfile } from '@/features/auth/services/service';
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
@@ -30,25 +33,26 @@ export async function PATCH(request: Request) {
 
     const imageEntry = form.get('image');
     let imageUrl: string | undefined;
+    let uploadedObjectKey: string | null = null;
 
     if (imageEntry !== null) {
-      const maybeFile = imageEntry as unknown as File;
-
-      if (!maybeFile || typeof maybeFile?.name !== 'string' || typeof maybeFile?.size !== 'number') {
+      if (!(imageEntry instanceof File)) {
         return fail('Invalid file upload for image', 400);
       }
 
-      if (!ALLOWED_MIME.includes(maybeFile.type)) {
+      if (!ALLOWED_MIME.includes(imageEntry.type)) {
         return fail('Invalid image type. Allowed: image/jpeg, image/png, image/webp', 400, {
           allowed: ALLOWED_MIME,
         });
       }
 
-      if (maybeFile.size > MAX_IMAGE_BYTES) {
+      if (imageEntry.size > MAX_IMAGE_BYTES) {
         return fail('Image exceeds maximum size of 2 MB', 400);
       }
 
-      imageUrl = await uploadProfileImage(maybeFile, session.user.id);
+      const uploadResult = await uploadProfileImage(imageEntry, session.user.id);
+      uploadedObjectKey = uploadResult.objectKey;
+      imageUrl = uploadResult.imageUrl;
     }
 
     const payload: { occupation?: string; image?: string } = {};
@@ -62,6 +66,13 @@ export async function PATCH(request: Request) {
     const updated = await updateUserProfile(session.user.id, payload);
 
     if (!updated) {
+      if (uploadedObjectKey) {
+        try {
+          await deleteProfileImage(uploadedObjectKey);
+        } catch (cleanupError) {
+          console.error('Failed to clean up uploaded profile image after DB update failure:', cleanupError);
+        }
+      }
       return fail('Failed to update user profile', 500);
     }
 

@@ -1,14 +1,16 @@
 import {
   CreateBucketCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
   HeadBucketCommand,
-  PutBucketPolicyCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 let s3Client: S3Client | null = null;
 let bucketReadyPromise: Promise<void> | null = null;
-const POLICY_VERSION = '2012-10-17';
+let bucketReady = false;
 
 function getRequiredEnv(name: string) {
   const value = process.env[name];
@@ -20,12 +22,8 @@ function getRequiredEnv(name: string) {
   return value;
 }
 
-function normalizeEndpoint(endpoint: string) {
-  return endpoint.replace(/\/$/, '');
-}
-
-function buildPublicObjectUrl(endpoint: string, bucket: string, objectKey: string) {
-  return new URL(`${bucket}/${objectKey}`, `${normalizeEndpoint(endpoint)}/`).toString();
+function buildProfileImageRouteUrl(objectKey: string) {
+  return `/api/storage/profile-image?key=${encodeURIComponent(objectKey)}`;
 }
 
 function sanitizeFileName(name: string) {
@@ -41,6 +39,20 @@ function sanitizeFileName(name: string) {
 
 function getObjectKey(fileName: string, userId: string) {
   return `profiles/${userId}/${Date.now()}-${sanitizeFileName(fileName)}`;
+}
+
+function isMissingBucketError(error: unknown) {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const typedError = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+
+  return (
+    typedError.name === 'NoSuchBucket' ||
+    typedError.name === 'NotFound' ||
+    typedError.$metadata?.httpStatusCode === 404
+  );
 }
 
 export function getS3Client() {
@@ -67,6 +79,10 @@ export function getS3Client() {
 }
 
 export async function ensureBucket() {
+  if (bucketReady) {
+    return;
+  }
+
   if (!bucketReadyPromise) {
     bucketReadyPromise = (async () => {
       const bucket = getRequiredEnv('S3_BUCKET');
@@ -74,7 +90,11 @@ export async function ensureBucket() {
 
       try {
         await client.send(new HeadBucketCommand({ Bucket: bucket }));
-      } catch {
+      } catch (error) {
+        if (!isMissingBucketError(error)) {
+          throw error;
+        }
+
         await client.send(
           new CreateBucketCommand({
             Bucket: bucket,
@@ -82,25 +102,7 @@ export async function ensureBucket() {
         );
       }
 
-      const bucketPolicy = {
-        Version: POLICY_VERSION,
-        Statement: [
-          {
-            Sid: 'PublicReadForProfileImages',
-            Effect: 'Allow',
-            Principal: '*',
-            Action: ['s3:GetObject'],
-            Resource: [`arn:aws:s3:::${bucket}/profiles/*`],
-          },
-        ],
-      };
-
-      await client.send(
-        new PutBucketPolicyCommand({
-          Bucket: bucket,
-          Policy: JSON.stringify(bucketPolicy),
-        }),
-      );
+      bucketReady = true;
 
     })().catch((error) => {
       bucketReadyPromise = null;
@@ -111,11 +113,13 @@ export async function ensureBucket() {
   await bucketReadyPromise;
 }
 
-export async function uploadProfileImage(file: File, userId: string): Promise<string> {
+export async function uploadProfileImage(
+  file: File,
+  userId: string,
+): Promise<{ objectKey: string; imageUrl: string }> {
   await ensureBucket();
 
   const bucket = getRequiredEnv('S3_BUCKET');
-  const endpoint = normalizeEndpoint(getRequiredEnv('S3_ENDPOINT'));
   const client = getS3Client();
   const objectKey = getObjectKey(file.name, userId);
   const body = Buffer.from(await file.arrayBuffer());
@@ -126,9 +130,39 @@ export async function uploadProfileImage(file: File, userId: string): Promise<st
       Key: objectKey,
       Body: body,
       ContentType: file.type,
-      ACL: 'public-read',
     }),
   );
 
-  return buildPublicObjectUrl(endpoint, bucket, objectKey);
+  return {
+    objectKey,
+    imageUrl: buildProfileImageRouteUrl(objectKey),
+  };
+}
+
+export async function deleteProfileImage(objectKey: string) {
+  const bucket = getRequiredEnv('S3_BUCKET');
+  const client = getS3Client();
+
+  await client.send(
+    new DeleteObjectCommand({
+      Bucket: bucket,
+      Key: objectKey,
+    }),
+  );
+}
+
+export async function getProfileImagePresignedUrl(objectKey: string) {
+  const bucket = getRequiredEnv('S3_BUCKET');
+  const client = getS3Client();
+
+  return await getSignedUrl(
+    client,
+    new GetObjectCommand({
+      Bucket: bucket,
+      Key: objectKey,
+    }),
+    {
+      expiresIn: 60 * 5,
+    },
+  );
 }

@@ -35,24 +35,27 @@ export async function getUserByEmail(email: string) {
 
 export async function updateUserProfile(userId: string, data: UpdateUserProfileInput) {
   try {
-    type SetObj = Partial<{
-      occupation: string | null;
-      image: string | null;
-      updatedAt: Date;
-    }>;
+    const setObj: Partial<typeof user.$inferInsert> = {
+      updatedAt: new Date(),
+    };
 
-    const setObj: SetObj = {};
+    if (data.occupation !== undefined) {
+      setObj.occupation = data.occupation;
+    }
 
-    if (data.occupation !== undefined) setObj.occupation = data.occupation ?? null;
-    if (data.image !== undefined) setObj.image = data.image ?? null;
+    if (data.image !== undefined) {
+      setObj.image = data.image;
+    }
 
-    if (Object.keys(setObj).length === 0) {
+    if (Object.keys(setObj).length === 1) {
       return null;
     }
 
-    setObj.updatedAt = new Date();
-
-    const updated = await db.update(user).set(setObj as Record<string, unknown>).where(eq(user.id, userId)).returning();
+    const updated = await db
+      .update(user)
+      .set(setObj)
+      .where(eq(user.id, userId))
+      .returning();
 
     return updated[0] ?? null;
   } catch (error) {
