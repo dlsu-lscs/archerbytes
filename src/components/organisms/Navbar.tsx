@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { useSession } from '@/lib/auth/client';
 import Image from 'next/image';
+import { useAuthStore } from '@/store/use-auth-store';
 import { MdMenu } from 'react-icons/md';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { AiOutlineBell } from 'react-icons/ai';
@@ -19,11 +19,12 @@ import Sidebar from './Sidebar';
 import Login from '@/features/auth/components/Login';
 
 export default function Navbar() {
-    const [login, setLogin] = useState(false);
-
     const { data: session } = useSession();
-
     const user = session?.user;
+
+    const isLoginOpen = useAuthStore((state) => state.isLoginOpen);
+    const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
+    const setLoginClose = useAuthStore((state) => state.setLoginClose);
 
     return (
         <>
@@ -49,11 +50,11 @@ export default function Navbar() {
                     </div>
                     <div className="flex items-center whitespace-nowrap text-md flex gap-[25px]">
                         <p>About ArcherBytes</p>
-                        {!session ? (
+                        {!user ? (
                             <>
                                 <p
                                     className="hover:cursor-pointer"
-                                    onClick={() => setLogin(true)}
+                                    onClick={() => setLoginOpen()}
                                 >
                                     Sign in
                                 </p>
@@ -106,7 +107,7 @@ export default function Navbar() {
                             ></Image>
                         </div>
 
-                        {!session ? (
+                        {!user ? (
                             <>
                                 <Button className="bg-secondary relative p-4 border border-2 border-neutral-950">
                                     <p className="font-bold text-neutral-50 text-outline-black">
@@ -152,10 +153,10 @@ export default function Navbar() {
                     </SheetHeader>
                 </SheetContent>
             </Sheet>
-            {login === true ? (
+            {isLoginOpen ? (
                 <div
-                    className="flex size-full absolute top-0 bg-neutral-500/50 backdrop-blur-xs justify-center items-center z-50 transition-all duration-150"
-                    onClick={() => setLogin(false)}
+                    className="fixed inset-0 flex bg-neutral-500/50 backdrop-blur-xs justify-center items-center z-50 transition-all duration-150"
+                    onClick={() => setLoginClose()}
                 >
                     <Login />
                 </div>
