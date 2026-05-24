@@ -2,14 +2,14 @@
 
 import SavedArticleItem from "../molecules/SavedArticleItem";
 import ArticleItemSkeleton from "@/features/landing/components/atoms/ArticleItemSkeleton";
-import useBookmarkedArticles from "../../queries/useBookmarks";
+import useBookmarks from "../../queries/useBookmarks";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function BookmarkedList() {
   const router = useRouter();
-  const {data: bookmarks, isLoading, isError, error} = useBookmarkedArticles();
+  const {data: bookmarks, isLoading, isError, error} = useBookmarks();
 
   useEffect(() => {
     if(isError && error?.message === 'Unauthorized') {

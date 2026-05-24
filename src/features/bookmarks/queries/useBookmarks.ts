@@ -3,7 +3,7 @@ import { BookmarkType } from '../types/bookmarks.types';
 
 const queryKey: QueryKey = ['bookmarks']
 
-export default function useBookmarkedArticles() {
+export default function useBookmarks() {
   return useQuery({
     queryKey: queryKey,
     queryFn: getBookmarkedArticles,
