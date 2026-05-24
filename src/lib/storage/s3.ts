@@ -113,6 +113,17 @@ export async function ensureBucket() {
   await bucketReadyPromise;
 }
 
+function getMimeTypeFromExtension(fileName: string): string {
+  const ext = fileName.toLowerCase().split('.').pop() || '';
+  const mimeMap: Record<string, string> = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    webp: 'image/webp',
+  };
+  return mimeMap[ext] || 'application/octet-stream';
+}
+
 export async function uploadProfileImage(
   file: File,
   userId: string,
@@ -124,12 +135,17 @@ export async function uploadProfileImage(
   const objectKey = getObjectKey(file.name, userId);
   const body = Buffer.from(await file.arrayBuffer());
 
+  let contentType = file.type || getMimeTypeFromExtension(file.name);
+  if (!contentType.startsWith('image/')) {
+    contentType = getMimeTypeFromExtension(file.name);
+  }
+
   await client.send(
     new PutObjectCommand({
       Bucket: bucket,
       Key: objectKey,
       Body: body,
-      ContentType: file.type,
+      ContentType: contentType,
     }),
   );
 
