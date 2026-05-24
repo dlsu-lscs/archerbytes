@@ -12,13 +12,22 @@ export default function useBookmarks() {
       return failureCount < 3;
     },
     select: (data) => {
-      return data.data.map((bookmark: Omit<BookmarkType, 'bookmarkedAt' | 'createdAt'> & {
+      return data.data.map((bookmark: Omit<BookmarkType, 'bookmarkedAt' | 'createdAt' | 'article'> & {
         bookmarkedAt: string;
         createdAt: string;
+        article: Omit<BookmarkType['article'], 'publishedAt' | 'createdAt'> & {
+          publishedAt: string | null;
+          createdAt: string;
+        }
       }) => ({
         ...bookmark,
         bookmarkedAt: new Date(bookmark.bookmarkedAt),
-        createdAt: new Date(bookmark.createdAt)
+        createdAt: new Date(bookmark.createdAt),
+        article: {
+          ...bookmark.article,
+          publishedAt: bookmark.article.publishedAt ? new Date(bookmark.article.publishedAt) : null,
+          createdAt: new Date(bookmark.article.createdAt)
+        }
       })) as BookmarkType[];
     }
   })

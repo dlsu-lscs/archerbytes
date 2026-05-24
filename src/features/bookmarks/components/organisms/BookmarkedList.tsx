@@ -1,6 +1,6 @@
 'use client'
 
-import SavedArticleItem from "../molecules/SavedArticleItem";
+import ArticleItem from "@/features/landing/components/molecules/ArticleItem";
 import ArticleItemSkeleton from "@/features/landing/components/atoms/ArticleItemSkeleton";
 import useBookmarks from "../../queries/useBookmarks";
 import { useEffect } from "react";
@@ -49,9 +49,9 @@ export default function BookmarkedList() {
       )}
 
       {!isLoading && !isError && bookmarks && bookmarks.length > 0 && (
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
               {bookmarks.map((bookmark) => (
-                <SavedArticleItem key={bookmark.id} bookmark={bookmark} />
+                <ArticleItem key={bookmark.id} article={bookmark.article} />
               ))}
           </div>
       )}

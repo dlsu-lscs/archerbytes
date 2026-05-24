@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
 import { BookmarkType, BookmarkMetaType } from "../types/bookmarks.types";
+import { FeedArticleType } from "@/features/article/types/article.types";
 import { toast } from "sonner";
 
 const queryKey: QueryKey = ['bookmarks']
@@ -31,9 +32,27 @@ export default function useAddBookmark() {
             article: {
                 id: articleId,
                 title: 'Saving Article...',
+                subtitle: 'Please wait...',
                 slug: '',
-                excerpt: ''
-            }
+                featuredImageUrl: null,
+                status: 'published',
+                isEdited: false,
+                publishedAt: new Date(),
+                createdAt: new Date(),
+                author: {
+                    id: 'temp',
+                    name: 'Loading...',
+                    avatarURL: '/lscs-logo.png',
+                    occupation: null
+                },
+                category: {
+                    id: 0,
+                    name: '',
+                    slug: ''
+                },
+                reactionCount: 0,
+                commentCount: 0
+            } as FeedArticleType
           };
 
           return {

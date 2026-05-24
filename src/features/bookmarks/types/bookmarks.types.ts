@@ -1,9 +1,4 @@
-export type BookmarkArticleType = {
-  id: number;
-  title: string;
-  slug: string;
-  excerpt: string;
-}
+import { FeedArticleType } from "@/features/article/types/article.types";
 
 export type BookmarkType = {
   id: number;
@@ -11,7 +6,7 @@ export type BookmarkType = {
   articleId: number;
   bookmarkedAt: Date;
   createdAt: Date;
-  article: BookmarkArticleType;
+  article: FeedArticleType;
 }
 
 export type BookmarkMetaType = {
