@@ -38,10 +38,9 @@ export default function RootLayout({
                         <main className="flex flex-col grow">{children}</main>
                     </QueryProvider>
                     <PrivacyPolicy />
-                    <Toaster position='top-center'/>
                 </div>
                 <Footer />
-                <Toaster />
+                <Toaster position='top-center' />
             </body>
         </html>
     );

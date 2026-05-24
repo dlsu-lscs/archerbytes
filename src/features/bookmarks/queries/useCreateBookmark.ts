@@ -22,12 +22,23 @@ export default function useAddBookmark() {
       if(previousState) {
         queryClient.setQueryData<CacheData>(queryKey, (prev) => {
           if(!prev) return prev;
+          const optimisticBookmark: BookmarkType = {
+            id: Date.now(),
+            articleId: articleId,
+            userId: 'temp-user',
+            bookmarkedAt: new Date(),
+            createdAt: new Date(),
+            article: {
+                id: articleId,
+                title: 'Saving Article...',
+                slug: '',
+                excerpt: ''
+            }
+          };
+
           return {
             ...prev,
-            data: [
-              ...prev.data,
-              { articleId } as BookmarkType 
-            ]
+            data: [...prev.data, optimisticBookmark]
           };
         });
       }
