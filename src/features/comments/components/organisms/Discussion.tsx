@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useRef } from 'react';
 import CommentItem from '@/features/comments/components/molecules/CommentItem';
 import CommentForm from '../molecules/CommentForm';
 import { useGetComments } from '../../hooks/useGetComments';
@@ -9,27 +8,8 @@ interface DiscussionProps {
 }
 
 export default function Discussion({ articleId }: DiscussionProps) {
-    const { data, total, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    const { data, total, hasNextPage, isFetchingNextPage, sentinelRef } =
         useGetComments(String(articleId));
-
-    const sentinelRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const sentinel = sentinelRef.current;
-        if (!sentinel) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-                    fetchNextPage();
-                }
-            },
-            { threshold: 0.1 },
-        );
-
-        observer.observe(sentinel);
-        return () => observer.disconnect();
-    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
     return (
         <div className="flex flex-col gap-3">

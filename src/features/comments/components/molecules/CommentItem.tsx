@@ -72,8 +72,15 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
     const replyTargetId =
         typeof comment.id === 'number' ? (comment.replyTo ?? comment.id) : null;
 
-    const { data: fetchedReplies, isLoading } = useGetReplies(comment.id ?? 0, {
+    const {
+        data: fetchedReplies,
+        isLoading,
+        hasNextPage,
+        isFetchingNextPage,
+        sentinelRef: repliesSentinelRef,
+    } = useGetReplies(comment.id ?? 0, {
         enabled: isExpanded && Boolean(comment.id),
+        isExpanded,
     });
 
     const replyCount = comment.replyCount ?? 0;
@@ -279,27 +286,31 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
                     </div>
                 </div>
             )}
-            {isExpanded &&
-                !isLoading &&
-                fetchedReplies &&
-                fetchedReplies.map((reply, index) => {
-                    const count = fetchedReplies.length;
-                    const isLast = index === count - 1;
-
-                    return (
-                        <div className="relative md:ml-16 ml-8" key={reply.id}>
-                            {!isLast && (
-                                <div className="absolute md:-left-[16px] left-[9px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
-                            )}
-                            <div className="absolute md:-left-[16px] left-[9px] md:w-13 w-5 h-16 md:-top-3 -top-5 bottom-0 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl" />
-                            <CommentItem comment={reply} articleId={articleId} />
+            {isExpanded && (
+                <>
+                    {isLoading && (
+                        <div className="ml-12 mt-4 text-sm text-neutral-500">
+                            Loading replies...
                         </div>
-                    );
-                })}
-            {isLoading && isExpanded && (
-                <div className="ml-12 mt-4 text-sm text-neutral-500">
-                    Loading replies...
-                </div>
+                    )}
+                    {!isLoading &&
+                        fetchedReplies.map((reply, index) => {
+                            const isLast = index === fetchedReplies.length - 1 && !hasNextPage;
+
+                            return (
+                                <div className="relative md:ml-16 ml-8" key={reply.id}>
+                                    {!isLast && (
+                                        <div className="absolute md:-left-[16px] left-[9px] -top-3 bottom-0 w-[2px] bg-neutral-300" />
+                                    )}
+                                    <div className="absolute md:-left-[16px] left-[9px] md:w-13 w-5 h-16 md:-top-3 -top-5 bottom-0 border-b-2 border-l-2 border-neutral-300 rounded-bl-2xl" />
+                                    <CommentItem comment={reply} articleId={articleId} />
+                                </div>
+                            );
+                        })}
+                    <div ref={repliesSentinelRef} className="ml-12 py-1 text-center text-sm text-neutral-400">
+                        {isFetchingNextPage ? 'Loading more replies...' : ''}
+                    </div>
+                </>
             )}
         </div>
     );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 import type { ApiPaginatedResponse } from '@/lib/api/response';
 import type { CommentType } from '../types/comment.types';
 
@@ -27,6 +28,27 @@ export function useGetComments(articleId: string | undefined) {
     enabled: Boolean(articleId),
   });
 
+  const { fetchNextPage, hasNextPage, isFetchingNextPage } = query;
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
   const data = query.data?.pages.flatMap((p) => p.data) ?? [];
   const total = query.data?.pages[0]?.meta.total ?? 0;
 
@@ -34,5 +56,6 @@ export function useGetComments(articleId: string | undefined) {
     ...query,
     data,
     total,
+    sentinelRef,
   };
 }
