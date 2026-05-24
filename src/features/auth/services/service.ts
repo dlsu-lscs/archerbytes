@@ -47,6 +47,10 @@ export async function updateUserProfile(userId: string, data: UpdateUserProfileI
       setObj.image = data.image;
     }
 
+    if ((data as any).bio !== undefined) {
+      setObj.bio = (data as any).bio;
+    }
+
     if (Object.keys(setObj).length === 1) {
       return null;
     }

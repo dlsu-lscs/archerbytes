@@ -11,7 +11,8 @@ import { updateUserProfile } from '@/features/auth/services/service';
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 
-const occupationSchema = z.string().min(1);
+const occupationSchema = z.enum(['Alumni', 'Student', 'Faculty'] as const);
+const bioSchema = z.string().max(150);
 
 export async function PATCH(request: Request) {
   try {
@@ -27,7 +28,18 @@ export async function PATCH(request: Request) {
       try {
         occupation = occupationSchema.parse(occ);
       } catch {
-        return fail('Invalid occupation: must be a non-empty string', 400);
+        return fail('Invalid occupation: must be one of Alumni, Student, Faculty', 400);
+      }
+    }
+
+    const bioRaw = form.get('bio');
+    let bio: string | undefined;
+    if (bioRaw !== null) {
+      const b = String(bioRaw).trim();
+      try {
+        bio = bioSchema.parse(b);
+      } catch {
+        return fail('Invalid bio: must be at most 150 characters', 400);
       }
     }
 
@@ -55,9 +67,10 @@ export async function PATCH(request: Request) {
       imageUrl = uploadResult.imageUrl;
     }
 
-    const payload: { occupation?: string; image?: string } = {};
+    const payload: { occupation?: string; image?: string; bio?: string } = {};
     if (occupation !== undefined) payload.occupation = occupation;
     if (imageUrl !== undefined) payload.image = imageUrl;
+    if (bio !== undefined) payload.bio = bio;
 
     if (Object.keys(payload).length === 0) {
       return fail('No updatable fields provided. Include `occupation` and/or `image`.', 400);
@@ -82,6 +95,7 @@ export async function PATCH(request: Request) {
       email: updated.email,
       image: updated.image,
       occupation: updated.occupation,
+      bio: updated.bio,
       updatedAt: updated.updatedAt,
     };
 

@@ -11,6 +11,7 @@ export interface AuthSession {
 }
 
 export type UpdateUserProfileInput = {
-  occupation?: string;
+  occupation?: 'Alumni' | 'Student' | 'Faculty';
   image?: string;
+  bio?: string;
 };
