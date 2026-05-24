@@ -5,7 +5,6 @@ import { toast } from 'sonner';
 import type {
   CreateCommentInput,
   CommentRecord,
-  GetCommentsResponse,
 } from '../types';
 
 interface CreateCommentVariables {
