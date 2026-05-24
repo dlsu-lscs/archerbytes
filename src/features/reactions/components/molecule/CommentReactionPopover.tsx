@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useCallback, type ComponentType } from 'react';
+import { useRef, useState, useCallback, useEffect, type ComponentType } from 'react';
 import {
     Angry,
     Frown,
@@ -109,6 +109,14 @@ export default function CommentReactionPopover({
         onSuccess: () => setIsOpen(false),
     });
 
+    useEffect(() => {
+        return () => {
+            if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+            if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+            if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+        };
+    }, []);
+
     const openPicker = useCallback(() => {
         if (!user) {
             setLoginOpen();
@@ -121,17 +129,17 @@ export default function CommentReactionPopover({
 
     // Desktop: hover on wrapper opens picker after delay
     const handleMouseEnter = () => {
-        if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+        if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
         hoverTimerRef.current = setTimeout(openPicker, 800);
     };
 
     const handleMouseLeave = () => {
-        if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+        if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
         closeTimerRef.current = setTimeout(closePicker, 300);
     };
 
     const handlePickerMouseEnter = () => {
-        if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+        if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
     };
 
     // Mobile: long press opens picker
@@ -146,7 +154,7 @@ export default function CommentReactionPopover({
 
     const cancelLongPress = (e: React.PointerEvent) => {
         if (e.pointerType === 'mouse') return;
-        if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+        if (longPressTimerRef.current) { clearTimeout(longPressTimerRef.current); longPressTimerRef.current = null; }
     };
 
     // Click = quick like toggle; ignored when triggered by a long press
