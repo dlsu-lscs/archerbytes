@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import stream from 'stream';
+import path from 'path';
 
 import { fail } from '@/lib/api/response';
 import { getS3Client } from '@/lib/storage/s3';
@@ -14,11 +15,27 @@ async function streamToBuffer(nodeStream: stream.Readable) {
   });
 }
 
+function normalizeAndValidateProfileKey(rawKey: string | null) {
+  if (!rawKey) return null;
+
+  const normalized = path.posix.normalize(rawKey.replace(/\\+/g, '/'));
+
+  if (!normalized.startsWith('profiles/') || normalized === 'profiles/' || normalized.includes('..')) {
+    return null;
+  }
+
+  if (normalized.startsWith('/')) {
+    return null;
+  }
+
+  return normalized;
+}
+
 export async function GET(request: NextRequest) {
   try {
-    const objectKey = request.nextUrl.searchParams.get('key');
+    const objectKey = normalizeAndValidateProfileKey(request.nextUrl.searchParams.get('key'));
 
-    if (!objectKey || !objectKey.startsWith('profiles/')) {
+    if (!objectKey) {
       return fail('Invalid profile image key', 400);
     }
 
