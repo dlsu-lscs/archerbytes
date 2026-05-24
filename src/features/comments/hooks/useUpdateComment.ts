@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import type { UpdateCommentInput, CommentRecord } from '../types';
 
 interface UpdateCommentVariables {
@@ -35,6 +36,9 @@ export function useUpdateComment() {
 
   return useMutation({
     mutationFn: updateCommentRequest,
+    onError: (err) => {
+      toast.error(err.message);
+    },
     onSuccess: (result, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['comments', String(variables.articleId)],

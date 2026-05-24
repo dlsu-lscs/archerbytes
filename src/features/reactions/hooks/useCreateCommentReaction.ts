@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import type { ReactionType } from '../types';
 
 interface CreateCommentReactionVariables {
@@ -64,11 +65,12 @@ export function useCreateCommentReaction() {
       ]);
       return { previous };
     },
-    onError: (_err, variables, context) => {
+    onError: (err, variables, context) => {
       queryClient.setQueryData(
         ['comment-reactions', variables.commentId],
         context?.previous,
       );
+      toast.error(err.message);
     },
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({

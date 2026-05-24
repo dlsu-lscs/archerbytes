@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import type {
   CreateCommentInput,
   CommentRecord,
@@ -35,6 +36,9 @@ export function useCreateComment() {
   return useMutation({
     mutationFn: ({ data }: CreateCommentVariables) =>
       createCommentRequest(data),
+    onError: (err) => {
+      toast.error(err.message);
+    },
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['comments', String(variables.data.articleId)],

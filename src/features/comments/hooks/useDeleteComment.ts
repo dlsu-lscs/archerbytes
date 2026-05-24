@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import type { CommentRecord } from '../types';
 
 interface DeleteCommentVariables {
@@ -34,6 +35,9 @@ export function useDeleteComment() {
 
   return useMutation({
     mutationFn: deleteCommentRequest,
+    onError: (err) => {
+      toast.error(err.message);
+    },
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['comments', String(variables.articleId)],
