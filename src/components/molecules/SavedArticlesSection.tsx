@@ -54,9 +54,9 @@ export default function SavedArticlesSection() {
                             <SmallArticleItem 
                                 key={bookmark.id}
                                 id={bookmark.articleId}
-                                topic='Article'
+                                topic={bookmark.article.category.name}
                                 title={bookmark.article.title}
-                                author='Xandrei Pogi'
+                                author={bookmark.article.author.name}
                                 date={formattedDate}
                             />
                         )

@@ -5,6 +5,7 @@ interface BookmarkButtonProps {
   onToggle: () => void;
   disabled?: boolean;
   size?: 'small' | 'medium' | 'large'
+  children?: React.ReactNode;
 }
 
 const buttonSizes = {
@@ -13,7 +14,7 @@ const buttonSizes = {
   large: 20,
 }
 
-export default function BookmarkButton({isBookmarked, onToggle, disabled, size = 'medium'}: BookmarkButtonProps) {
+export default function BookmarkButton({isBookmarked, onToggle, disabled, size = 'medium', children}: BookmarkButtonProps) {
   const currentSize = buttonSizes[size];
 
   return (
@@ -26,13 +27,14 @@ export default function BookmarkButton({isBookmarked, onToggle, disabled, size =
         disabled={disabled}
         aria-label={isBookmarked ? "Unsave article" : "Save article"}
         aria-pressed={isBookmarked}
-        className="transition-colors duration-200 flex items-center justify-center cursor-pointer hover:text-primary"
+        className="transition-colors duration-200 flex items-center justify-center cursor-pointer hover:text-primary gap-1.5"
     >
         {isBookmarked ? (
             <FaBookmark size={currentSize} className="text-primary" />
         ) : (
             <FaRegBookmark size={currentSize} />
         )}
+        {children}
     </button>
   )
 }

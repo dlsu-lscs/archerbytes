@@ -95,12 +95,13 @@ export default function ArticleHeader() {
                     onClick={handleToggleBookmark}
                 >
                     <BookmarkButton 
-                        isBookmarked={isBookmarked} 
-                        onToggle={handleToggleBookmark} 
-                        disabled={isPending} 
-                        size='large'
-                    />
-                    <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
+                    isBookmarked={isBookmarked} 
+                    onToggle={handleToggleBookmark} 
+                    disabled={isPending} 
+                    size='large'
+                    >
+                        <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
+                    </BookmarkButton>
                 </div>
             </div>
         </div>
