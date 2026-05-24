@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             new URL('https://lh3.googleusercontent.com/a/**'),
             new URL('https://cms.app.dlsu-lscs.org/**'),
+            new URL('https://s3.app.dlsu-lscs.org/**'),
         ],
     },
 };
