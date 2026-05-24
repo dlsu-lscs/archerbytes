@@ -5,7 +5,7 @@ import Navbar from '@/components/organisms/Navbar';
 import Footer from '@/components/organisms/Footer';
 import PrivacyPolicy from '@/components/organisms/PrivacyPolicy';
 import { QueryProvider } from '@/components/providers/QueryProvider';
-import { Toaster } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -41,6 +41,7 @@ export default function RootLayout({
                     <Toaster position='top-center'/>
                 </div>
                 <Footer />
+                <Toaster />
             </body>
         </html>
     );

@@ -15,27 +15,45 @@ import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
 import { toast } from 'sonner';
 
 export default function ArticleHeader() {
-    const placeholderArticle: ArticleDetailsType = {
-        title: 'Top 10 LSCS Research and Development Officers of all time',
-        quote:
-            'Research and Development is the best committee in the whole universe',
-        quotee: 'Ian Gabriel Ilagan',
-        author: 'Charles Cordez',
-        avatarURL: '/lscs-logo.png',
-        occupation: 'DevOps Engineer',
-        readingTime: 6,
-        publicationDate: new Date('2025-10-29'),
-        commentCount: 100,
-        likeCount: 100,
-        keywords: [
-            'Computer',
-            'Programming',
-            'Coding',
-            'Frontend',
-            'Backend',
-            'UI/UX',
-        ],
-    };
+  const placeholderArticle: ArticleDetailsType = {
+    title: 'Top 10 LSCS Research and Development Officers of all time',
+    quote:
+      'Research and Development is the best committee in the whole universe',
+    quotee: 'Ian Gabriel Ilagan',
+    author: 'Charles Cordez',
+    avatarURL: '/lscs-logo.png',
+    previewURL: '/image.jpg',
+    readingTime: 6,
+    publicationDate: new Date('2025-10-29'),
+    commentCount: 100,
+    reactionCount: 100,
+    likeCount: 100,
+    keywords: [
+      'Computer',
+      'Programming',
+      'Coding',
+      'Frontend',
+      'Backend',
+      'UI/UX',
+    ],
+    id: 0,
+    subtitle: '',
+    slug: '',
+    content: '',
+    categoryId: 0,
+    userId: '',
+    featuredImageUrl: null,
+    tags: [],
+    metaTitle: null,
+    metaDescription: null,
+    metaImageUrl: null,
+    status: 'published',
+    isEdited: false,
+    publishedAt: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    occupation: null,
+  };
 
     const { data: bookmarks, error: authError } = useBookmarks();
     const addBookmark = useCreateBookmark();
@@ -85,5 +103,5 @@ export default function ArticleHeader() {
                 </div>
             </div>
         </div>
-    );
+  );
 }

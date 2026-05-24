@@ -1,0 +1,53 @@
+'use client';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import type { CommentRecord } from '../types';
+
+interface DeleteCommentVariables {
+  commentId: number;
+  userId: string;
+  articleId: number;
+  replyTo?: number | null;
+}
+
+async function deleteCommentRequest(variables: DeleteCommentVariables) {
+  const { commentId, userId } = variables;
+  const response = await fetch(`/api/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
+
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ error: 'Failed to delete comment' }));
+    throw new Error(error.error || 'Failed to delete comment');
+  }
+
+  const json: { data: CommentRecord } = await response.json();
+  return json.data;
+}
+
+export function useDeleteComment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteCommentRequest,
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSuccess: (_result, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['comments', String(variables.articleId)],
+      });
+
+      if (variables.replyTo) {
+        queryClient.invalidateQueries({
+          queryKey: ['replies', variables.replyTo],
+        });
+      }
+    },
+  });
+}

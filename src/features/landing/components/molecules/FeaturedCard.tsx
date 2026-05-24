@@ -7,10 +7,10 @@ import {
 import {
     CarouselItem,
 } from '@/components/ui/carousel';
-import { ArticleDetailsProp } from '@/features/article/types/article.types';
+import { FeedArticleProp } from '@/features/article/types/article.types';
 import Image from 'next/image';
 
-export default function FeaturedCard({ article }: ArticleDetailsProp) {
+export default function FeaturedCard({ article }: FeedArticleProp) {
     return (
         <CarouselItem className="basis-2/4 lg:basis-2/7 w-50 md:w-35">
             <Card className="relative py-0 h-55 w-full flex flex-col justify-end">

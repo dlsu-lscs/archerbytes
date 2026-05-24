@@ -7,10 +7,10 @@ import {
 import {
     CarouselItem,
 } from '@/components/ui/carousel';
-import { ArticleDetailsProp } from '@/features/article/types/article.types';
+import { FeedArticleProp } from '@/features/article/types/article.types';
 import Image from 'next/image';
 
-export default function CarouselCard({ article }: ArticleDetailsProp) {
+export default function CarouselCard({ article }: FeedArticleProp) {
     return (
         <CarouselItem>
             <Card className="relative">

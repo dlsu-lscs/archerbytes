@@ -34,3 +34,5 @@ export const updateCommentSchema = z.object({
 export type CreateCommentInput = z.infer<typeof createCommentSchema>;
 export type UpdateCommentInput = z.infer<typeof updateCommentSchema>;
 export type CommentPaginationQuery = z.infer<typeof paginationQuerySchema>;
+
+export * from './comment.types';
