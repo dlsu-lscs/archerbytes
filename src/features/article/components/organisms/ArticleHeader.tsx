@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Breadcrumbs from '@/features/article/components/atoms/Breadcrumbs';
 import Keywords from '@/features/article/components/atoms/Keywords';
@@ -55,55 +55,53 @@ export default function ArticleHeader() {
     occupation: null,
   };
 
-    const { data: bookmarks, error: authError } = useBookmarks();
-    const addBookmark = useCreateBookmark();
-    const deleteBookmark = useDeleteBookmark();
-    
-    const isBookmarked = bookmarks?.some((bookmark) => bookmark.articleId === 1) || false;
-    const isPending = addBookmark.isPending || deleteBookmark.isPending;
-    const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
+  const { data: bookmarks, error: authError } = useBookmarks();
+  const addBookmark = useCreateBookmark();
+  const deleteBookmark = useDeleteBookmark();
 
-    const handleToggleBookmark = () => {
-        if (authError?.message === 'Unauthorized') {
-            setLoginOpen();
-            return;
-        }
+  const isBookmarked =
+    bookmarks?.some((bookmark) => bookmark.articleId === 1) || false;
+  const isPending = addBookmark.isPending || deleteBookmark.isPending;
+  const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
 
-        if(isBookmarked) {
-            deleteBookmark.mutate(1);
-        } else {
-            addBookmark.mutate(1);
-        }
+  const handleToggleBookmark = () => {
+    if (authError?.message === 'Unauthorized') {
+      setLoginOpen();
+      return;
     }
 
-    return (
-        <div className="flex flex-col gap-[10px] pt-3 mb-3 h-max ">
-            <Breadcrumbs link="Home > Category > Title" />
-            <ArticleDetails article={placeholderArticle} />
-            <Keywords article={placeholderArticle} />
-            <div className="flex gap-5 text-neutral-950 text-sm">
-                <div className="flex gap-2 items-center">
-                    <IoHeartCircleSharp size={24} />
-                    <p>Like this article</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <ImBubble size={24} />
-                    <p>Reply to this article</p>
-                </div>
-                <div 
-                    className="flex gap-2 items-center cursor-pointer hover:text-primary transition-colors"
-                    onClick={handleToggleBookmark}
-                >
-                    <BookmarkButton 
-                    isBookmarked={isBookmarked} 
-                    onToggle={handleToggleBookmark} 
-                    disabled={isPending} 
-                    size='large'
-                    >
-                        <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
-                    </BookmarkButton>
-                </div>
-            </div>
+    if (isBookmarked) {
+      deleteBookmark.mutate(1);
+    } else {
+      addBookmark.mutate(1);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-[10px] pt-3 mb-3 h-max ">
+      <Breadcrumbs link="Home > Category > Title" />
+      <ArticleDetails article={placeholderArticle} />
+      <Keywords article={placeholderArticle} />
+      <div className="flex gap-5 text-neutral-950 text-sm">
+        <div className="flex gap-2 items-center">
+          <IoHeartCircleSharp size={24} />
+          <p>Like this article</p>
         </div>
+        <div className="flex gap-2 items-center">
+          <ImBubble size={24} />
+          <p>Reply to this article</p>
+        </div>
+        <div className="flex gap-2 items-center cursor-pointer hover:text-primary transition-colors">
+          <BookmarkButton
+            isBookmarked={isBookmarked}
+            onToggle={handleToggleBookmark}
+            disabled={isPending}
+            size="large"
+          >
+            <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
+          </BookmarkButton>
+        </div>
+      </div>
+    </div>
   );
 }
