@@ -1,6 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -8,8 +16,10 @@ interface ConfirmationModalProps {
   message: string;
   confirmText?: string;
   cancelText?: string;
+  loadingText?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  isLoading?: boolean;
 }
 
 export default function ConfirmationModal({
@@ -18,42 +28,45 @@ export default function ConfirmationModal({
   message,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
+  loadingText,
   onConfirm,
   onCancel,
+  isLoading
 }: ConfirmationModalProps) {
   
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="flex flex-col items-center bg-white border-3 border-black rounded-xl py-10 md:py-16 md:px-22 px-8 gap-7.5 max-w-lg w-full shadow-lg">
-        
-        <div className="flex flex-col items-center gap-5">
-          <h3 className="text-lg md:text-2xl text-neutral-950 font-medium text-center">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => !open && onCancel()}
+    >
+      <DialogContent showCloseButton={false} className="border-0">
+        <DialogHeader>
+          <DialogTitle className="text-neutral-50">
             {title}
-          </h3>
-          <p className="text-sm text-neutral-600 text-center">
+          </DialogTitle>
+          <DialogDescription className="text-neutral-400">
             {message}
-          </p>
-        </div>
-
-        <div className="flex flex-col w-full items-center gap-2.5">
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
           <Button
-            className="text-white bg-neutral-950 border-2 border-solid border-neutral-950 hover:bg-neutral-800 rounded-full md:px-26 px-8 py-5 w-full max-w-70"
+            variant="secondary"
             onClick={onConfirm}
+            disabled={isLoading}
           >
-            {confirmText}
+            {isLoading ? loadingText : confirmText}
           </Button>
-          
           <Button
-            className="text-neutral-950 bg-neutral-50 hover:bg-neutral-100 border-2 border-solid border-neutral-950 rounded-full md:px-26 px-8 py-5 w-full max-w-70"
+            variant="destructive"
             onClick={onCancel}
+            disabled={isLoading}
           >
             {cancelText}
           </Button>
-        </div>
-
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

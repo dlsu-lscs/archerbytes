@@ -80,6 +80,7 @@ export default function BookmarkedList() {
         message="This will remove all articles from your Read Later list. This action cannot be undone"
         confirmText="Yes, Clear All"
         cancelText="Cancel"
+        loadingText="Clearing..."
         onConfirm={handleConfirmClear}
         onCancel={() => setIsModalOpen(false)}
       />
