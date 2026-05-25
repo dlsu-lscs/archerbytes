@@ -2,11 +2,9 @@ import { z } from 'zod';
 
 import { requireAuth } from '@/lib/util/auth/session';
 import { ok, fail } from '@/lib/api/response';
-import {
-  deleteProfileImage,
-  uploadProfileImage,
-} from '@/lib/storage/s3';
+import { deleteProfileImage, uploadProfileImage } from '@/lib/storage/s3';
 import { updateUserProfile } from '@/features/auth/services/service';
+import type { UpdateUserProfileInput } from '@/features/auth/types';
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
@@ -21,14 +19,17 @@ export async function PATCH(request: Request) {
     const form = await request.formData();
 
     const occupationRaw = form.get('occupation');
-    let occupation: string | undefined;
+    let occupation: UpdateUserProfileInput['occupation'];
 
     if (occupationRaw !== null) {
       const occ = String(occupationRaw).trim();
       try {
         occupation = occupationSchema.parse(occ);
       } catch {
-        return fail('Invalid occupation: must be one of Alumni, Student, Faculty', 400);
+        return fail(
+          'Invalid occupation: must be one of Alumni, Student, Faculty',
+          400,
+        );
       }
     }
 
@@ -53,27 +54,37 @@ export async function PATCH(request: Request) {
       }
 
       if (!ALLOWED_MIME.includes(imageEntry.type)) {
-        return fail('Invalid image type. Allowed: image/jpeg, image/png, image/webp', 400, {
-          allowed: ALLOWED_MIME,
-        });
+        return fail(
+          'Invalid image type. Allowed: image/jpeg, image/png, image/webp',
+          400,
+          {
+            allowed: ALLOWED_MIME,
+          },
+        );
       }
 
       if (imageEntry.size > MAX_IMAGE_BYTES) {
         return fail('Image exceeds maximum size of 2 MB', 400);
       }
 
-      const uploadResult = await uploadProfileImage(imageEntry, session.user.id);
+      const uploadResult = await uploadProfileImage(
+        imageEntry,
+        session.user.id,
+      );
       uploadedObjectKey = uploadResult.objectKey;
       imageUrl = uploadResult.imageUrl;
     }
 
-    const payload: { occupation?: string; image?: string; bio?: string } = {};
+    const payload: UpdateUserProfileInput = {};
     if (occupation !== undefined) payload.occupation = occupation;
     if (imageUrl !== undefined) payload.image = imageUrl;
     if (bio !== undefined) payload.bio = bio;
 
     if (Object.keys(payload).length === 0) {
-      return fail('No updatable fields provided. Include `occupation`, `bio`, and/or `image`.', 400);
+      return fail(
+        'No updatable fields provided. Include `occupation`, `bio`, and/or `image`.',
+        400,
+      );
     }
 
     const updated = await updateUserProfile(session.user.id, payload);
@@ -83,7 +94,10 @@ export async function PATCH(request: Request) {
         try {
           await deleteProfileImage(uploadedObjectKey);
         } catch (cleanupError) {
-          console.error('Failed to clean up uploaded profile image after DB update failure:', cleanupError);
+          console.error(
+            'Failed to clean up uploaded profile image after DB update failure:',
+            cleanupError,
+          );
         }
       }
       return fail('Failed to update user profile', 500);
