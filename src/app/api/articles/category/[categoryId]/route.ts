@@ -1,6 +1,9 @@
 import { NextRequest } from 'next/server';
 import { ZodError } from 'zod';
-import { ArticleService, CategoryService } from '@/features/article/services/service';
+import {
+  ArticleService,
+  CategoryService,
+} from '@/features/article/services/service';
 import {
   articlesByCategoryQuerySchema,
   categoryIdParamSchema,
@@ -24,7 +27,10 @@ export async function GET(
       return fail('Category not found', 404);
     }
 
-    const result = await ArticleService.listByCategoryId(parsedParams.categoryId, query);
+    const result = await ArticleService.listByCategoryId(
+      parsedParams.categoryId,
+      query,
+    );
     const meta = buildPaginationMeta(result.total, result.page, result.limit);
 
     return okPaginated(result.items, meta);

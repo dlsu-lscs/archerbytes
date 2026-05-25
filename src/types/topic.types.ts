@@ -1,3 +1,3 @@
 export type TopicType = {
-    children: React.ReactNode;
+  children: React.ReactNode;
 };

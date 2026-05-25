@@ -57,7 +57,9 @@ describe('reactions API routes', () => {
   test('POST /api/article-reactions requires auth and uses session user id', async () => {
     const { requireAuth } = await import('@/lib/util/auth/session');
     vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-    vi.mocked(ReactionService.createArticleReaction).mockResolvedValue({ id: 1 } as never);
+    vi.mocked(ReactionService.createArticleReaction).mockResolvedValue({
+      id: 1,
+    } as never);
 
     const req = new NextRequest('http://localhost:3000/api/article-reactions', {
       method: 'POST',
@@ -69,7 +71,11 @@ describe('reactions API routes', () => {
 
     expect(res.status).toBe(201);
     expect(ReactionService.createArticleReaction).toHaveBeenCalledWith(
-      expect.objectContaining({ userId: 'user-123', articleId: 42, reactionType: 'like' }),
+      expect.objectContaining({
+        userId: 'user-123',
+        articleId: 42,
+        reactionType: 'like',
+      }),
     );
   });
 
@@ -93,7 +99,9 @@ describe('reactions API routes', () => {
   test('DELETE /api/comment-reactions requires auth and uses session user id', async () => {
     const { requireAuth } = await import('@/lib/util/auth/session');
     vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-    vi.mocked(ReactionService.deleteCommentReaction).mockResolvedValue({ id: 9 } as never);
+    vi.mocked(ReactionService.deleteCommentReaction).mockResolvedValue({
+      id: 9,
+    } as never);
 
     const req = new NextRequest('http://localhost:3000/api/comment-reactions', {
       method: 'DELETE',

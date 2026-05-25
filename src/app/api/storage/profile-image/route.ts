@@ -20,7 +20,11 @@ function normalizeAndValidateProfileKey(rawKey: string | null) {
 
   const normalized = path.posix.normalize(rawKey.replace(/\\+/g, '/'));
 
-  if (!normalized.startsWith('profiles/') || normalized === 'profiles/' || normalized.includes('..')) {
+  if (
+    !normalized.startsWith('profiles/') ||
+    normalized === 'profiles/' ||
+    normalized.includes('..')
+  ) {
     return null;
   }
 
@@ -33,7 +37,9 @@ function normalizeAndValidateProfileKey(rawKey: string | null) {
 
 export async function GET(request: NextRequest) {
   try {
-    const objectKey = normalizeAndValidateProfileKey(request.nextUrl.searchParams.get('key'));
+    const objectKey = normalizeAndValidateProfileKey(
+      request.nextUrl.searchParams.get('key'),
+    );
 
     if (!objectKey) {
       return fail('Invalid profile image key', 400);
@@ -45,12 +51,18 @@ export async function GET(request: NextRequest) {
     }
 
     const client = getS3Client();
-    const res = await client.send(new GetObjectCommand({ Bucket: bucket, Key: objectKey }));
+    const res = await client.send(
+      new GetObjectCommand({ Bucket: bucket, Key: objectKey }),
+    );
 
-    const contentType = (res.ContentType as string) || 'application/octet-stream';
+    const contentType =
+      (res.ContentType as string) || 'application/octet-stream';
     let buf: Buffer;
 
-    if (res.Body && typeof (res.Body as unknown as stream.Readable).pipe === 'function') {
+    if (
+      res.Body &&
+      typeof (res.Body as unknown as stream.Readable).pipe === 'function'
+    ) {
       buf = await streamToBuffer(res.Body as stream.Readable);
     } else if (res.Body instanceof Uint8Array) {
       buf = Buffer.from(res.Body);

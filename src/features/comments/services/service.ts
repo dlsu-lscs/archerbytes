@@ -139,7 +139,10 @@ function buildCommentSelect() {
 }
 
 function getCommentBaseFilters(articleId: number) {
-  return and(eq(comments.articleId, articleId), sql`${comments.replyTo} IS NULL`);
+  return and(
+    eq(comments.articleId, articleId),
+    sql`${comments.replyTo} IS NULL`,
+  );
 }
 
 export async function getCommentsByArticleID(
@@ -208,7 +211,10 @@ export async function getCommentById(id: number) {
   }
 }
 
-export async function getReplies(parentId: number, query: CommentPaginationQuery) {
+export async function getReplies(
+  parentId: number,
+  query: CommentPaginationQuery,
+) {
   try {
     const [{ total }] = await db
       .select({ total: count(comments.id) })
@@ -253,7 +259,10 @@ export async function updateComment(
       .returning();
 
     if (updated.length === 0) return null;
-    return (await getCommentById(id)) ?? (await buildCommentResponse(updated[0] as CommentRow));
+    return (
+      (await getCommentById(id)) ??
+      (await buildCommentResponse(updated[0] as CommentRow))
+    );
   } catch (error) {
     console.error('Error updating comment:', error);
     throw error;

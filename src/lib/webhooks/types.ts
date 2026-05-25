@@ -18,7 +18,9 @@ export const CategoryWebhookPayloadSchema = z.object({
   cms: z.string().optional(),
 });
 
-export type CategoryWebhookPayload = z.infer<typeof CategoryWebhookPayloadSchema>;
+export type CategoryWebhookPayload = z.infer<
+  typeof CategoryWebhookPayloadSchema
+>;
 
 export const WebhookPayloadSchema = z.discriminatedUnion('event', [
   ArticleWebhookPayloadSchema,

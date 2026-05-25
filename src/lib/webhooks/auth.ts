@@ -25,7 +25,6 @@ export function verifyWebhookSecret(token: string): boolean {
   return constantTimeCompare(token, webhookSecret);
 }
 
-
 function constantTimeCompare(a: string, b: string): boolean {
   if (a.length !== b.length) {
     return false;
@@ -39,13 +38,17 @@ function constantTimeCompare(a: string, b: string): boolean {
   return result === 0;
 }
 
-export function validateWebhookAuth(req: NextRequest): { valid: boolean; error?: string } {
+export function validateWebhookAuth(req: NextRequest): {
+  valid: boolean;
+  error?: string;
+} {
   const token = extractBearerToken(req);
 
   if (!token) {
     return {
       valid: false,
-      error: 'Missing or invalid Authorization header. Expected: Authorization: Bearer <token>',
+      error:
+        'Missing or invalid Authorization header. Expected: Authorization: Bearer <token>',
     };
   }
 

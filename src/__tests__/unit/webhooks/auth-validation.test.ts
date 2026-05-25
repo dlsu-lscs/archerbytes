@@ -23,7 +23,7 @@ function createMockRequest(
   body: unknown,
   options?: {
     authHeader?: string;
-  }
+  },
 ): NextRequest {
   const headers = new Headers();
 
@@ -64,7 +64,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: 'InvalidFormat token-here' }
+        { authHeader: 'InvalidFormat token-here' },
       );
 
       const response = await POST(req);
@@ -80,7 +80,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: 'Bearer wrong-secret' }
+        { authHeader: 'Bearer wrong-secret' },
       );
 
       const response = await POST(req);
@@ -96,7 +96,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: 'Bearer test-webhook-secret-123' }
+        { authHeader: 'Bearer test-webhook-secret-123' },
       );
 
       const response = await POST(req);
@@ -132,7 +132,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -150,7 +150,7 @@ describe('CMS Webhook Endpoint', () => {
           action: 'created',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -166,7 +166,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: 'not-a-valid-timestamp',
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -182,7 +182,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -202,7 +202,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: 'my-article-slug',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -222,7 +222,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '456',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -238,7 +238,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '789',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -254,7 +254,7 @@ describe('CMS Webhook Endpoint', () => {
           categoryId: 'tech-news',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -272,7 +272,7 @@ describe('CMS Webhook Endpoint', () => {
           categoryId: '100',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -288,7 +288,7 @@ describe('CMS Webhook Endpoint', () => {
           categoryId: '200',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -304,7 +304,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: 'test-article',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -322,7 +322,7 @@ describe('CMS Webhook Endpoint', () => {
           timestamp: new Date().toISOString(),
           cms: 'payload-cms',
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -342,7 +342,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '12345',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -358,7 +358,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '',
           timestamp: new Date().toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);
@@ -377,7 +377,7 @@ describe('CMS Webhook Endpoint', () => {
           articleId: '123',
           timestamp: futureDate.toISOString(),
         },
-        { authHeader: validAuthHeader }
+        { authHeader: validAuthHeader },
       );
 
       const response = await POST(req);

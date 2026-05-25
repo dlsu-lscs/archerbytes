@@ -33,7 +33,10 @@ export async function getUserByEmail(email: string) {
   }
 }
 
-export async function updateUserProfile(userId: string, data: UpdateUserProfileInput) {
+export async function updateUserProfile(
+  userId: string,
+  data: UpdateUserProfileInput,
+) {
   try {
     const setObj: Partial<typeof user.$inferInsert> = {
       updatedAt: new Date(),

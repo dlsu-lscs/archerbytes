@@ -50,9 +50,12 @@ describe('categories API routes', () => {
   test('GET /api/categories/[slug] returns 404 when missing', async () => {
     vi.mocked(CategoryService.getBySlug).mockResolvedValue(null as never);
 
-    const res = await categoryBySlugGET(new Request('http://localhost:3000/api/categories/missing'), {
-      params: Promise.resolve({ slug: 'missing' }),
-    });
+    const res = await categoryBySlugGET(
+      new Request('http://localhost:3000/api/categories/missing'),
+      {
+        params: Promise.resolve({ slug: 'missing' }),
+      },
+    );
 
     expect(res.status).toBe(404);
   });
@@ -71,7 +74,9 @@ describe('categories API routes', () => {
   });
 
   test('GET /api/categories/[slug] returns 500 when service throws', async () => {
-    vi.mocked(CategoryService.getBySlug).mockRejectedValue(new Error('db failure'));
+    vi.mocked(CategoryService.getBySlug).mockRejectedValue(
+      new Error('db failure'),
+    );
 
     const res = await categoryBySlugGET(
       new Request('http://localhost:3000/api/categories/tech'),
@@ -98,7 +103,9 @@ describe('categories API routes', () => {
       limit: 10,
     } as never);
 
-    const req = new NextRequest('http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10',
+    );
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: '2' }),
     });
@@ -110,7 +117,9 @@ describe('categories API routes', () => {
   });
 
   test('GET /api/categories/by-id/[id]/articles returns 400 for invalid id', async () => {
-    const req = new NextRequest('http://localhost:3000/api/categories/by-id/nope/articles?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/categories/by-id/nope/articles?page=1&limit=10',
+    );
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: 'nope' }),
     });
@@ -121,7 +130,9 @@ describe('categories API routes', () => {
   test('GET /api/categories/by-id/[id]/articles returns 404 when category is missing', async () => {
     vi.mocked(CategoryService.getById).mockResolvedValue(null as never);
 
-    const req = new NextRequest('http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10',
+    );
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: '2' }),
     });
@@ -133,9 +144,13 @@ describe('categories API routes', () => {
 
   test('GET /api/categories/by-id/[id]/articles returns 500 when service throws', async () => {
     vi.mocked(CategoryService.getById).mockResolvedValue({ id: 2 } as never);
-    vi.mocked(CategoryService.listArticles).mockRejectedValue(new Error('db failure'));
+    vi.mocked(CategoryService.listArticles).mockRejectedValue(
+      new Error('db failure'),
+    );
 
-    const req = new NextRequest('http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/categories/by-id/2/articles?page=1&limit=10',
+    );
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ id: '2' }),
     });

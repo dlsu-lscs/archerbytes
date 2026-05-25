@@ -5,7 +5,9 @@ function generateWebhookId(): string {
   return `wh_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 }
 
-export function accepted(message: string = 'Webhook received and queued for processing'): NextResponse<WebhookResponse> {
+export function accepted(
+  message: string = 'Webhook received and queued for processing',
+): NextResponse<WebhookResponse> {
   const response: WebhookResponse = {
     status: 'accepted',
     message,
@@ -16,7 +18,10 @@ export function accepted(message: string = 'Webhook received and queued for proc
   return NextResponse.json(response, { status: 202 });
 }
 
-export function badRequest(message: string, details?: unknown): NextResponse<WebhookResponse> {
+export function badRequest(
+  message: string,
+  details?: unknown,
+): NextResponse<WebhookResponse> {
   const response: WebhookResponse = {
     status: 'rejected',
     message,
@@ -28,7 +33,9 @@ export function badRequest(message: string, details?: unknown): NextResponse<Web
   return NextResponse.json(response, { status: 400 });
 }
 
-export function unauthorized(message: string = 'Unauthorized: Invalid webhook secret'): NextResponse<WebhookResponse> {
+export function unauthorized(
+  message: string = 'Unauthorized: Invalid webhook secret',
+): NextResponse<WebhookResponse> {
   const response: WebhookResponse = {
     status: 'rejected',
     message,

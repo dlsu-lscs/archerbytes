@@ -2,7 +2,11 @@ import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { BookmarkService } from '@/features/bookmarks/services/service';
 import { ArticleService } from '@/features/article/services/service';
-import { POST as bookmarksPOST, DELETE as bookmarksDELETE, GET as bookmarksGET } from '@/app/api/bookmarks/route';
+import {
+  POST as bookmarksPOST,
+  DELETE as bookmarksDELETE,
+  GET as bookmarksGET,
+} from '@/app/api/bookmarks/route';
 
 // mock the requireAuth function
 vi.mock('@/lib/util/auth/session', () => ({
@@ -69,7 +73,9 @@ describe('bookmarks API routes', () => {
         createdAt: now,
       };
       vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
-      vi.mocked(BookmarkService.create).mockResolvedValue(mockBookmark as never);
+      vi.mocked(BookmarkService.create).mockResolvedValue(
+        mockBookmark as never,
+      );
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks', {
         method: 'POST',
@@ -84,7 +90,10 @@ describe('bookmarks API routes', () => {
       expect(json.data.bookmark).toBeDefined();
       expect(json.data.bookmark.id).toBe(1);
       expect(json.data.bookmark.articleId).toBe(42);
-      expect(vi.mocked(BookmarkService.create)).toHaveBeenCalledWith('user-123', 42);
+      expect(vi.mocked(BookmarkService.create)).toHaveBeenCalledWith(
+        'user-123',
+        42,
+      );
     });
 
     test('re-bookmarks article after deletion', async () => {
@@ -102,7 +111,9 @@ describe('bookmarks API routes', () => {
         createdAt,
       };
       vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
-      vi.mocked(BookmarkService.create).mockResolvedValue(mockBookmark as never);
+      vi.mocked(BookmarkService.create).mockResolvedValue(
+        mockBookmark as never,
+      );
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks', {
         method: 'POST',
@@ -230,7 +241,9 @@ describe('bookmarks API routes', () => {
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
       vi.mocked(ArticleService.getById).mockResolvedValue({ id: 42 } as never);
 
-      vi.mocked(BookmarkService.create).mockRejectedValue(new Error('db failure'));
+      vi.mocked(BookmarkService.create).mockRejectedValue(
+        new Error('db failure'),
+      );
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks', {
         method: 'POST',
@@ -264,25 +277,36 @@ describe('bookmarks API routes', () => {
       vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(
         existingBookmark as never,
       );
-      vi.mocked(BookmarkService.remove).mockResolvedValue(existingBookmark as never);
+      vi.mocked(BookmarkService.remove).mockResolvedValue(
+        existingBookmark as never,
+      );
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
-        method: 'DELETE',
-      });
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?articleId=42',
+        {
+          method: 'DELETE',
+        },
+      );
 
       const res = await bookmarksDELETE(req);
 
       expect(res.status).toBe(204);
-      expect(vi.mocked(BookmarkService.remove)).toHaveBeenCalledWith('user-123', 42);
+      expect(vi.mocked(BookmarkService.remove)).toHaveBeenCalledWith(
+        'user-123',
+        42,
+      );
     });
 
     test('returns 401 when not authenticated', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockRejectedValue(new Error('Unauthorized'));
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
-        method: 'DELETE',
-      });
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?articleId=42',
+        {
+          method: 'DELETE',
+        },
+      );
 
       const res = await bookmarksDELETE(req);
       const json = await res.json();
@@ -295,9 +319,12 @@ describe('bookmarks API routes', () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=-5', {
-        method: 'DELETE',
-      });
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?articleId=-5',
+        {
+          method: 'DELETE',
+        },
+      );
 
       const res = await bookmarksDELETE(req);
       const json = await res.json();
@@ -324,11 +351,16 @@ describe('bookmarks API routes', () => {
     test('returns 404 when bookmark does not exist', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(null as never);
+      vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(
+        null as never,
+      );
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
-        method: 'DELETE',
-      });
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?articleId=42',
+        {
+          method: 'DELETE',
+        },
+      );
 
       const res = await bookmarksDELETE(req);
       const json = await res.json();
@@ -353,11 +385,16 @@ describe('bookmarks API routes', () => {
       vi.mocked(BookmarkService.getByUserAndArticle).mockResolvedValue(
         existingBookmark as never,
       );
-      vi.mocked(BookmarkService.remove).mockRejectedValue(new Error('db failure'));
+      vi.mocked(BookmarkService.remove).mockRejectedValue(
+        new Error('db failure'),
+      );
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?articleId=42', {
-        method: 'DELETE',
-      });
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?articleId=42',
+        {
+          method: 'DELETE',
+        },
+      );
 
       const res = await bookmarksDELETE(req);
       const json = await res.json();
@@ -414,7 +451,9 @@ describe('bookmarks API routes', () => {
         offset: 0,
       });
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?limit=10&offset=0');
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?limit=10&offset=0',
+      );
 
       const res = await bookmarksGET(req);
       const json = await res.json();
@@ -446,7 +485,11 @@ describe('bookmarks API routes', () => {
       const res = await bookmarksGET(req);
 
       expect(res.status).toBe(200);
-      expect(vi.mocked(BookmarkService.listByUserId)).toHaveBeenCalledWith('user-123', 10, 0);
+      expect(vi.mocked(BookmarkService.listByUserId)).toHaveBeenCalledWith(
+        'user-123',
+        10,
+        0,
+      );
     });
 
     test('returns 401 when not authenticated', async () => {
@@ -466,7 +509,9 @@ describe('bookmarks API routes', () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?limit=0');
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?limit=0',
+      );
 
       const res = await bookmarksGET(req);
       const json = await res.json();
@@ -480,7 +525,9 @@ describe('bookmarks API routes', () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?limit=200');
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?limit=200',
+      );
 
       const res = await bookmarksGET(req);
       const json = await res.json();
@@ -493,7 +540,9 @@ describe('bookmarks API routes', () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?offset=-5');
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?offset=-5',
+      );
 
       const res = await bookmarksGET(req);
       const json = await res.json();
@@ -513,7 +562,9 @@ describe('bookmarks API routes', () => {
         offset: 0,
       });
 
-      const req = new NextRequest('http://localhost:3000/api/bookmarks?limit=10&offset=0');
+      const req = new NextRequest(
+        'http://localhost:3000/api/bookmarks?limit=10&offset=0',
+      );
 
       const res = await bookmarksGET(req);
       const json = await res.json();
@@ -526,7 +577,9 @@ describe('bookmarks API routes', () => {
     test('returns 500 when service throws', async () => {
       const { requireAuth } = await import('@/lib/util/auth/session');
       vi.mocked(requireAuth).mockResolvedValue(mockSession as never);
-      vi.mocked(BookmarkService.listByUserId).mockRejectedValue(new Error('db failure'));
+      vi.mocked(BookmarkService.listByUserId).mockRejectedValue(
+        new Error('db failure'),
+      );
 
       const req = new NextRequest('http://localhost:3000/api/bookmarks');
 
