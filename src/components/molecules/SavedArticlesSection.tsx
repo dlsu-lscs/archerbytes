@@ -1,21 +1,20 @@
-'use client';
-
 import Image from 'next/image';
 import SmallArticleItem from '../atoms/SmallArticleItem';
-import useBookmarks from '@/features/bookmarks/queries/useBookmarks';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useSession } from '@/lib/auth/client';
+import { BookmarkType } from '@/features/bookmarks/types/bookmarks.types';
 
-export default function SavedArticlesSection() {
-  const pathname = usePathname();
-  const { data: session } = useSession();
-  const { data: bookmarks, isLoading } = useBookmarks();
+interface SavedArticlesSectionProps {
+  bookmarks?: BookmarkType[];
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  pathname: string;
+}
 
+export default function SavedArticlesSection({bookmarks, isLoading, isAuthenticated, pathname}: SavedArticlesSectionProps) {
   const displayedBookmarks = bookmarks?.slice(0, 3) || [];
   const totalSaved = bookmarks?.length || 0;
 
-  if (pathname === '/bookmarks' || !session?.user) {
+  if (pathname === '/bookmarks' || !isAuthenticated) {
     return null;
   }
 
