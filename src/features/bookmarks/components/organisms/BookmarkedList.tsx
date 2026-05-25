@@ -3,13 +3,15 @@
 import ArticleItem from '@/features/landing/components/molecules/ArticleItem';
 import ArticleItemSkeleton from '@/features/landing/components/atoms/ArticleItemSkeleton';
 import useBookmarks from '../../queries/useBookmarks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import ConfirmationModal from '@/components/atoms/ConfirmationModal';
 
 export default function BookmarkedList() {
   const router = useRouter();
   const { data: bookmarks, isLoading, isError, error } = useBookmarks();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (isError && error?.message === 'Unauthorized') {
@@ -26,8 +28,24 @@ export default function BookmarkedList() {
     );
   }
 
+  const handleConfirmClear = () => {
+    toast.info('Lucky for your saved articles, this feature doesnt exist yet');
+    setIsModalOpen(false);
+  }
+
   return (
     <div>
+      <div className="flex items-center justify-end mb-5">        
+        {!isLoading && !isError && bookmarks && bookmarks.length > 0 && (
+          <button
+            onClick={() => setIsModalOpen(true)} 
+            className="text-md font-normal text-neutral-500 hover:text-red-500 transition-colors"
+          >
+            Clear All
+          </button>
+        )}
+      </div>
+
       {isError && (
         <p className="text-red-500">
           Failed to load your bookmarks. Please try again later.
@@ -55,6 +73,16 @@ export default function BookmarkedList() {
           ))}
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Clear all saved articles?"
+        message="This will remove all articles from your Read Later list. This action cannot be undone"
+        confirmText="Yes, Clear All"
+        cancelText="Cancel"
+        onConfirm={handleConfirmClear}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

@@ -31,7 +31,6 @@ export default function SavedArticlesSection({bookmarks, isLoading, isError, isA
           />
           <h6 className="font-medium text-md">Read Later</h6>
         </div>
-        <p className="font-light text-md">Clear</p>
       </div>
       <div className="flex flex-col gap-6">
         {isLoading ? (
