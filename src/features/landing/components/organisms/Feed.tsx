@@ -10,15 +10,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import SortDropdown from '../atoms/SortDropdown';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { option } from '@/features/article/queries/useArticleList';
 import ArticleList from '../molecules/ArticleList';
 import CategoryDropdown from '../atoms/CategoryDropdown';
+import { useSearchParams } from 'next/navigation';
 
 export default function Feed() {
-  const [activeTab, setActiveTab] = useState('for-you');
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const categoryIdParam = searchParams.get('categoryId');
+
+  const [activeTab, setActiveTab] = useState(tabParam || 'for-you');
   const [forYouSort, setForYouSort] = useState<option>('newest');
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(categoryIdParam ? parseInt(categoryIdParam, 10) : null);
 
   const forYouQuery = useArticleList({
     sort: forYouSort,
@@ -33,6 +38,15 @@ export default function Feed() {
     categoryId: selectedCategory,
     enabled: activeTab === 'by-category',
   });
+
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+    if (categoryIdParam) {
+      setSelectedCategory(parseInt(categoryIdParam, 10));
+    }
+  }, [tabParam, categoryIdParam])
 
   return (
     <section className="flex flex-col gap-2.5">

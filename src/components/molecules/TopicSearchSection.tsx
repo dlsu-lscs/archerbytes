@@ -41,7 +41,7 @@ export default function TopicSearchSection({categories, isLoading, isError}: Top
           <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">No topics found</p>
         ) : (
           displayedCategories.map((category) => (
-            <Link key={category.id} href={`/category/${category.slug}`}>
+            <Link key={category.id} href={`/?tab=by-category&categoryId=${category.id}`}>
               <TopicButton>{category.name}</TopicButton>
             </Link>
           ))
