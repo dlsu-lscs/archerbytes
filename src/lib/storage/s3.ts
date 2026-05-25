@@ -46,7 +46,10 @@ function isMissingBucketError(error: unknown) {
     return false;
   }
 
-  const typedError = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+  const typedError = error as {
+    name?: string;
+    $metadata?: { httpStatusCode?: number };
+  };
 
   return (
     typedError.name === 'NoSuchBucket' ||
@@ -103,7 +106,6 @@ export async function ensureBucket() {
       }
 
       bucketReady = true;
-
     })().catch((error) => {
       bucketReadyPromise = null;
       throw error;

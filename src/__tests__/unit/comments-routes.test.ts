@@ -46,7 +46,9 @@ describe('comments API routes', () => {
       offset: 0,
     } as never);
 
-    const req = new NextRequest('http://localhost:3000/api/comments?articleId=42&limit=10&offset=0');
+    const req = new NextRequest(
+      'http://localhost:3000/api/comments?articleId=42&limit=10&offset=0',
+    );
     const res = await commentsGET(req);
     const json = await res.json();
 
@@ -60,7 +62,9 @@ describe('comments API routes', () => {
   });
 
   test('GET /api/comments returns 400 when articleId is missing', async () => {
-    const req = new NextRequest('http://localhost:3000/api/comments?limit=10&offset=0');
+    const req = new NextRequest(
+      'http://localhost:3000/api/comments?limit=10&offset=0',
+    );
     const res = await commentsGET(req);
     const json = await res.json();
 
@@ -113,7 +117,9 @@ describe('comments API routes', () => {
       offset: 0,
     } as never);
 
-    const req = new NextRequest('http://localhost:3000/api/comments/11/replies?limit=10&offset=0');
+    const req = new NextRequest(
+      'http://localhost:3000/api/comments/11/replies?limit=10&offset=0',
+    );
     const res = await repliesGET(req, {
       params: Promise.resolve({ id: '11' }),
     });
@@ -131,7 +137,9 @@ describe('comments API routes', () => {
   test('GET /api/comments/[id]/replies returns 404 when parent comment is missing', async () => {
     vi.mocked(CommentService.getById).mockResolvedValue(null as never);
 
-    const req = new NextRequest('http://localhost:3000/api/comments/11/replies?limit=10&offset=0');
+    const req = new NextRequest(
+      'http://localhost:3000/api/comments/11/replies?limit=10&offset=0',
+    );
     const res = await repliesGET(req, {
       params: Promise.resolve({ id: '11' }),
     });

@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
-import { BookmarkType, BookmarkMetaType } from "../types/bookmarks.types";
-import { toast } from "sonner";
+import { useMutation, useQueryClient, QueryKey } from '@tanstack/react-query';
+import { BookmarkType, BookmarkMetaType } from '../types/bookmarks.types';
+import { toast } from 'sonner';
 
 const queryKey: QueryKey = ['bookmarks'];
 
@@ -19,26 +19,28 @@ export default function useDeleteBookmark() {
 
       const previousState = queryClient.getQueryData<CacheData>(queryKey);
 
-      if(previousState){
+      if (previousState) {
         queryClient.setQueryData<CacheData>(queryKey, (prev) => {
-          if(!prev) return prev;
+          if (!prev) return prev;
           return {
             ...prev,
-            data: prev.data.filter((bookmark) => bookmark.articleId !== articleId)
-          }
+            data: prev.data.filter(
+              (bookmark) => bookmark.articleId !== articleId,
+            ),
+          };
         });
       }
 
-      return {previousState};
+      return { previousState };
     },
     onError: (error, variables, context) => {
       queryClient.setQueryData(queryKey, context?.previousState);
-      toast.error("Failed to unsave article. Please try again");
+      toast.error('Failed to unsave article. Please try again');
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
     },
-  })
+  });
 }
 
 const deleteBookmark = async (articleId: number) => {
@@ -49,4 +51,4 @@ const deleteBookmark = async (articleId: number) => {
   if (!res.ok) {
     throw new Error('Failed to remove bookmark');
   }
-}
+};

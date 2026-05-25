@@ -39,7 +39,7 @@ describe('CMS API client', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       'http://cms.test/api/archerbytes-articles?where[slug][equals]=test-article&limit=1&depth=1',
-      expect.objectContaining({ method: 'GET' })
+      expect.objectContaining({ method: 'GET' }),
     );
     expect(article.slug).toBe('test-article');
   });
@@ -57,7 +57,7 @@ describe('CMS API client', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       'http://cms.test/api/archerbytes-articles/42?depth=1',
-      expect.objectContaining({ method: 'GET' })
+      expect.objectContaining({ method: 'GET' }),
     );
     expect(article.id).toBe(1);
   });

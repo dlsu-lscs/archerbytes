@@ -1,4 +1,4 @@
-import { FeedArticleType } from "@/features/article/types/article.types";
+import { FeedArticleType } from '@/features/article/types/article.types';
 
 export type BookmarkType = {
   id: number;
@@ -7,11 +7,11 @@ export type BookmarkType = {
   bookmarkedAt: Date;
   createdAt: Date;
   article: FeedArticleType;
-}
+};
 
 export type BookmarkMetaType = {
   total: number;
   page: number;
   limit: number;
   pages: number;
-}
+};

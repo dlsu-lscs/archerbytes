@@ -3,7 +3,10 @@ export interface CMSArticle {
   title: string;
   subtitle: string;
   slug: string;
-  content: { root: { type: string; children: unknown[] }; [key: string]: unknown };
+  content: {
+    root: { type: string; children: unknown[] };
+    [key: string]: unknown;
+  };
   mdContent?: string | null;
   featuredImage?: { id: number; url: string } | number | null;
   category: { id: number; name: string } | number;
@@ -40,34 +43,38 @@ class CMSApiClient {
   private getHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-    }
-    const cmsApiKey = process.env.CMS_API_KEY
+    };
+    const cmsApiKey = process.env.CMS_API_KEY;
     if (cmsApiKey) {
-      headers['Authorization'] = `users API-Key ${cmsApiKey}`
+      headers['Authorization'] = `users API-Key ${cmsApiKey}`;
     }
-    return headers
+    return headers;
   }
 
   private normalizeArticle(article: CMSArticle): CMSArticle | null {
-    const { deleted_at, ...normalized } = article as CMSArticle & { deleted_at?: unknown }
-    
+    const { deleted_at, ...normalized } = article as CMSArticle & {
+      deleted_at?: unknown;
+    };
+
     // if the CMS marked the article as deleted, reject it
     if (deleted_at) {
-      return null
+      return null;
     }
-    
-    return normalized as CMSArticle
+
+    return normalized as CMSArticle;
   }
 
   private normalizeCategory(category: CMSCategory): CMSCategory | null {
-    const { deleted_at, ...normalized } = category as CMSCategory & { deleted_at?: unknown }
-    
+    const { deleted_at, ...normalized } = category as CMSCategory & {
+      deleted_at?: unknown;
+    };
+
     // if the CMS marked the article as deleted, reject it
     if (deleted_at) {
-      return null
+      return null;
     }
-    
-    return normalized as CMSCategory
+
+    return normalized as CMSCategory;
   }
 
   async fetchArticle(articleId: string | number): Promise<CMSArticle> {
@@ -83,13 +90,17 @@ class CMSApiClient {
     });
 
     if (!response.ok) {
-      throw new Error(`CMS API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `CMS API error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = (await response.json()) as unknown;
     const article = this.extractCMSData<CMSArticle>(data);
     if (!article) {
-      throw new Error(`CMS article not found for identifier: ${normalizedArticleId}`);
+      throw new Error(
+        `CMS article not found for identifier: ${normalizedArticleId}`,
+      );
     }
 
     const normalizedArticle = this.normalizeArticle(article);
@@ -110,18 +121,24 @@ class CMSApiClient {
     });
 
     if (!response.ok) {
-      throw new Error(`CMS API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `CMS API error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = (await response.json()) as unknown;
     const category = this.extractCMSData<CMSCategory>(data);
     if (!category) {
-      throw new Error(`CMS category not found for identifier: ${String(categoryId).trim()}`);
+      throw new Error(
+        `CMS category not found for identifier: ${String(categoryId).trim()}`,
+      );
     }
 
     const normalizedCategory = this.normalizeCategory(category);
     if (!normalizedCategory) {
-      throw new Error(`Category is deleted in CMS: ${String(categoryId).trim()}`);
+      throw new Error(
+        `Category is deleted in CMS: ${String(categoryId).trim()}`,
+      );
     }
 
     return normalizedCategory;

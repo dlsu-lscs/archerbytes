@@ -1,5 +1,11 @@
 import { db } from '@/config/database';
-import { articleCategories, articleReactions, articles, comments, user } from '@/lib/db/schema';
+import {
+  articleCategories,
+  articleReactions,
+  articles,
+  comments,
+  user,
+} from '@/lib/db/schema';
 import type { ArticleDetailsType } from '@/features/article/types/article.types';
 import {
   and,

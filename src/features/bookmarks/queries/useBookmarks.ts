@@ -1,7 +1,7 @@
 import { useQuery, QueryKey } from '@tanstack/react-query';
 import { BookmarkType } from '../types/bookmarks.types';
 
-const queryKey: QueryKey = ['bookmarks']
+const queryKey: QueryKey = ['bookmarks'];
 
 export default function useBookmarks() {
   return useQuery({
@@ -12,32 +12,44 @@ export default function useBookmarks() {
       return failureCount < 3;
     },
     select: (data) => {
-      return data.data.map((bookmark: Omit<BookmarkType, 'bookmarkedAt' | 'createdAt' | 'article'> & {
-        bookmarkedAt: string;
-        createdAt: string;
-        article: Omit<BookmarkType['article'], 'publishedAt' | 'createdAt'> & {
-          publishedAt: string | null;
-          createdAt: string;
-        }
-      }) => ({
-        ...bookmark,
-        bookmarkedAt: new Date(bookmark.bookmarkedAt),
-        createdAt: new Date(bookmark.createdAt),
-        article: {
-          ...bookmark.article,
-          publishedAt: bookmark.article.publishedAt ? new Date(bookmark.article.publishedAt) : null,
-          createdAt: new Date(bookmark.article.createdAt)
-        }
-      })) as BookmarkType[];
-    }
-  })
+      return data.data.map(
+        (
+          bookmark: Omit<
+            BookmarkType,
+            'bookmarkedAt' | 'createdAt' | 'article'
+          > & {
+            bookmarkedAt: string;
+            createdAt: string;
+            article: Omit<
+              BookmarkType['article'],
+              'publishedAt' | 'createdAt'
+            > & {
+              publishedAt: string | null;
+              createdAt: string;
+            };
+          },
+        ) => ({
+          ...bookmark,
+          bookmarkedAt: new Date(bookmark.bookmarkedAt),
+          createdAt: new Date(bookmark.createdAt),
+          article: {
+            ...bookmark.article,
+            publishedAt: bookmark.article.publishedAt
+              ? new Date(bookmark.article.publishedAt)
+              : null,
+            createdAt: new Date(bookmark.article.createdAt),
+          },
+        }),
+      ) as BookmarkType[];
+    },
+  });
 }
 
 const getBookmarkedArticles = async () => {
   const params = new URLSearchParams({
     limit: '10',
-    offset: '0'
-  })
+    offset: '0',
+  });
 
   const res = await fetch(`/api/bookmarks?${params.toString()}`);
 
@@ -45,9 +57,9 @@ const getBookmarkedArticles = async () => {
     throw new Error('Unauthorized');
   }
 
-  if(!res.ok){
+  if (!res.ok) {
     throw new Error('Failed to fetch saved articles');
   }
 
   return res.json();
-}
+};

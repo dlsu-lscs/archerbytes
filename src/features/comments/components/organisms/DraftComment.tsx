@@ -3,12 +3,9 @@
 import CommentForm from '../molecules/CommentForm';
 
 interface DraftCommentProps {
-    articleId: number;
+  articleId: number;
 }
 
 export default function DraftComment({ articleId }: DraftCommentProps) {
-
-    return (
-        <CommentForm articleId={articleId} expandable />
-    );
+  return <CommentForm articleId={articleId} expandable />;
 }

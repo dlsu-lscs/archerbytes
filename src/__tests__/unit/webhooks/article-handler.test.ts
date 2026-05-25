@@ -41,10 +41,12 @@ describe('Article Event Handler', () => {
 
   describe('Article creation event', () => {
     it('should handle article.created event', async () => {
-      const syncSpy = vi.spyOn(CMSSyncService, 'syncArticle').mockResolvedValue({
-        id: 1,
-        slug: 'test-article',
-      });
+      const syncSpy = vi
+        .spyOn(CMSSyncService, 'syncArticle')
+        .mockResolvedValue({
+          id: 1,
+          slug: 'test-article',
+        });
 
       const payload: ArticleWebhookPayload = {
         ...mockArticlePayload,
@@ -57,10 +59,12 @@ describe('Article Event Handler', () => {
     });
 
     it('should handle article.updated event', async () => {
-      const syncSpy = vi.spyOn(CMSSyncService, 'syncArticle').mockResolvedValue({
-        id: 1,
-        slug: 'test-article',
-      });
+      const syncSpy = vi
+        .spyOn(CMSSyncService, 'syncArticle')
+        .mockResolvedValue({
+          id: 1,
+          slug: 'test-article',
+        });
 
       const payload: ArticleWebhookPayload = {
         ...mockArticlePayload,
@@ -75,7 +79,9 @@ describe('Article Event Handler', () => {
 
   describe('Article deletion event', () => {
     it('should handle article.deleted event', async () => {
-      const deleteSpy = vi.spyOn(CMSSyncService, 'deleteArticle').mockResolvedValue();
+      const deleteSpy = vi
+        .spyOn(CMSSyncService, 'deleteArticle')
+        .mockResolvedValue();
 
       const payload: ArticleWebhookPayload = {
         ...mockArticlePayload,
@@ -91,7 +97,7 @@ describe('Article Event Handler', () => {
   describe('Error handling', () => {
     it('should throw error when sync fails', async () => {
       vi.spyOn(CMSSyncService, 'syncArticle').mockRejectedValue(
-        new Error('CMS API error')
+        new Error('CMS API error'),
       );
 
       const payload: ArticleWebhookPayload = {
@@ -99,13 +105,17 @@ describe('Article Event Handler', () => {
         action: 'created',
       };
 
-      await expect(handleArticleEvent(payload)).rejects.toThrow('CMS API error');
+      await expect(handleArticleEvent(payload)).rejects.toThrow(
+        'CMS API error',
+      );
     });
 
     it('should log error details', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       vi.spyOn(CMSSyncService, 'syncArticle').mockRejectedValue(
-        new Error('Test error')
+        new Error('Test error'),
       );
 
       const payload: ArticleWebhookPayload = {
@@ -115,8 +125,7 @@ describe('Article Event Handler', () => {
 
       try {
         await handleArticleEvent(payload);
-      } catch {
-      }
+      } catch {}
 
       expect(consoleErrorSpy).toHaveBeenCalled();
     });

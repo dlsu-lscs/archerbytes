@@ -44,7 +44,10 @@ export async function POST(req: NextRequest) {
 
       return ok({ bookmark }, 201);
     } catch (serviceError) {
-      if (serviceError instanceof Error && serviceError.message === 'Bookmark already exists') {
+      if (
+        serviceError instanceof Error &&
+        serviceError.message === 'Bookmark already exists'
+      ) {
         return fail('Bookmark already exists', 409);
       }
       throw serviceError;
@@ -69,7 +72,9 @@ export async function DELETE(req: NextRequest) {
     const session = await requireAuth();
     const articleIdParam = req.nextUrl.searchParams.get('articleId');
 
-    const parsedBody = removeBookmarkSchema.parse({ articleId: articleIdParam });
+    const parsedBody = removeBookmarkSchema.parse({
+      articleId: articleIdParam,
+    });
     const existing = await BookmarkService.getByUserAndArticle(
       session.user.id,
       parsedBody.articleId,
