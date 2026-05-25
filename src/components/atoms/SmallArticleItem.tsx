@@ -9,6 +9,7 @@ import useCreateBookmark from '@/features/bookmarks/queries/useCreateBookmark';
 import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
 import { useAuthStore } from '@/store/use-auth-store';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function SmallArticleItem({
   id,
@@ -17,6 +18,7 @@ export default function SmallArticleItem({
   author,
   date,
   avatarURL,
+  slug
 }: SmallArticleItemType) {
   const { data: bookmarks, error: authError } = useBookmarks();
   const addBookmark = useCreateBookmark();
@@ -60,7 +62,9 @@ export default function SmallArticleItem({
           size="small"
         />
       </div>
-      <h6 className="text-md font-bold align-middle">{title}</h6>
+      <Link href={`/article/${slug}`}>
+        <h6 className="text-md font-bold align-middle hover:underline">{title}</h6>
+      </Link>
       <div className="flex gap-2">
         <TopicChip>{topic}</TopicChip>
         <p className="text-xs font-light">{date}</p>

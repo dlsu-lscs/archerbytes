@@ -11,7 +11,7 @@ export default function RelatedSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const { data: categories, isLoading: isLoadingCategories, isError: isErrorCategories } = useCategoryList();
-  const { data: bookmarks, isLoading: isLoadingBookmarks } = useBookmarks();
+  const { data: bookmarks, isLoading: isLoadingBookmarks, isError: isErrorBookmarks } = useBookmarks();
 
   return (
     <div className="hidden lg:flex flex-col gap-6 p-5 max-w-64">
@@ -23,6 +23,7 @@ export default function RelatedSidebar() {
       <SavedArticlesSection 
         bookmarks={bookmarks}
         isLoading={isLoadingBookmarks}
+        isError={isErrorBookmarks}
         isAuthenticated={!!session?.user}
         pathname={pathname}
       />

@@ -6,19 +6,16 @@ import { BookmarkType } from '@/features/bookmarks/types/bookmarks.types';
 interface SavedArticlesSectionProps {
   bookmarks?: BookmarkType[];
   isLoading: boolean;
+  isError: boolean
   isAuthenticated: boolean;
   pathname: string;
 }
 
-export default function SavedArticlesSection({bookmarks, isLoading, isAuthenticated, pathname}: SavedArticlesSectionProps) {
+export default function SavedArticlesSection({bookmarks, isLoading, isError, isAuthenticated, pathname}: SavedArticlesSectionProps) {
   const displayedBookmarks = bookmarks?.slice(0, 3) || [];
   const totalSaved = bookmarks?.length || 0;
 
   if (pathname === '/bookmarks' || !isAuthenticated) {
-    return null;
-  }
-
-  if (!isLoading && (!bookmarks || bookmarks.length === 0)) {
     return null;
   }
 
@@ -39,9 +36,13 @@ export default function SavedArticlesSection({bookmarks, isLoading, isAuthentica
       <div className="flex flex-col gap-6">
         {isLoading ? (
           <div className="animate-pulse flex flex-col gap-4">
-            <div className="h-16 bg-gray-200 rounded-md"></div>
-            <div className="h-16 bg-gray-200 rounded-md"></div>
+            <div className="h-16 bg-neutral-300 rounded-md"></div>
+            <div className="h-16 bg-neutral-300 rounded-md"></div>
           </div>
+        ) : isError ? (
+          <p className="text-sm text-neutral-500 text-center mt-3">Failed to load saved articles</p>
+        ) : displayedBookmarks.length === 0 ? (
+          <p className="text-sm text-neutral-500 text-center mt-3">No saved articles yet</p>
         ) : (
           displayedBookmarks?.map((bookmark) => {
             const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -62,6 +63,7 @@ export default function SavedArticlesSection({bookmarks, isLoading, isAuthentica
                 author={bookmark.article.author.name}
                 date={formattedDate}
                 avatarURL={bookmark.article.author?.avatarURL}
+                slug={bookmark.article.slug}
               />
             );
           })

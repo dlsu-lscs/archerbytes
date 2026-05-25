@@ -35,6 +35,10 @@ export default function TopicSearchSection({categories, isLoading, isError}: Top
           Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-8 bg-neutral-300 animate-pulse rounded-full"></div>
           ))
+        ) : isError ? (
+          <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">Failed to load topics</p>
+        ) : displayedCategories.length === 0 ? (
+          <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">No topics found</p>
         ) : (
           displayedCategories.map((category) => (
             <Link key={category.id} href={`/category/${category.slug}`}>
