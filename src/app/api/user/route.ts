@@ -73,7 +73,7 @@ export async function PATCH(request: Request) {
     if (bio !== undefined) payload.bio = bio;
 
     if (Object.keys(payload).length === 0) {
-      return fail('No updatable fields provided. Include `occupation` and/or `image`.', 400);
+      return fail('No updatable fields provided. Include `occupation`, `bio`, and/or `image`.', 400);
     }
 
     const updated = await updateUserProfile(session.user.id, payload);
