@@ -5,6 +5,7 @@ export default function useCategoryList() {
   return useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
     select: (data) => {
       return data.data.map((category: Omit<CategoryType, 'createdAt'> & {
         createdAt: string;

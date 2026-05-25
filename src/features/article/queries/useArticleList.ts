@@ -14,6 +14,7 @@ export default function useArticleList({sort = 'newest', categoryId = null, enab
     queryKey: ['articles', {sort, categoryId}],
     queryFn: () => getArticles({sort, categoryId}),
     enabled: enabled,
+    staleTime: 5 * 60 * 1000,
     select: (data) => {
       return data.data.map((article: Omit<FeedArticleType, 'publishedAt' | 'createdAt'> & {
           publishedAt: string;

@@ -5,29 +5,23 @@ export type ArticleDetailsType = {
     slug: string;
     content: string;
     categoryId: number;
+    category: { id: number; name: string; slug: string };
     userId: string;
     featuredImageUrl: string | null;
-    tags: string[];
-    keywords: string[];
+    tags: string[] | null;
     metaTitle: string | null;
     metaDescription: string | null;
     metaImageUrl: string | null;
     status: 'draft' | 'published';
     isEdited: boolean;
     publishedAt: Date | null;
-    publicationDate: Date | null;
     createdAt: Date;
     updatedAt: Date;
-    author: string;
-    avatarURL: string | null;
-    occupation: string | null;
-    readingTime: number;
+    author: articleAuthorType;
     quote?: string;
     quotee?: string;
     commentCount: number;
     reactionCount: number;
-    likeCount: number;
-    previewURL: string;
 };
 
 export type articleAuthorType = {
