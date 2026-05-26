@@ -8,7 +8,7 @@ export default function ArticlePage() {
       <div className="hidden lg:flex justify-end">
         <Sidebar />
       </div>
-      <main className="flex flex-col gap-[30px] px-10">
+      <main className="flex flex-col gap-5 px-10">
         <h1 className="mt-3 text-5xl text-black font-bold">Saved Articles</h1>
         <BookmarkedList />
       </main>

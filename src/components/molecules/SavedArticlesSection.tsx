@@ -1,25 +1,21 @@
-'use client';
-
 import Image from 'next/image';
 import SmallArticleItem from '../atoms/SmallArticleItem';
-import useBookmarks from '@/features/bookmarks/queries/useBookmarks';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useSession } from '@/lib/auth/client';
+import { BookmarkType } from '@/features/bookmarks/types/bookmarks.types';
 
-export default function SavedArticlesSection() {
-  const pathname = usePathname();
-  const { data: session } = useSession();
-  const { data: bookmarks, isLoading } = useBookmarks();
+interface SavedArticlesSectionProps {
+  bookmarks?: BookmarkType[];
+  isLoading: boolean;
+  isError: boolean
+  isAuthenticated: boolean;
+  pathname: string;
+}
 
+export default function SavedArticlesSection({bookmarks, isLoading, isError, isAuthenticated, pathname}: SavedArticlesSectionProps) {
   const displayedBookmarks = bookmarks?.slice(0, 3) || [];
   const totalSaved = bookmarks?.length || 0;
 
-  if (pathname === '/bookmarks' || !session?.user) {
-    return null;
-  }
-
-  if (!isLoading && (!bookmarks || bookmarks.length === 0)) {
+  if (pathname === '/bookmarks' || !isAuthenticated) {
     return null;
   }
 
@@ -35,14 +31,17 @@ export default function SavedArticlesSection() {
           />
           <h6 className="font-medium text-md">Read Later</h6>
         </div>
-        <p className="font-light text-md">Clear</p>
       </div>
       <div className="flex flex-col gap-6">
         {isLoading ? (
           <div className="animate-pulse flex flex-col gap-4">
-            <div className="h-16 bg-gray-200 rounded-md"></div>
-            <div className="h-16 bg-gray-200 rounded-md"></div>
+            <div className="h-16 bg-neutral-300 rounded-md"></div>
+            <div className="h-16 bg-neutral-300 rounded-md"></div>
           </div>
+        ) : isError ? (
+          <p className="text-sm text-neutral-500 text-center mt-3">Failed to load saved articles</p>
+        ) : displayedBookmarks.length === 0 ? (
+          <p className="text-sm text-neutral-500 text-center mt-3">No saved articles yet</p>
         ) : (
           displayedBookmarks?.map((bookmark) => {
             const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -63,6 +62,7 @@ export default function SavedArticlesSection() {
                 author={bookmark.article.author.name}
                 date={formattedDate}
                 avatarURL={bookmark.article.author?.avatarURL}
+                slug={bookmark.article.slug}
               />
             );
           })

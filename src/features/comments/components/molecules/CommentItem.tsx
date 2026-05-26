@@ -9,14 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import ConfirmationModal from '@/components/atoms/ConfirmationModal';
 
 import Image from 'next/image';
 
@@ -195,37 +188,17 @@ export default function CommentItem({ comment, articleId }: CommentItemProps) {
               <div className="text-sm break-words">{comment.content}</div>
             )}
 
-            <Dialog
-              open={isDeleteConfirmOpen}
-              onOpenChange={setIsDeleteConfirmOpen}
-            >
-              <DialogContent showCloseButton={false} className="border-0">
-                <DialogHeader>
-                  <DialogTitle className="text-neutral-50">
-                    Delete comment?
-                  </DialogTitle>
-                  <DialogDescription className="text-neutral-400">
-                    This action cannot be undone.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button
-                    variant="secondary"
-                    onClick={() => setIsDeleteConfirmOpen(false)}
-                    disabled={isDeletePending}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={deleteCommentAction}
-                    disabled={isDeletePending}
-                  >
-                    {isDeletePending ? 'Deleting...' : 'Delete'}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <ConfirmationModal
+              isOpen={isDeleteConfirmOpen}
+              title="Delete comment?"
+              message="This action cannot be undone."
+              confirmText="Delete"
+              cancelText="Cancel"
+              loadingText="Deleting..."
+              onConfirm={deleteCommentAction}
+              onCancel={() => setIsDeleteConfirmOpen(false)}
+              isLoading={isDeletePending}
+            />
 
             <div className="flex gap-5 flex-wrap">
               <CommentReactionPopover
