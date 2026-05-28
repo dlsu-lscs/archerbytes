@@ -5,14 +5,21 @@ interface DesignedButtonProps {
   disabled?: boolean;
   label: string;
   variant?: 'primary' | 'danger';
+  className?: string;
 }
 
-export default function DesignedButton({ onClick, disabled, label, variant = 'primary' }: DesignedButtonProps) {
+export default function DesignedButton({ 
+  onClick,
+  disabled,
+  label,
+  variant = 'primary',
+  className = 'w-full'
+}: DesignedButtonProps) {
   return (
     <Button 
       onClick={onClick}
       disabled={disabled}
-      className={`${variant === 'danger' ? 'bg-red-800 hover:bg-red-500' : 'hover:bg-secondary'} px-8 md:px-10 py-5 md:py-6 w-full text-md relative border-2 border-neutral-950 `}
+      className={`${variant === 'danger' ? 'bg-red-800 hover:bg-red-500' : 'hover:bg-secondary'} px-8 md:px-10 py-5 md:py-6 text-md relative border-2 border-neutral-950 ${className}`}
     >
       <span className="text-neutral-50 relative text-outline-black">
         {label}

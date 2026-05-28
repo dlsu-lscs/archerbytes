@@ -125,10 +125,15 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
             <div>
               <label className="block text-sm font-bold mb-1">Bio</label>
               <Textarea 
-                className="w-full border-2 border-black rounded-md p-3 bg-white resize-none focus-visible:ring-0 focus-visible:ring-offset-0 min-h-30"
+                className="w-full border-2 border-black rounded-md p-3 bg-white resize-none focus-visible:ring-0 focus-visible:ring-offset-0 overflow-y-auto"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Tell us about yourself..."
+                style={{ 
+                  height: '128px', 
+                  minHeight: '128px', 
+                  maxHeight: '128px' 
+                }}
               />
             </div>
           </div>
