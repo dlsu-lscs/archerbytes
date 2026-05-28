@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import DesignedButton from '@/components/atoms/DesignedButton';
+import { toast } from 'sonner';
 
 export default function ProfileForm({user}: {user: UserProfileType}) {
   const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +36,15 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if(file) {
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image must be smaller than 2MB');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        return;
+      }
+
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
     }
@@ -50,6 +59,10 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
       onSuccess: () => {
         setIsEditing(false);
         setSelectedFile(null);
+        toast.success('Successfully updated profile');
+      },
+      onError: () => {
+        toast.error('Failed to update profile');
       }
     });
   }

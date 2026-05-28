@@ -1,22 +1,10 @@
-'use client'
-
 import ProfileForm from '../components/organisms/ProfileForm';
-import { useSession } from '@/lib/auth/client';
+import { UserProfileType } from '../types/profile.types';
 
-export default function ProfileContainer() {
-  const {data: session, isPending} = useSession();
-
-  if(isPending){
-    return <div className="p-10 text-center font-bold text-xl">Loading profile...</div>;
-  }
-
-  if(!session?.user){
-    return null;
-  }
-
+export default function ProfileContainer({user}: {user: UserProfileType}) {
   return (
     <div>
-      <ProfileForm user={session.user} />
+      <ProfileForm user={user} />
     </div>
   );
 };

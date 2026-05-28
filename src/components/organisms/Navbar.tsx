@@ -17,6 +17,7 @@ import { IoIosSearch } from 'react-icons/io';
 import { Button } from '@/components/ui/button';
 import Sidebar from './Sidebar';
 import Login from '@/features/auth/components/Login';
+import Link from 'next/link';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -79,13 +80,15 @@ export default function Navbar() {
                   </p>
                 </Button>
                 <AiOutlineBell className="size-8" />
-                <Image
-                  src={user?.image || '/globe.svg'}
-                  width={128}
-                  height={128}
-                  className="rounded-full size-8"
-                  alt="User image"
-                ></Image>
+                <Link href={`/profile`}>
+                  <Image
+                    src={user?.image || '/globe.svg'}
+                    width={128}
+                    height={128}
+                    className="rounded-full size-8"
+                    alt="User image"
+                  ></Image>
+                </Link>
               </div>
             )}
           </div>
