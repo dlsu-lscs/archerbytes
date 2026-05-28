@@ -1,26 +1,157 @@
-import { Button } from '@/components/ui/button';
+'use client'
 
-export default function ProfileForm() {
+import useUpdateProfile from '../../queries/useUpdateProfile';
+import { UpdateProfileType, UserProfileType } from '../../types/profile.types';
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import DesignedButton from '@/components/atoms/DesignedButton';
+
+export default function ProfileForm({user}: {user: UserProfileType}) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const[occupation, setOccupation] = useState(user.occupation || "");
+  const [bio, setBio] = useState(user.bio || '');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(user.image || null);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { mutate, isPending } = useUpdateProfile();
+
+  useEffect(() => {
+    return () => {
+      if (selectedFile && previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [selectedFile, previewUrl]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if(file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  }
+
+  const handleEditProfile = () => {
+    mutate({
+      occupation: occupation as UpdateProfileType['occupation'],
+      bio,
+      ...(selectedFile && {image: selectedFile}),
+    }, {
+      onSuccess: () => {
+        setIsEditing(false);
+        setSelectedFile(null);
+      }
+    });
+  }
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setOccupation(user.occupation || '');
+    setBio(user.bio || '');
+    setSelectedFile(null);
+    setPreviewUrl(user.image || null);
+  }
+
   return (
     <div className='flex flex-col gap-5 items-center md:items-start p-6'>
-      <div className="bg-neutral-300 size-60 md:size-80 rounded-full border-4 border-black ring-offset-[7px] ring-offset-primary ring-1 ring-black"></div>
-
-      <div className='flex flex-col gap-2'>
-        <p className='text-[#25609F] font-bold text-5xl'>Sample Name</p>
-        <p className='text-gray-500 font-normal text-4xl'>Username - Pronouns</p>
-        <p className='mt-3'>Description - Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas repellat magni tempore est? Itaque, atque. A vitae, laboriosam ab fugit ullam, totam libero voluptatibus, eius optio dicta perspiciatis modi distinctio molestiae quos tempore quam facilis sunt at deserunt quisquam sed! Sed optio maxime asperiores dolorem quasi! Commodi consequuntur aspernatur totam.</p>
+      <div className="relative group">
+        <div className="relative bg-neutral-300 size-60 md:size-80 rounded-full border-4 border-black ring-offset-[7px] ring-offset-primary ring-1 ring-black overflow-hidden flex items-center justify-center">
+          {previewUrl ? (
+            <Image src={previewUrl} alt={user.name} fill className="object-cover" />
+          ) : (
+            <Image src={'/lscs-logo.png'} alt={user.name} fill className="object-cover" />
+          )}
+        </div>
+        
+        {isEditing && (
+          <div 
+            className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <span className="text-white font-bold bg-black/50 px-4 py-2 rounded-md">Change Image</span>
+          </div>
+        )}
+        <input 
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/jpeg,image/png,image/webp"
+          className="hidden"
+        />
       </div>
 
-      <div className="relative z-10 w-full md:w-4/5">
-        <Button className="px-8 md:px-10 py-5 md:py-6 w-full text-md relative border-2 border-neutral-950 hover:bg-primary/100 hover:bg-secondary">
-          <span className="text-neutral-50 relative text-outline-black">
-            Edit Profile
-          </span>
-          <span className="text-neutral-50 absolute inset-0 flex items-center justify-center pointer-events-none">
-            Edit Profile
-          </span>
-          <div className="absolute size-full box-content p-0.5 bg-neutral-950 -z-10 top-1 left-1 rounded-md"></div>
-        </Button>
+      <div className='flex flex-col gap-2 w-full'>
+        <p className='text-[#25609F] font-bold text-5xl'>{user.name}</p>
+        
+        {isEditing ? (
+          <div className="mt-2 space-y-4 w-full md:w-4/5">
+            <div>
+              <label className="block text-sm font-bold mb-1">Occupation</label>
+              <Select value={occupation} onValueChange={setOccupation}>
+                <SelectTrigger className="w-full border-2 border-black rounded-md bg-white">
+                  <SelectValue placeholder="Select Occupation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Student">Student</SelectItem>
+                  <SelectItem value="Alumni">Alumni</SelectItem>
+                  <SelectItem value="Faculty">Faculty</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-bold mb-1">Bio</label>
+              <Textarea 
+                className="w-full border-2 border-black rounded-md p-3 bg-white resize-none focus-visible:ring-0 focus-visible:ring-offset-0 min-h-30"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Tell us about yourself..."
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <p className='text-gray-500 font-normal text-4xl'>
+              {user.occupation || 'No occupation set'}
+            </p>
+            <p className='mt-3 md:w-4/5'>
+              {user.bio || 'This user has not set a bio yet.'}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="relative z-10 w-full md:w-4/5 mt-4">
+        {isEditing ? (
+          <div className="flex flex-col gap-4">
+            <DesignedButton
+              onClick={handleEditProfile}
+              disabled={isPending}
+              label={isPending ? 'Saving...' : 'Save Changes'}
+            />
+            <DesignedButton
+              onClick={handleCancel}
+              disabled={isPending}
+              label="Cancel"
+              variant="danger"
+            />
+          </div>
+        ) : (
+          <DesignedButton 
+            onClick={() => setIsEditing(true)} 
+            label="Edit Profile"
+          />
+        )}
       </div>
     </div>
   );

@@ -1,15 +1,16 @@
-import { useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { UpdateProfileType } from "../types/profile.types";
-
-const queryKey: QueryKey = ['session'];
+import { authClient } from "@/lib/auth/client";
+import { useRouter } from "next/navigation";
 
 export default function useUpdateProfile() {
-  const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (data: UpdateProfileType) => updateProfile(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
+    onSuccess: async () => {
+      await authClient.getSession();
+      router.refresh();
     }
   })
 }
