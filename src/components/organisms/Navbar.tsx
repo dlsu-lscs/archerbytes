@@ -18,10 +18,20 @@ import { Button } from '@/components/ui/button';
 import Sidebar from './Sidebar';
 import Login from '@/features/auth/components/Login';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, refetch } = useSession();
   const user = session?.user;
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      refetch();
+    };
+
+    window.addEventListener('profile-updated', handleUpdate);
+    return () => window.removeEventListener('profile-updated', handleUpdate);
+  }, [refetch]);
 
   const isLoginOpen = useAuthStore((state) => state.isLoginOpen);
   const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
@@ -85,7 +95,7 @@ export default function Navbar() {
                     src={user?.image || '/globe.svg'}
                     width={128}
                     height={128}
-                    className="rounded-full size-8"
+                    className="rounded-full size-8 object-cover"
                     alt="User image"
                   ></Image>
                 </Link>

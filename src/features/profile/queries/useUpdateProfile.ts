@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { UpdateProfileType } from "../types/profile.types";
-import { authClient } from "@/lib/auth/client";
 import { useRouter } from "next/navigation";
 
 export default function useUpdateProfile() {
@@ -9,7 +8,7 @@ export default function useUpdateProfile() {
   return useMutation({
     mutationFn: (data: UpdateProfileType) => updateProfile(data),
     onSuccess: async () => {
-      await authClient.getSession();
+      window.dispatchEvent(new Event('profile-updated'));
       router.refresh();
     }
   })
