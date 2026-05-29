@@ -24,7 +24,7 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(user.image || null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { mutate, isPending } = useUpdateProfile();
+  const { mutate, isPending, error } = useUpdateProfile();
 
   useEffect(() => {
     return () => {
@@ -129,12 +129,14 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Tell us about yourself..."
+                maxLength={150}
                 style={{ 
                   height: '128px', 
                   minHeight: '128px', 
                   maxHeight: '128px' 
                 }}
               />
+              <p className="text-xs text-gray-500 mt-1">{bio.length}/150 characters</p>
             </div>
           </div>
         ) : (
@@ -150,6 +152,12 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
       </div>
 
       <div className="relative z-10 w-full md:w-4/5 mt-4">
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border-2 border-red-800 text-red-800 rounded-md font-bold text-sm">
+            {error.message || 'Something went wrong while saving your profile.'}
+          </div>
+        )}
+        
         {isEditing ? (
           <div className="flex flex-col gap-4">
             <DesignedButton
