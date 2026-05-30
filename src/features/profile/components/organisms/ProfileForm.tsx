@@ -88,7 +88,7 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
         
         {isEditing && (
           <div 
-            className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center cursor-pointer transition-opacity"
             onClick={() => fileInputRef.current?.click()}
           >
             <span className="text-white font-bold bg-black/50 px-4 py-2 rounded-md">Change Image</span>
@@ -104,7 +104,7 @@ export default function ProfileForm({user}: {user: UserProfileType}) {
       </div>
 
       <div className='flex flex-col gap-2 w-full'>
-        <p className='text-[#25609F] font-bold text-5xl'>{user.name}</p>
+        <p className='text-[#25609F] font-bold text-4xl'>{user.name}</p>
         
         {isEditing ? (
           <div className="mt-2 space-y-4 w-full md:w-4/5">

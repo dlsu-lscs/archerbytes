@@ -5,7 +5,7 @@ import { getSession } from '@/lib/util/auth/session';
 import { redirect } from 'next/navigation';
 import { UserProfileType } from '@/features/profile/types/profile.types';
 
-export default async function ArticlePage() {
+export default async function ProfilePage() {
   const session = await getSession();
 
   if(!session?.user) {
