@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import DesignedButton from '@/components/atoms/DesignedButton';
 
 export default function LoginPage() {
   return (
@@ -23,15 +23,7 @@ export default function LoginPage() {
             </p>
           </div>
           <Link href={'/'}>
-            <Button className="px-8 md:px-10 py-2 md:py-5 w-fit text-md relative border border-2 border-neutral-950 hover:bg-primary/100 hover:bg-secondary">
-              <p className="text-neutral-50 relative text-outline-black">
-                Start Reading
-              </p>
-              <p className="text-neutral-50 absolute inset-0 top-[4px] md:top-[8px]">
-                Start Reading
-              </p>
-              <div className="absolute size-full box-content p-[2px] bg-neutral-950 -z-10 top-1 left-1 rounded-md"></div>
-            </Button>
+            <DesignedButton label={"Start Reading"} className={"w-fit"} />
           </Link>
         </div>
       </div>

@@ -1,9 +1,9 @@
 'use client';
 
-import { useSession } from '@/lib/auth/client';
+import { useSession, signOut } from '@/lib/auth/client';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/use-auth-store';
-import { MdMenu } from 'react-icons/md';
+import { MdMenu, MdLogout } from 'react-icons/md';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { AiOutlineBell } from 'react-icons/ai';
 import {
@@ -17,14 +17,37 @@ import { IoIosSearch } from 'react-icons/io';
 import { Button } from '@/components/ui/button';
 import Sidebar from './Sidebar';
 import Login from '@/features/auth/components/Login';
+import { useEffect } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, refetch } = useSession();
   const user = session?.user;
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      refetch();
+    };
+
+    window.addEventListener('profile-updated', handleUpdate);
+    return () => window.removeEventListener('profile-updated', handleUpdate);
+  }, [refetch]);
 
   const isLoginOpen = useAuthStore((state) => state.isLoginOpen);
   const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
   const setLoginClose = useAuthStore((state) => state.setLoginClose);
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  }
 
   return (
     <>
@@ -79,13 +102,26 @@ export default function Navbar() {
                   </p>
                 </Button>
                 <AiOutlineBell className="size-8" />
-                <Image
-                  src={user?.image || '/globe.svg'}
-                  width={128}
-                  height={128}
-                  className="rounded-full size-8"
-                  alt="User image"
-                ></Image>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="outline-none rounded-full">
+                    <Image
+                      src={user?.image || '/globe.svg'}
+                      width={128}
+                      height={128}
+                      className="rounded-full size-8 object-cover hover:opacity-80 transition-opacity"
+                      alt="User image"
+                    ></Image>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40 z-100">
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="text-red-600 font-bold cursor-pointer flex items-center gap-2 focus:text-red-700 focus:bg-red-50"
+                    >
+                      <MdLogout size={18} />
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </div>
@@ -124,13 +160,26 @@ export default function Navbar() {
                   <Button className="bg-secondary relative p-0 border border-2 border-neutral-950">
                     <HiOutlinePencilAlt className="text-neutral-950 size-6" />
                   </Button>
-                  <Image
-                    src={user?.image || '/globe.svg'}
-                    width={128}
-                    height={128}
-                    className="rounded-full size-8"
-                    alt="User image"
-                  ></Image>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="outline-none rounded-full">
+                      <Image
+                        src={user?.image || '/globe.svg'}
+                        width={128}
+                        height={128}
+                        className="rounded-full size-8 object-cover hover:opacity-80 transition-opacity"
+                        alt="User image"
+                      ></Image>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-40 z-100">
+                      <DropdownMenuItem
+                        onClick={handleLogout}
+                        className="text-red-600 font-bold cursor-pointer flex items-center gap-2 focus:text-red-700 focus:bg-red-50"
+                      >
+                        <MdLogout size={18} />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </>
             )}
