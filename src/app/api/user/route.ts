@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { requireAuth } from '@/lib/util/auth/session';
 import { ok, fail } from '@/lib/api/response';
 import { deleteProfileImage, uploadProfileImage } from '@/lib/storage/s3';
-import { updateUserProfile } from '@/features/auth/services/service';
+import { updateUserProfile, getUserById } from '@/features/auth/services/service';
 import type { UpdateUserProfileInput } from '@/features/auth/types';
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
@@ -87,6 +87,9 @@ export async function PATCH(request: Request) {
       );
     }
 
+    const previousUser = await getUserById(session.user.id);
+    const previousImageUrl = previousUser?.image;
+
     const updated = await updateUserProfile(session.user.id, payload);
 
     if (!updated) {
@@ -101,6 +104,35 @@ export async function PATCH(request: Request) {
         }
       }
       return fail('Failed to update user profile', 500);
+    }
+
+    if (uploadedObjectKey && previousImageUrl) {
+      let prevKey: string | null = null;
+      try {
+        if (/^https?:\/\//.test(previousImageUrl)) {
+          const u = new URL(previousImageUrl);
+          prevKey = u.searchParams.get('key');
+        } else {
+          const qIdx = previousImageUrl.indexOf('?key=');
+          if (qIdx !== -1) {
+            prevKey = decodeURIComponent(previousImageUrl.substring(qIdx + 5));
+          } else {
+            const parts = previousImageUrl.split('/api/storage/profile-image/');
+            prevKey = parts[1] ?? null;
+          }
+        }
+      } catch (parseErr) {
+        console.error('Failed to parse previous image URL:', parseErr);
+        prevKey = null;
+      }
+
+      if (prevKey && prevKey !== uploadedObjectKey) {
+        try {
+          await deleteProfileImage(prevKey);
+        } catch (delErr) {
+          console.error('Failed to delete previous profile image from S3:', delErr);
+        }
+      }
     }
 
     const resp = {
