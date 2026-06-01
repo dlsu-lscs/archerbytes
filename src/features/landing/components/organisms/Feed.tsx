@@ -49,7 +49,7 @@ export default function Feed() {
   }, [tabParam, categoryIdParam])
 
   return (
-    <section className="flex flex-col gap-2.5">
+    <section className="flex flex-col gap-4.5">
       <Tabs
         defaultValue="for-you"
         value={activeTab}
@@ -100,7 +100,7 @@ export default function Feed() {
             </div>
           </div>
         </TabsList>
-        <TabsContent value="for-you" className="flex flex-col gap-2">
+        <TabsContent value="for-you" className="flex flex-col gap-4">
           <ArticleList
             articles={forYouQuery.data}
             isLoading={forYouQuery.isLoading}
@@ -108,7 +108,7 @@ export default function Feed() {
           />
         </TabsContent>
 
-        <TabsContent value="trending" className="flex flex-col gap-2">
+        <TabsContent value="trending" className="flex flex-col gap-4">
           <ArticleList
             articles={trendingQuery.data}
             isLoading={trendingQuery.isLoading}
@@ -116,7 +116,7 @@ export default function Feed() {
           />
         </TabsContent>
 
-        <TabsContent value="by-category" className="flex flex-col gap-2">
+        <TabsContent value="by-category" className="flex flex-col gap-4">
           <div className="flex sm:justify-start md:justify-end w-full pt-1 pb-2">
             <CategoryDropdown
               value={selectedCategory}
