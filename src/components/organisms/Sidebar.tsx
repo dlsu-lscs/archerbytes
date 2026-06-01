@@ -21,7 +21,13 @@ export default function Sidebar() {
           isSelected={pathname === '/'}
         />
       </Link>
-      <SidebarItem icon={<GoPerson />} title="PROFILE" />
+      <Link href={'/profile'}>
+        <SidebarItem 
+          icon={<GoPerson />}
+          title="PROFILE"
+          isSelected={pathname === '/profile'}  
+        />
+      </Link>
       <Link href={'/bookmarks'}>
         <SidebarItem
           icon={<IoBookmarkOutline />}
