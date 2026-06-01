@@ -7,7 +7,10 @@ import type { CommentType } from '../types/comment.types';
 
 const LIMIT = 5;
 
-async function fetchReplies(commentId: number, page: number): Promise<ApiPaginatedResponse<CommentType>> {
+async function fetchReplies(
+  commentId: number,
+  page: number,
+): Promise<ApiPaginatedResponse<CommentType>> {
   const offset = (page - 1) * LIMIT;
   const response = await fetch(
     `/api/comments/${commentId}/replies?limit=${LIMIT}&offset=${offset}`,
@@ -36,7 +39,9 @@ export function useGetReplies(
     queryFn: ({ pageParam }) => fetchReplies(commentId, pageParam as number),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
-      lastPage.meta.page < lastPage.meta.pages ? lastPage.meta.page + 1 : undefined,
+      lastPage.meta.page < lastPage.meta.pages
+        ? lastPage.meta.page + 1
+        : undefined,
     enabled: Boolean(commentId) && (enabled ?? true),
   });
 

@@ -2,11 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import type {
-  CreateCommentInput,
-  CommentRecord,
-  GetCommentsResponse,
-} from '../types';
+import type { CreateCommentInput, CommentRecord } from '../types';
 
 interface CreateCommentVariables {
   data: CreateCommentInput;

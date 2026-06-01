@@ -7,6 +7,7 @@ function calcReadingTime(content: string): number {
 }
 
 export default function ArticleDetails({ article }: { article: ArticleDetailsType }) {
+
     return (
         <div className="flex flex-col gap-[10px] text-neutral-950">
             <TopicChip>{article.category.name}</TopicChip>
@@ -23,7 +24,7 @@ export default function ArticleDetails({ article }: { article: ArticleDetailsTyp
                     <div className="size-12 shrink-0 rounded-full bg-neutral-400 overflow-hidden relative">
                         {article.author.avatarURL && (
                             <Image
-                                src={article.author.avatarURL ?? "/archerbytes-bg.png"}
+                                src={`${article.author.avatarURL}` || "/archerbytes-bg.png"}
                                 alt={article.author.name}
                                 fill
                                 className="object-cover"

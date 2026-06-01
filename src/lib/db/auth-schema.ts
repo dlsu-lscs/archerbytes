@@ -1,4 +1,10 @@
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, pgEnum } from 'drizzle-orm/pg-core';
+
+export const occupationEnum = pgEnum('occupation_enum', [
+  'Alumni',
+  'Student',
+  'Faculty',
+]);
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -6,7 +12,8 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),
   image: text('image'),
-  occupation: text('occupation'),
+  occupation: occupationEnum('occupation'),
+  bio: text('bio'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()

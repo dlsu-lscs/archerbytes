@@ -38,7 +38,11 @@ describe('article query schemas', () => {
   });
 
   test('requires search query length of at least 3', () => {
-    const result = articleSearchQuerySchema.safeParse({ q: 'ab', page: '1', limit: '10' });
+    const result = articleSearchQuerySchema.safeParse({
+      q: 'ab',
+      page: '1',
+      limit: '10',
+    });
     expect(result.success).toBe(false);
   });
 
@@ -46,12 +50,16 @@ describe('article query schemas', () => {
     expect(articleSlugParamSchema.parse({ slug: 'my-article' })).toEqual({
       slug: 'my-article',
     });
-    expect(categoryIdParamSchema.parse({ categoryId: '7' })).toEqual({ categoryId: 7 });
+    expect(categoryIdParamSchema.parse({ categoryId: '7' })).toEqual({
+      categoryId: 7,
+    });
     expect(idParamSchema.parse({ id: '9' })).toEqual({ id: 9 });
   });
 
   test('rejects non-positive ID params', () => {
-    expect(categoryIdParamSchema.safeParse({ categoryId: '0' }).success).toBe(false);
+    expect(categoryIdParamSchema.safeParse({ categoryId: '0' }).success).toBe(
+      false,
+    );
     expect(idParamSchema.safeParse({ id: '-1' }).success).toBe(false);
   });
 });

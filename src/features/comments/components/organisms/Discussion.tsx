@@ -12,7 +12,7 @@ export default function Discussion({ articleId }: DiscussionProps) {
         useGetComments(String(articleId));
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3" id='discussion'>
             <h3 className="text-2xl font-bold text-neutral-950">
                 Discussion ({total})
             </h3>
@@ -26,8 +26,17 @@ export default function Discussion({ articleId }: DiscussionProps) {
                     />
                 ))}
             </div>
-            <div ref={sentinelRef} className="py-2 text-center text-sm text-neutral-400">
-                {isFetchingNextPage ? 'Loading more...' : hasNextPage ? '' : data.length > 0 ? 'No more comments' : ''}
+            <div
+                ref={sentinelRef}
+                className="py-2 text-center text-sm text-neutral-400"
+            >
+                {isFetchingNextPage
+                    ? 'Loading more...'
+                    : hasNextPage
+                        ? ''
+                        : data.length > 0
+                            ? 'No more comments'
+                            : ''}
             </div>
         </div>
     );

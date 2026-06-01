@@ -43,7 +43,10 @@ export function okPaginated<Data>(
   meta: PaginationMeta,
   status = 200,
 ) {
-  return NextResponse.json<ApiPaginatedResponse<Data>>({ data, meta }, { status });
+  return NextResponse.json<ApiPaginatedResponse<Data>>(
+    { data, meta },
+    { status },
+  );
 }
 
 export function fail(error: string, status: number, details?: unknown) {

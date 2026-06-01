@@ -29,9 +29,13 @@ export async function POST(req: NextRequest) {
   }
 
   const webhookPayload = validationResult.data;
-  console.log(`[Webhook] Received ${webhookPayload.event} event for ID: ${
-    'articleId' in webhookPayload ? webhookPayload.articleId : webhookPayload.categoryId
-  } at ${webhookPayload.timestamp}`);
+  console.log(
+    `[Webhook] Received ${webhookPayload.event} event for ID: ${
+      'articleId' in webhookPayload
+        ? webhookPayload.articleId
+        : webhookPayload.categoryId
+    } at ${webhookPayload.timestamp}`,
+  );
 
   (async () => {
     try {
@@ -41,7 +45,10 @@ export async function POST(req: NextRequest) {
         await handleCategoryEvent(webhookPayload);
       }
     } catch (error) {
-      console.error(`[Webhook] Processing failed for ${webhookPayload.event}:`, error);
+      console.error(
+        `[Webhook] Processing failed for ${webhookPayload.event}:`,
+        error,
+      );
     }
   })();
 

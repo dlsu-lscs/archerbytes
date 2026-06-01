@@ -59,12 +59,8 @@
           "name": "comments_article_id_articles_id_fk",
           "tableFrom": "comments",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -72,12 +68,8 @@
           "name": "comments_reply_to_comments_id_fk",
           "tableFrom": "comments",
           "tableTo": "comments",
-          "columnsFrom": [
-            "reply_to"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reply_to"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -131,12 +123,8 @@
           "name": "article_reactions_article_id_articles_id_fk",
           "tableFrom": "article_reactions",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -146,10 +134,7 @@
         "unique_user_article": {
           "name": "unique_user_article",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "article_id"
-          ]
+          "columns": ["user_id", "article_id"]
         }
       },
       "policies": {},
@@ -199,12 +184,8 @@
           "name": "comment_reactions_comment_id_comments_id_fk",
           "tableFrom": "comment_reactions",
           "tableTo": "comments",
-          "columnsFrom": [
-            "comment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["comment_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -214,10 +195,7 @@
         "unique_user_comment": {
           "name": "unique_user_comment",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "comment_id"
-          ]
+          "columns": ["user_id", "comment_id"]
         }
       },
       "policies": {},
@@ -314,12 +292,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -390,12 +364,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -405,9 +375,7 @@
         "session_token_unique": {
           "name": "session_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -477,9 +445,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -609,16 +575,12 @@
         "article_categories_cms_category_id_unique": {
           "name": "article_categories_cms_category_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "cms_category_id"
-          ]
+          "columns": ["cms_category_id"]
         },
         "article_categories_slug_unique": {
           "name": "article_categories_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -845,12 +807,8 @@
           "name": "articles_category_id_article_categories_id_fk",
           "tableFrom": "articles",
           "tableTo": "article_categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -858,12 +816,8 @@
           "name": "articles_user_id_user_id_fk",
           "tableFrom": "articles",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -873,16 +827,12 @@
         "articles_cms_article_id_unique": {
           "name": "articles_cms_article_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "cms_article_id"
-          ]
+          "columns": ["cms_article_id"]
         },
         "articles_slug_unique": {
           "name": "articles_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -894,23 +844,12 @@
     "public.reaction_type": {
       "name": "reaction_type",
       "schema": "public",
-      "values": [
-        "like",
-        "heart",
-        "care",
-        "haha",
-        "wow",
-        "sad",
-        "angry"
-      ]
+      "values": ["like", "heart", "care", "haha", "wow", "sad", "angry"]
     },
     "public.article_status": {
       "name": "article_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
+      "values": ["draft", "published"]
     }
   },
   "schemas": {},

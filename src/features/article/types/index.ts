@@ -15,7 +15,10 @@ export const articleListQuerySchema = paginationQuerySchema.extend({
 });
 
 export const articleSearchQuerySchema = paginationQuerySchema.extend({
-  q: z.string().trim().min(3, 'Search query must be at least 3 characters long'),
+  q: z
+    .string()
+    .trim()
+    .min(3, 'Search query must be at least 3 characters long'),
 });
 
 export const articlesByCategoryQuerySchema = paginationQuerySchema.extend({
@@ -33,7 +36,10 @@ export const categorySlugParamSchema = z.object({
 });
 
 export const categoryIdParamSchema = z.object({
-  categoryId: z.coerce.number().int().positive('Category ID must be a positive integer'),
+  categoryId: z.coerce
+    .number()
+    .int()
+    .positive('Category ID must be a positive integer'),
 });
 
 export const idParamSchema = z.object({

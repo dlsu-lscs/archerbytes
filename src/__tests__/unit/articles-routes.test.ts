@@ -1,6 +1,9 @@
 import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { ArticleService, CategoryService } from '@/features/article/services/service';
+import {
+  ArticleService,
+  CategoryService,
+} from '@/features/article/services/service';
 import { GET as listArticlesGET } from '@/app/api/articles/route';
 import { GET as articleBySlugGET } from '@/app/api/articles/[slug]/route';
 import { GET as searchArticlesGET } from '@/app/api/articles/search/route';
@@ -34,7 +37,9 @@ describe('articles API routes', () => {
       limit: 10,
     } as never);
 
-    const req = new NextRequest('http://localhost:3000/api/articles?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles?page=1&limit=10',
+    );
     const res = await listArticlesGET(req);
     const json = await res.json();
 
@@ -45,7 +50,9 @@ describe('articles API routes', () => {
   });
 
   test('GET /api/articles returns 400 for invalid query params', async () => {
-    const req = new NextRequest('http://localhost:3000/api/articles?page=0&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles?page=0&limit=10',
+    );
     const res = await listArticlesGET(req);
     const json = await res.json();
 
@@ -57,7 +64,9 @@ describe('articles API routes', () => {
   test('GET /api/articles returns 500 when service throws', async () => {
     vi.mocked(ArticleService.list).mockRejectedValue(new Error('db failure'));
 
-    const req = new NextRequest('http://localhost:3000/api/articles?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles?page=1&limit=10',
+    );
     const res = await listArticlesGET(req);
     const json = await res.json();
 
@@ -66,7 +75,9 @@ describe('articles API routes', () => {
   });
 
   test('GET /api/articles/search returns 400 for short q', async () => {
-    const req = new NextRequest('http://localhost:3000/api/articles/search?q=ab&page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/search?q=ab&page=1&limit=10',
+    );
     const res = await searchArticlesGET(req);
     const json = await res.json();
 
@@ -113,9 +124,13 @@ describe('articles API routes', () => {
   });
 
   test('GET /api/articles/[slug] returns 500 when service throws', async () => {
-    vi.mocked(ArticleService.getBySlug).mockRejectedValue(new Error('db failure'));
+    vi.mocked(ArticleService.getBySlug).mockRejectedValue(
+      new Error('db failure'),
+    );
 
-    const req = new NextRequest('http://localhost:3000/api/articles/sample-slug');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/sample-slug',
+    );
     const res = await articleBySlugGET(req, {
       params: Promise.resolve({ slug: 'sample-slug' }),
     });
@@ -128,7 +143,9 @@ describe('articles API routes', () => {
   test('GET /api/articles/category/[categoryId] returns 404 for unknown category', async () => {
     vi.mocked(CategoryService.getById).mockResolvedValue(null as never);
 
-    const req = new NextRequest('http://localhost:3000/api/articles/category/5?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/category/5?page=1&limit=10',
+    );
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ categoryId: '5' }),
     });
@@ -155,7 +172,9 @@ describe('articles API routes', () => {
       new Error('db failure'),
     );
 
-    const req = new NextRequest('http://localhost:3000/api/articles/category/5?page=1&limit=10');
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/category/5?page=1&limit=10',
+    );
     const res = await categoryArticlesGET(req, {
       params: Promise.resolve({ categoryId: '5' }),
     });

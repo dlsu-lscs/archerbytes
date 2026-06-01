@@ -133,6 +133,7 @@ src/
 > All curl examples use `curl.exe` which works in both PowerShell and Command Prompt on Windows. On Unix-based systems (macOS/Linux), use `curl` instead.
 
 ### Quick Links
+
 - [Auth Endpoints](#auth-endpoints)
 - [Comment Endpoints](#comment-endpoints)
 - [Comment Reaction Endpoints](#comment-reaction-endpoints)
@@ -305,7 +306,7 @@ curl.exe -X GET "http://localhost:3000/api/comments?articleId=article_456&limit=
 }
 ```
 
-```json
+````json
 {
   "error": "articleId query parameter is required"
 }```
@@ -322,7 +323,7 @@ curl.exe -X GET "http://localhost:3000/api/comments?articleId=article_456&limit=
     }
   ]
 }
-```
+````
 
 ### GET `/api/comments/[id]`
 
