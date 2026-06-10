@@ -33,13 +33,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     subtitle: raw.subtitle,
     slug: raw.slug,
     content: raw.content,
-    categoryId: raw.categoryId,
     category: {
       id: raw.category.id,
       name: raw.category.name,
       slug: raw.category.slug,
     },
-    userId: raw.userId,
     featuredImageUrl: raw.featuredImageUrl ?? null,
     tags: raw.tags ?? null,
     metaTitle: raw.metaTitle ?? null,

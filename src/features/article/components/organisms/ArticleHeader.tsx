@@ -24,7 +24,7 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
     const deleteBookmark = useDeleteBookmark();
 
     const isBookmarked =
-        bookmarks?.some((bookmark) => bookmark.articleId === 1) || false;
+        bookmarks?.some((bookmark) => bookmark.articleId === article.id) || false;
     const isPending = addBookmark.isPending || deleteBookmark.isPending;
     const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
 
@@ -35,9 +35,9 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
         }
 
         if (isBookmarked) {
-            deleteBookmark.mutate(1);
+            deleteBookmark.mutate(article.id);
         } else {
-            addBookmark.mutate(1);
+            addBookmark.mutate(article.id);
         }
     };
 

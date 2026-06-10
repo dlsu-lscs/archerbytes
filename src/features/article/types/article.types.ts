@@ -4,30 +4,22 @@ export type ArticleDetailsType = {
   subtitle: string;
   slug: string;
   content: string;
-  categoryId: number;
-  userId: string;
+  category: articleCategoryType;
   featuredImageUrl: string | null;
-  tags: string[];
-  keywords: string[];
+  tags: string[] | null;
   metaTitle: string | null;
   metaDescription: string | null;
   metaImageUrl: string | null;
   status: 'draft' | 'published';
   isEdited: boolean;
   publishedAt: Date | null;
-  publicationDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  author: string;
-  avatarURL: string | null;
-  occupation: string | null;
-  readingTime: number;
+  author: articleAuthorType;
   quote?: string;
   quotee?: string;
   commentCount: number;
   reactionCount: number;
-  likeCount: number;
-  previewURL: string;
 };
 
 export type articleAuthorType = {
