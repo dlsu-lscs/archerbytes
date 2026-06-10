@@ -52,11 +52,11 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
                         articleId={article.id}
                         fallbackCount={article.reactionCount ?? 0}
                     />
-                    <p>Like this article</p>
+                    <p className='hidden md:block'>Like this article</p>
                 </div>
-                <a href='#discussion' className="flex gap-2 items-center hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); document.getElementById('discussion')?.scrollIntoView({ behavior: 'smooth' }); }}>
+                <a href='#discussion' className="flex gap-2 items-center text-muted-foreground hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); document.getElementById('discussion')?.scrollIntoView({ behavior: 'smooth' }); }}>
                     <ImBubble size={24} />
-                    <p>Reply to this article</p>
+                    <p className='hidden md:block'>Reply to this article</p>
                 </a>
                 <div className="flex gap-2 items-center cursor-pointer hover:text-primary transition-colors">
                     <BookmarkButton
@@ -65,7 +65,7 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
                         disabled={isPending}
                         size="large"
                     >
-                        <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
+                        <p className='hidden md:block'>{isBookmarked ? 'Saved' : 'Save article'}</p>
                     </BookmarkButton>
                 </div>
             </div>
