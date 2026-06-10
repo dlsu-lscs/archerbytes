@@ -51,7 +51,7 @@ export default function Feed() {
   }, [tabParam, categoryIdParam]);
 
   return (
-    <section className="flex flex-col gap-4.5 mb-auto">
+    <section className="flex flex-col gap-4.5 mb-4">
       <Tabs
         defaultValue="for-you"
         value={activeTab}
