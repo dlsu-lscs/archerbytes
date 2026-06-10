@@ -1,6 +1,9 @@
 'use client';
 
-import { useGetCommentReactions, useCommentReactionSelection } from '../../hooks';
+import {
+  useGetCommentReactions,
+  useCommentReactionSelection,
+} from '../../hooks';
 import ReactionPopover from './ReactionPopover';
 
 interface CommentReactionPopoverProps {
@@ -16,9 +19,12 @@ export default function CommentReactionPopover({
   replyTo,
   fallbackCount,
 }: CommentReactionPopoverProps) {
-  const { data: reactionSummary, isFetched } = useGetCommentReactions(commentId ?? 0, {
-    enabled: Boolean(commentId),
-  });
+  const { data: reactionSummary, isFetched } = useGetCommentReactions(
+    commentId ?? 0,
+    {
+      enabled: Boolean(commentId),
+    },
+  );
 
   const { selectReaction, isPending } = useCommentReactionSelection({
     commentId,

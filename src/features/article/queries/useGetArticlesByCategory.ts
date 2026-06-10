@@ -32,7 +32,8 @@ async function fetchArticlesByCategory(
     `/api/articles/category/${params.categoryId}?${searchParams.toString()}`,
   );
   if (!res.ok) throw new Error('Failed to fetch articles by category');
-  const json: { data: RawFeedArticle[]; meta: PaginationMeta } = await res.json();
+  const json: { data: RawFeedArticle[]; meta: PaginationMeta } =
+    await res.json();
 
   return {
     data: json.data.map((article) => ({

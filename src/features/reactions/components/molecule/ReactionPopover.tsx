@@ -1,7 +1,21 @@
 'use client';
 
-import { useRef, useState, useCallback, useEffect, type ComponentType } from 'react';
-import { Angry, Frown, HandHeart, Heart, Laugh, Sparkles, ThumbsUp } from 'lucide-react';
+import {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  type ComponentType,
+} from 'react';
+import {
+  Angry,
+  Frown,
+  HandHeart,
+  Heart,
+  Laugh,
+  Sparkles,
+  ThumbsUp,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { reactionTypes, type ReactionType } from '../../types';

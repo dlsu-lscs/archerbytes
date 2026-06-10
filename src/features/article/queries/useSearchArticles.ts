@@ -27,7 +27,8 @@ async function fetchSearchArticles(
 
   const res = await fetch(`/api/articles/search?${searchParams.toString()}`);
   if (!res.ok) throw new Error('Failed to search articles');
-  const json: { data: RawFeedArticle[]; meta: PaginationMeta } = await res.json();
+  const json: { data: RawFeedArticle[]; meta: PaginationMeta } =
+    await res.json();
 
   return {
     data: json.data.map((article) => ({
@@ -50,8 +51,13 @@ export default function useSearchArticles(
   options?: UseSearchArticlesOptions,
 ) {
   return useQuery({
-    queryKey: ['articles', 'search', { q, page: options?.page, limit: options?.limit }],
-    queryFn: () => fetchSearchArticles({ q, page: options?.page, limit: options?.limit }),
+    queryKey: [
+      'articles',
+      'search',
+      { q, page: options?.page, limit: options?.limit },
+    ],
+    queryFn: () =>
+      fetchSearchArticles({ q, page: options?.page, limit: options?.limit }),
     enabled: q.trim().length >= 3 && (options?.enabled ?? true),
     staleTime: 5 * 60 * 1000,
   });

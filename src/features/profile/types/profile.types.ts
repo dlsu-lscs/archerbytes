@@ -2,7 +2,7 @@ export type UpdateProfileType = {
   occupation?: 'Alumni' | 'Student' | 'Faculty';
   image?: File;
   bio?: string;
-}
+};
 
 export type UserProfileType = {
   id: string;
@@ -11,4 +11,4 @@ export type UserProfileType = {
   image?: string | null;
   occupation?: 'Alumni' | 'Student' | 'Faculty' | null;
   bio?: string | null;
-}
+};

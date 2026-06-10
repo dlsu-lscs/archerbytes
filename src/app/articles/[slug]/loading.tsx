@@ -19,7 +19,11 @@ export default function ArticleLoading() {
             <div className="h-64 w-full bg-neutral-200 rounded-xl" />
             <div className="flex flex-col gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-4 bg-neutral-200 rounded" style={{ width: `${85 + (i % 3) * 5}%` }} />
+                <div
+                  key={i}
+                  className="h-4 bg-neutral-200 rounded"
+                  style={{ width: `${85 + (i % 3) * 5}%` }}
+                />
               ))}
             </div>
           </div>

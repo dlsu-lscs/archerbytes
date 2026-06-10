@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import IconGroup from "@/features/landing/components/atoms/IconGroup";
+import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
+import IconGroup from '@/features/landing/components/atoms/IconGroup';
 
 export default function UserArticleItem() {
   return (
@@ -19,13 +19,9 @@ export default function UserArticleItem() {
             <h5 className="font-bold">Article Title</h5>
             <p className="text-sm text-gray-600">Article Subtitle</p>
           </div>
-          <IconGroup
-            date={new Date}
-            reactions={1}
-            comments={1}
-          />
+          <IconGroup date={new Date()} reactions={1} comments={1} />
         </CardContent>
       </div>
     </Card>
-  )
+  );
 }

@@ -2,6 +2,7 @@ import Sidebar from '@/components/organisms/Sidebar';
 import RelatedSidebar from '@/components/organisms/RelatedSidebar';
 import Feed from '@/features/landing/components/organisms/Feed';
 import ArticleCarousel from '@/features/landing/components/organisms/ArticleCarousel';
+import { Suspense } from 'react';
 
 export default function LandingPage() {
   return (
@@ -11,7 +12,15 @@ export default function LandingPage() {
         <Sidebar />
       </div>
       <main className="flex flex-col gap-[30px] px-5">
-        <Feed />
+        <Suspense
+          fallback={
+            <div className="h-40 flex items-center justify-center text-muted-foreground text-sm">
+              Loading feed...
+            </div>
+          }
+        >
+          <Feed />
+        </Suspense>
       </main>
       <div className="hidden lg:block grow">
         <RelatedSidebar />

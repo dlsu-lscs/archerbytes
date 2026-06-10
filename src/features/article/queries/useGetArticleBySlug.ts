@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ArticleDetailsType } from '../types/article.types';
 
-type RawArticleDetails = Omit<ArticleDetailsType, 'publishedAt' | 'createdAt' | 'updatedAt'> & {
+type RawArticleDetails = Omit<
+  ArticleDetailsType,
+  'publishedAt' | 'createdAt' | 'updatedAt'
+> & {
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;

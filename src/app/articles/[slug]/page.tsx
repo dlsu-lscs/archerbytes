@@ -11,7 +11,11 @@ export const revalidate = 3600;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const result = await ArticleService.list({ page: 1, limit: 1000, sort: 'newest' });
+  const result = await ArticleService.list({
+    page: 1,
+    limit: 1000,
+    sort: 'newest',
+  });
   return result.items.map((article) => ({ slug: article.slug }));
 }
 

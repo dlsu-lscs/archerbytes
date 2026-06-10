@@ -1,6 +1,9 @@
 'use client';
 
-import { useGetArticleReactions, useArticleReactionSelection } from '../../hooks';
+import {
+  useGetArticleReactions,
+  useArticleReactionSelection,
+} from '../../hooks';
 import ReactionPopover from './ReactionPopover';
 
 interface ArticleReactionPopoverProps {
@@ -12,7 +15,8 @@ export default function ArticleReactionPopover({
   articleId,
   fallbackCount,
 }: ArticleReactionPopoverProps) {
-  const { data: reactionSummary, isFetched } = useGetArticleReactions(articleId);
+  const { data: reactionSummary, isFetched } =
+    useGetArticleReactions(articleId);
 
   const { selectReaction, isPending } = useArticleReactionSelection({
     articleId,

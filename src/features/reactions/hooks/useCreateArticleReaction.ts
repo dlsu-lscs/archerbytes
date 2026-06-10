@@ -50,17 +50,21 @@ export function useCreateArticleReaction() {
     onMutate: async (variables) => {
       const queryKey = ['article-reactions', variables.articleId];
       await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<ArticleReactionRecord[]>(queryKey);
-      queryClient.setQueryData<ArticleReactionRecord[]>(queryKey, (old = []) => [
-        ...old,
-        {
-          id: -1,
-          userId: variables.userId,
-          articleId: variables.articleId,
-          reactionType: variables.reactionType,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
+      const previous =
+        queryClient.getQueryData<ArticleReactionRecord[]>(queryKey);
+      queryClient.setQueryData<ArticleReactionRecord[]>(
+        queryKey,
+        (old = []) => [
+          ...old,
+          {
+            id: -1,
+            userId: variables.userId,
+            articleId: variables.articleId,
+            reactionType: variables.reactionType,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      );
       return { previous };
     },
     onError: (err, variables, context) => {

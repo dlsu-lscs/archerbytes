@@ -1,4 +1,4 @@
-import { Button } from "../ui/button"
+import { Button } from '../ui/button';
 
 interface DesignedButtonProps {
   onClick?: () => void;
@@ -8,15 +8,15 @@ interface DesignedButtonProps {
   className?: string;
 }
 
-export default function DesignedButton({ 
+export default function DesignedButton({
   onClick,
   disabled,
   label,
   variant = 'primary',
-  className = 'w-full'
+  className = 'w-full',
 }: DesignedButtonProps) {
   return (
-    <Button 
+    <Button
       onClick={onClick}
       disabled={disabled}
       className={`${variant === 'danger' ? 'bg-red-800 hover:bg-red-500' : 'hover:bg-secondary'} px-8 md:px-10 py-5 md:py-6 text-md relative border-2 border-neutral-950 ${className}`}
@@ -29,5 +29,5 @@ export default function DesignedButton({
       </span>
       <div className="absolute size-full box-content p-0.5 bg-neutral-950 -z-10 top-1 left-1 rounded-md"></div>
     </Button>
-  )
+  );
 }

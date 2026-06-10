@@ -50,7 +50,8 @@ export function useUpdateArticleReaction() {
     onMutate: async (variables) => {
       const queryKey = ['article-reactions', variables.articleId];
       await queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<ArticleReactionRecord[]>(queryKey);
+      const previous =
+        queryClient.getQueryData<ArticleReactionRecord[]>(queryKey);
       queryClient.setQueryData<ArticleReactionRecord[]>(queryKey, (old = []) =>
         old.map((r) =>
           r.userId === variables.userId

@@ -18,7 +18,7 @@ export default function SmallArticleItem({
   author,
   date,
   avatarURL,
-  slug
+  slug,
 }: SmallArticleItemType) {
   const { data: bookmarks, error: authError } = useBookmarks();
   const addBookmark = useCreateBookmark();
@@ -63,7 +63,9 @@ export default function SmallArticleItem({
         />
       </div>
       <Link href={`/articles/${slug}`}>
-        <h6 className="text-md font-bold align-middle hover:underline">{title}</h6>
+        <h6 className="text-md font-bold align-middle hover:underline">
+          {title}
+        </h6>
       </Link>
       <div className="flex gap-2">
         <TopicChip>{topic}</TopicChip>

@@ -24,7 +24,7 @@ export const auth = betterAuth({
     },
   },
   user: {
-    additionalFields :{
+    additionalFields: {
       occupation: {
         type: 'string',
         required: false,

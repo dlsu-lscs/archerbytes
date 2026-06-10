@@ -31,14 +31,14 @@ export default function BookmarkedList() {
   const handleConfirmClear = () => {
     toast.info('Lucky for your saved articles, this feature doesnt exist yet');
     setIsModalOpen(false);
-  }
+  };
 
   return (
     <div>
-      <div className="flex items-center justify-end mb-5">        
+      <div className="flex items-center justify-end mb-5">
         {!isLoading && !isError && bookmarks && bookmarks.length > 0 && (
           <button
-            onClick={() => setIsModalOpen(true)} 
+            onClick={() => setIsModalOpen(true)}
             className="text-md font-normal text-neutral-500 hover:text-red-500 transition-colors"
           >
             Clear All

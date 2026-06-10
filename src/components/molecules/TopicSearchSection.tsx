@@ -9,8 +9,12 @@ interface TopicSearchSectionProps {
   isError: boolean;
 }
 
-export default function TopicSearchSection({categories, isLoading, isError}: TopicSearchSectionProps) {
-  if(!isLoading && (!categories || categories.length === 0 || isError)) {
+export default function TopicSearchSection({
+  categories,
+  isLoading,
+  isError,
+}: TopicSearchSectionProps) {
+  if (!isLoading && (!categories || categories.length === 0 || isError)) {
     return null;
   }
 
@@ -33,22 +37,34 @@ export default function TopicSearchSection({categories, isLoading, isError}: Top
       <div className="grid grid-cols-2 gap-x-2 gap-y-2">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-8 bg-neutral-300 animate-pulse rounded-full"></div>
+            <div
+              key={i}
+              className="h-8 bg-neutral-300 animate-pulse rounded-full"
+            ></div>
           ))
         ) : isError ? (
-          <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">Failed to load topics</p>
+          <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">
+            Failed to load topics
+          </p>
         ) : displayedCategories.length === 0 ? (
-          <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">No topics found</p>
+          <p className="text-sm text-neutral-500 col-span-2 text-center mt-3">
+            No topics found
+          </p>
         ) : (
           displayedCategories.map((category) => (
-            <Link key={category.id} href={`/?tab=by-category&categoryId=${category.id}`}>
+            <Link
+              key={category.id}
+              href={`/?tab=by-category&categoryId=${category.id}`}
+            >
               <TopicButton>{category.name}</TopicButton>
             </Link>
           ))
         )}
       </div>
       {categories && categories.length > 6 && (
-        <p className=" text-primary text-sm cursor-pointer hover:underline">See More</p>
+        <p className=" text-primary text-sm cursor-pointer hover:underline">
+          See More
+        </p>
       )}
     </div>
   );

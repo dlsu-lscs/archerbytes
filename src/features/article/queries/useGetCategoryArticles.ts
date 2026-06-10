@@ -30,7 +30,8 @@ async function fetchCategoryArticles(
     `/api/categories/by-id/${params.id}/articles${query ? `?${query}` : ''}`,
   );
   if (!res.ok) throw new Error('Failed to fetch category articles');
-  const json: { data: RawFeedArticle[]; meta: PaginationMeta } = await res.json();
+  const json: { data: RawFeedArticle[]; meta: PaginationMeta } =
+    await res.json();
 
   return {
     data: json.data.map((article) => ({
@@ -53,9 +54,18 @@ export default function useGetCategoryArticles(
   options?: UseGetCategoryArticlesOptions,
 ) {
   return useQuery({
-    queryKey: ['categories', id, 'articles', { page: options?.page, limit: options?.limit }],
+    queryKey: [
+      'categories',
+      id,
+      'articles',
+      { page: options?.page, limit: options?.limit },
+    ],
     queryFn: () =>
-      fetchCategoryArticles({ id: id!, page: options?.page, limit: options?.limit }),
+      fetchCategoryArticles({
+        id: id!,
+        page: options?.page,
+        limit: options?.limit,
+      }),
     enabled: Boolean(id) && (options?.enabled ?? true),
     staleTime: 5 * 60 * 1000,
   });
