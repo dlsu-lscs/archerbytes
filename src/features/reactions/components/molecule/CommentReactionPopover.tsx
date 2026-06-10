@@ -16,7 +16,7 @@ export default function CommentReactionPopover({
   replyTo,
   fallbackCount,
 }: CommentReactionPopoverProps) {
-  const { data: reactionSummary } = useGetCommentReactions(commentId ?? 0, {
+  const { data: reactionSummary, isFetched } = useGetCommentReactions(commentId ?? 0, {
     enabled: Boolean(commentId),
   });
 
@@ -33,6 +33,7 @@ export default function CommentReactionPopover({
       selectReaction={selectReaction}
       isPending={isPending}
       fallbackCount={fallbackCount}
+      isFetched={isFetched}
       ariaLabel="React to comment"
     />
   );

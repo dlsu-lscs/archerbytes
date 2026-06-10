@@ -14,6 +14,7 @@ interface ReactionPopoverProps {
   selectReaction: (reactionType: ReactionType) => void;
   isPending: boolean;
   fallbackCount: number;
+  isFetched: boolean;
   ariaLabel?: string;
 }
 
@@ -75,6 +76,7 @@ export default function ReactionPopover({
   selectReaction,
   isPending,
   fallbackCount,
+  isFetched,
   ariaLabel = 'React',
 }: ReactionPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -155,7 +157,7 @@ export default function ReactionPopover({
   };
 
   const topReactions = reactionSummary.topTypes.slice(0, 3);
-  const totalReactionCount = reactionSummary.total || fallbackCount;
+  const totalReactionCount = isFetched ? reactionSummary.total : fallbackCount;
   const userReaction = reactionSummary.userReaction;
 
   return (

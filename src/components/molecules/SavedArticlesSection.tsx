@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import SmallArticleItem from '../atoms/SmallArticleItem';
+import SmallArticleItem from '@/features/article/components/atoms/SmallArticleItem';
 import Link from 'next/link';
 import { BookmarkType } from '@/features/bookmarks/types/bookmarks.types';
 

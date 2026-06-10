@@ -12,7 +12,7 @@ export default function ArticleReactionPopover({
   articleId,
   fallbackCount,
 }: ArticleReactionPopoverProps) {
-  const { data: reactionSummary } = useGetArticleReactions(articleId);
+  const { data: reactionSummary, isFetched } = useGetArticleReactions(articleId);
 
   const { selectReaction, isPending } = useArticleReactionSelection({
     articleId,
@@ -25,6 +25,7 @@ export default function ArticleReactionPopover({
       selectReaction={selectReaction}
       isPending={isPending}
       fallbackCount={fallbackCount}
+      isFetched={isFetched}
       ariaLabel="React to article"
     />
   );
