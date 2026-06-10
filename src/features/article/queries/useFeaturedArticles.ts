@@ -5,6 +5,7 @@ export default function useFeaturedArticles() {
   return useQuery({
     queryKey: ['articles', 'featured'],
     queryFn: getFeaturedArticles,
+    staleTime: 5 * 60 * 1000,
     select: (data) => {
       return data.data.map(
         (

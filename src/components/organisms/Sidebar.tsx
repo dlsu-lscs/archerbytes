@@ -22,10 +22,10 @@ export default function Sidebar() {
         />
       </Link>
       <Link href={'/profile'}>
-        <SidebarItem 
+        <SidebarItem
           icon={<GoPerson />}
           title="PROFILE"
-          isSelected={pathname === '/profile'}  
+          isSelected={pathname === '/profile'}
         />
       </Link>
       <Link href={'/bookmarks'}>

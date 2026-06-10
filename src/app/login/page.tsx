@@ -23,7 +23,7 @@ export default function LoginPage() {
             </p>
           </div>
           <Link href={'/'}>
-            <DesignedButton label={"Start Reading"} className={"w-fit"} />
+            <DesignedButton label={'Start Reading'} className={'w-fit'} />
           </Link>
         </div>
       </div>

@@ -18,6 +18,7 @@ export default function useArticleList({
     queryKey: ['articles', { sort, categoryId }],
     queryFn: () => getArticles({ sort, categoryId }),
     enabled: enabled,
+    staleTime: 5 * 60 * 1000,
     select: (data) => {
       return data.data.map(
         (

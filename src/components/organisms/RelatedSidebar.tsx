@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import TopicSearchSection from '../molecules/TopicSearchSection';
 import SavedArticlesSection from '../molecules/SavedArticlesSection';
@@ -10,17 +10,25 @@ import { usePathname } from 'next/navigation';
 export default function RelatedSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const { data: categories, isLoading: isLoadingCategories, isError: isErrorCategories } = useCategoryList();
-  const { data: bookmarks, isLoading: isLoadingBookmarks, isError: isErrorBookmarks } = useBookmarks();
+  const {
+    data: categories,
+    isLoading: isLoadingCategories,
+    isError: isErrorCategories,
+  } = useCategoryList();
+  const {
+    data: bookmarks,
+    isLoading: isLoadingBookmarks,
+    isError: isErrorBookmarks,
+  } = useBookmarks();
 
   return (
     <div className="hidden lg:flex flex-col gap-6 p-5 max-w-64">
-      <TopicSearchSection 
+      <TopicSearchSection
         categories={categories}
         isLoading={isLoadingCategories}
         isError={isErrorCategories}
       />
-      <SavedArticlesSection 
+      <SavedArticlesSection
         bookmarks={bookmarks}
         isLoading={isLoadingBookmarks}
         isError={isErrorBookmarks}

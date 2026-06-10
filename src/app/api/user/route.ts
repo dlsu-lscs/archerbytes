@@ -3,7 +3,10 @@ import { z } from 'zod';
 import { requireAuth } from '@/lib/util/auth/session';
 import { ok, fail } from '@/lib/api/response';
 import { deleteProfileImage, uploadProfileImage } from '@/lib/storage/s3';
-import { updateUserProfile, getUserById } from '@/features/auth/services/service';
+import {
+  updateUserProfile,
+  getUserById,
+} from '@/features/auth/services/service';
 import type { UpdateUserProfileInput } from '@/features/auth/types';
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
@@ -130,7 +133,10 @@ export async function PATCH(request: Request) {
         try {
           await deleteProfileImage(prevKey);
         } catch (delErr) {
-          console.error('Failed to delete previous profile image from S3:', delErr);
+          console.error(
+            'Failed to delete previous profile image from S3:',
+            delErr,
+          );
         }
       }
     }

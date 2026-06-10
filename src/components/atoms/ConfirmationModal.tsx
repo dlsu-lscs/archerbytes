@@ -31,42 +31,28 @@ export default function ConfirmationModal({
   loadingText,
   onConfirm,
   onCancel,
-  isLoading
+  isLoading,
 }: ConfirmationModalProps) {
-  
   if (!isOpen) return null;
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => !open && onCancel()}
-    >
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent showCloseButton={false} className="border-0">
         <DialogHeader>
-          <DialogTitle className="text-neutral-50">
-            {title}
-          </DialogTitle>
+          <DialogTitle className="text-neutral-50">{title}</DialogTitle>
           <DialogDescription className="text-neutral-400">
             {message}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            variant="secondary"
-            onClick={onConfirm}
-            disabled={isLoading}
-          >
+          <Button variant="secondary" onClick={onConfirm} disabled={isLoading}>
             {isLoading ? loadingText : confirmText}
           </Button>
-          <Button
-            variant="destructive"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button variant="destructive" onClick={onCancel} disabled={isLoading}>
             {cancelText}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -12,9 +12,13 @@ const nextConfig: NextConfig = {
       },
     ],
     remotePatterns: [
-      new URL('https://lh3.googleusercontent.com/a/**'),
-      new URL('https://cms.app.dlsu-lscs.org/**'),
-      new URL('https://s3.app.dlsu-lscs.org/**'),
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/a/**',
+      },
+      { protocol: 'https', hostname: 'cms.app.dlsu-lscs.org', pathname: '/**' },
+      { protocol: 'https', hostname: 's3.api.dlsu-lscs.org', pathname: '/**' },
     ],
   },
 };

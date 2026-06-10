@@ -4,63 +4,25 @@ import Breadcrumbs from '@/features/article/components/atoms/Breadcrumbs';
 import Keywords from '@/features/article/components/atoms/Keywords';
 import ArticleDetails from '../molecules/ArticleDetails';
 import { ArticleDetailsType } from '@/features/article/types/article.types';
-
-import { IoHeartCircleSharp } from 'react-icons/io5';
 import { ImBubble } from 'react-icons/im';
-
+import ArticleReactionPopover from '@/features/reactions/components/molecule/ArticleReactionPopover';
 import BookmarkButton from '@/features/bookmarks/components/atoms/BookmarkButton';
 import useBookmarks from '@/features/bookmarks/queries/useBookmarks';
 import useCreateBookmark from '@/features/bookmarks/queries/useCreateBookmark';
 import useDeleteBookmark from '@/features/bookmarks/queries/useDeleteBookmark';
 import { useAuthStore } from '@/store/use-auth-store';
 
-export default function ArticleHeader() {
-  const placeholderArticle: ArticleDetailsType = {
-    title: 'Top 10 LSCS Research and Development Officers of all time',
-    quote:
-      'Research and Development is the best committee in the whole universe',
-    quotee: 'Ian Gabriel Ilagan',
-    author: 'Charles Cordez',
-    avatarURL: '/lscs-logo.png',
-    previewURL: '/image.jpg',
-    readingTime: 6,
-    publicationDate: new Date('2025-10-29'),
-    commentCount: 100,
-    reactionCount: 100,
-    likeCount: 100,
-    keywords: [
-      'Computer',
-      'Programming',
-      'Coding',
-      'Frontend',
-      'Backend',
-      'UI/UX',
-    ],
-    id: 0,
-    subtitle: '',
-    slug: '',
-    content: '',
-    categoryId: 0,
-    userId: '',
-    featuredImageUrl: null,
-    tags: [],
-    metaTitle: null,
-    metaDescription: null,
-    metaImageUrl: null,
-    status: 'published',
-    isEdited: false,
-    publishedAt: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    occupation: null,
-  };
+interface ArticleHeaderProps {
+  article: ArticleDetailsType;
+}
 
+export default function ArticleHeader({ article }: ArticleHeaderProps) {
   const { data: bookmarks, error: authError } = useBookmarks();
   const addBookmark = useCreateBookmark();
   const deleteBookmark = useDeleteBookmark();
 
   const isBookmarked =
-    bookmarks?.some((bookmark) => bookmark.articleId === 1) || false;
+    bookmarks?.some((bookmark) => bookmark.articleId === article.id) || false;
   const isPending = addBookmark.isPending || deleteBookmark.isPending;
   const setLoginOpen = useAuthStore((state) => state.setLoginOpen);
 
@@ -71,26 +33,40 @@ export default function ArticleHeader() {
     }
 
     if (isBookmarked) {
-      deleteBookmark.mutate(1);
+      deleteBookmark.mutate(article.id);
     } else {
-      addBookmark.mutate(1);
+      addBookmark.mutate(article.id);
     }
   };
 
   return (
-    <div className="flex flex-col gap-[10px] pt-3 mb-3 h-max ">
-      <Breadcrumbs link="Home > Category > Title" />
-      <ArticleDetails article={placeholderArticle} />
-      <Keywords article={placeholderArticle} />
+    <div className="flex flex-col gap-[10px] pt-3 mb-3 h-max">
+      <Breadcrumbs
+        link={`Home > ${article.category.name} > ${article.title}`}
+      />
+      <ArticleDetails article={article} />
+      <Keywords article={article} />
       <div className="flex gap-5 text-neutral-950 text-sm">
         <div className="flex gap-2 items-center">
-          <IoHeartCircleSharp size={24} />
-          <p>Like this article</p>
+          <ArticleReactionPopover
+            articleId={article.id}
+            fallbackCount={article.reactionCount ?? 0}
+          />
+          <p className="hidden md:block">Like this article</p>
         </div>
-        <div className="flex gap-2 items-center">
+        <a
+          href="#discussion"
+          className="flex gap-2 items-center text-muted-foreground hover:text-primary transition-colors"
+          onClick={(e) => {
+            e.preventDefault();
+            document
+              .getElementById('discussion')
+              ?.scrollIntoView({ behavior: 'smooth' });
+          }}
+        >
           <ImBubble size={24} />
-          <p>Reply to this article</p>
-        </div>
+          <p className="hidden md:block">Reply to this article</p>
+        </a>
         <div className="flex gap-2 items-center cursor-pointer hover:text-primary transition-colors">
           <BookmarkButton
             isBookmarked={isBookmarked}
@@ -98,7 +74,9 @@ export default function ArticleHeader() {
             disabled={isPending}
             size="large"
           >
-            <p>{isBookmarked ? 'Saved' : 'Save article'}</p>
+            <p className="hidden md:block">
+              {isBookmarked ? 'Saved' : 'Save article'}
+            </p>
           </BookmarkButton>
         </div>
       </div>

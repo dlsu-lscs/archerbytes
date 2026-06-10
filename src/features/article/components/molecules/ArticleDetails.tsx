@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import TopicChip from '../atoms/TopicChip';
 import { ArticleDetailsType } from '@/features/article/types/article.types';
 
@@ -8,25 +9,39 @@ export default function ArticleDetails({
 }) {
   return (
     <div className="flex flex-col gap-[10px] text-neutral-950">
-      <TopicChip>Gaming</TopicChip>
+      <TopicChip>{article.category.name}</TopicChip>
       <h1 className="text-2xl md:text-5xl font-bold">
         {article.title.toUpperCase()}
       </h1>
-      <h5 className="font-extralight text-neutral-500">
-        &rdquo;{article.quote}&rdquo; - {article.quotee}
-      </h5>
-      <div className="flex items-start gap-5  text-sm">
+      {article.quote && article.quotee && (
+        <h5 className="font-extralight text-neutral-500">
+          &rdquo;{article.quote}&rdquo; - {article.quotee}
+        </h5>
+      )}
+      <div className="flex items-start gap-5 text-sm">
         <div className="flex gap-3 items-center">
-          <div className="size-12 shrink-0 rounded-full bg-neutral-400"></div>
-          <div className="flex flex-col">
-            <h5 className="font-bold">{article.author}</h5>
-            <p className="text-xs">{article.occupation}</p>
+          <div className="flex gap-3 items-center flex-1 min-w-0">
+            <div className="size-12 shrink-0 rounded-full bg-neutral-400 overflow-hidden relative">
+              {article.author.avatarURL && (
+                <Image
+                  src={`${article.author.avatarURL}` || '/archerbytes-bg.png'}
+                  alt={article.author.name}
+                  fill
+                  className="object-cover"
+                />
+              )}
+            </div>
+
+            <div className="flex flex-col min-w-0">
+              <h5 className="font-bold">{article.author.name}</h5>
+              {article.author.occupation && (
+                <p className="text-xs">{article.author.occupation}</p>
+              )}
+            </div>
           </div>
-          <p>{'\u2022'}</p>
-          <p className="align-middle">{article.readingTime} min read</p>
-          <p>{'\u2022'}</p>
-          <p>
-            {(article.publicationDate || new Date()).toLocaleDateString(
+          <p className="shrink-0">{'•'}</p>
+          <p className="shrink-0 whitespace-nowrap">
+            {(article.publishedAt ?? article.createdAt).toLocaleDateString(
               'en-US',
               {
                 month: 'short',

@@ -12,7 +12,7 @@ export default function Discussion({ articleId }: DiscussionProps) {
     useGetComments(String(articleId));
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" id="discussion">
       <h3 className="text-2xl font-bold text-neutral-950">
         Discussion ({total})
       </h3>

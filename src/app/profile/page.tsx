@@ -8,7 +8,7 @@ import { UserProfileType } from '@/features/profile/types/profile.types';
 export default async function ProfilePage() {
   const session = await getSession();
 
-  if(!session?.user) {
+  if (!session?.user) {
     redirect('/login');
   }
 

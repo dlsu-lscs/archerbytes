@@ -19,6 +19,7 @@ export default function RecentlyViewedSection() {
       <div className="flex flex-col gap-6">
         <SmallArticleItem
           id={1}
+          slug="ccprog2-everything-you-need-to-pass-1"
           topic="Genre"
           title="CCPROG2: Everything you need to pass"
           author="Airon Bantillo"
@@ -26,6 +27,7 @@ export default function RecentlyViewedSection() {
         />
         <SmallArticleItem
           id={2}
+          slug="ccprog2-everything-you-need-to-pass-2"
           topic="Genre"
           title="CCPROG2: Everything you need to pass"
           author="Airon Bantillo"
@@ -33,6 +35,7 @@ export default function RecentlyViewedSection() {
         />
         <SmallArticleItem
           id={3}
+          slug="ccprog2-everything-you-need-to-pass-3"
           topic="Genre"
           title="CCPROG2: Everything you need to pass"
           author="Airon Bantillo"
@@ -40,6 +43,7 @@ export default function RecentlyViewedSection() {
         />
         <SmallArticleItem
           id={4}
+          slug="ccprog2-everything-you-need-to-pass-4"
           topic="Genre"
           title="CCPROG2: Everything you need to pass"
           author="Airon Bantillo"

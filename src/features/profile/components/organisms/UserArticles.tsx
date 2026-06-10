@@ -1,4 +1,4 @@
-import UserArticleItem from "../molecules/UserArticleItem"
+import UserArticleItem from '../molecules/UserArticleItem';
 
 export default function UserArticles() {
   return (
@@ -9,5 +9,5 @@ export default function UserArticles() {
       <UserArticleItem />
       <UserArticleItem />
     </div>
-  )
+  );
 }
