@@ -19,6 +19,8 @@ export const articleSearchQuerySchema = paginationQuerySchema.extend({
     .string()
     .trim()
     .min(3, 'Search query must be at least 3 characters long'),
+  category: z.coerce.number().int().positive().optional(),
+  sort: articleSortEnum.default('newest'),
 });
 
 export const articlesByCategoryQuerySchema = paginationQuerySchema.extend({

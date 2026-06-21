@@ -46,6 +46,51 @@ describe('article query schemas', () => {
     expect(result.success).toBe(false);
   });
 
+  test('parses search filters correctly with category and sort', () => {
+    const parsed = articleSearchQuerySchema.parse({
+      q: 'typescript',
+      page: '1',
+      limit: '10',
+      category: '5',
+      sort: 'oldest',
+    });
+
+    expect(parsed).toEqual({
+      q: 'typescript',
+      page: 1,
+      limit: 10,
+      category: 5,
+      sort: 'oldest',
+    });
+  });
+
+  test('applies search defaults for sort and optional category', () => {
+    const parsed = articleSearchQuerySchema.parse({
+      q: 'typescript',
+    });
+
+    expect(parsed).toEqual({
+      q: 'typescript',
+      page: 1,
+      limit: 10,
+      sort: 'newest',
+    });
+  });
+
+  test('rejects invalid search sort and non-positive category', () => {
+    const badSort = articleSearchQuerySchema.safeParse({
+      q: 'typescript',
+      sort: 'invalid',
+    });
+    expect(badSort.success).toBe(false);
+
+    const badCategory = articleSearchQuerySchema.safeParse({
+      q: 'typescript',
+      category: '-1',
+    });
+    expect(badCategory.success).toBe(false);
+  });
+
   test('parses dynamic route params', () => {
     expect(articleSlugParamSchema.parse({ slug: 'my-article' })).toEqual({
       slug: 'my-article',

@@ -330,7 +330,8 @@ export async function searchArticles(query: ArticleSearchQuery) {
     return listArticlesWithCount({
       page: query.page,
       limit: query.limit,
-      sort: 'newest',
+      sort: query.sort,
+      categoryId: query.category,
       searchQuery: query.q,
     });
   } catch (error) {
