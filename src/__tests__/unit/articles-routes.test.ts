@@ -99,6 +99,53 @@ describe('articles API routes', () => {
     expect(json).toEqual({ error: 'Failed to search articles' });
   });
 
+  test('GET /api/articles/search forwards category and sort parameters to service', async () => {
+    vi.mocked(ArticleService.search).mockResolvedValue({
+      items: [{ id: 1, title: 'Test Article' }],
+      total: 1,
+      page: 1,
+      limit: 10,
+    } as never);
+
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/search?q=test&category=3&sort=popular',
+    );
+    const res = await searchArticlesGET(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(ArticleService.search).toHaveBeenCalledWith({
+      q: 'test',
+      page: 1,
+      limit: 10,
+      category: 3,
+      sort: 'popular',
+    });
+    expect(json.data).toHaveLength(1);
+  });
+
+  test('GET /api/articles/search returns 400 for invalid category', async () => {
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/search?q=test&category=invalid',
+    );
+    const res = await searchArticlesGET(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(json.error).toBe('Validation failed');
+  });
+
+  test('GET /api/articles/search returns 400 for invalid sort option', async () => {
+    const req = new NextRequest(
+      'http://localhost:3000/api/articles/search?q=test&sort=invalid_sort',
+    );
+    const res = await searchArticlesGET(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(json.error).toBe('Validation failed');
+  });
+
   test('GET /api/articles/[slug] returns 404 when not found', async () => {
     vi.mocked(ArticleService.getBySlug).mockResolvedValue(null as never);
 
