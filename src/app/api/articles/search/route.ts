@@ -9,8 +9,10 @@ export async function GET(req: NextRequest) {
     const page = req.nextUrl.searchParams.get('page') ?? undefined;
     const limit = req.nextUrl.searchParams.get('limit') ?? undefined;
     const q = req.nextUrl.searchParams.get('q') ?? undefined;
+    const category = req.nextUrl.searchParams.get('category') ?? undefined;
+    const sort = req.nextUrl.searchParams.get('sort') ?? undefined;
 
-    const query = articleSearchQuerySchema.parse({ page, limit, q });
+    const query = articleSearchQuerySchema.parse({ page, limit, q, category, sort });
     const result = await ArticleService.search(query);
     const meta = buildPaginationMeta(result.total, result.page, result.limit);
 
