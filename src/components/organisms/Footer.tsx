@@ -15,7 +15,7 @@ export default function Footer() {
           <p>FAQs</p>
           <p>Contacts</p>
           <Link href="/about-lscs">About LSCS</Link>
-          
+          <Link href="/about">About</Link>
           <p>Help</p>
         </div>
         <p className="text-xs md:text-base">All rights reserved.</p>
