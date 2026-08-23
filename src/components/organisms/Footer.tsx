@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -13,7 +14,8 @@ export default function Footer() {
         <div className="flex gap-[15px] text-xs md:text-base">
           <p>FAQs</p>
           <p>Contacts</p>
-          <p>About</p>
+          <Link href="/about-lscs">About LSCS</Link>
+          <Link href="/about">About</Link>
           <p>Help</p>
         </div>
         <p className="text-xs md:text-base">All rights reserved.</p>
