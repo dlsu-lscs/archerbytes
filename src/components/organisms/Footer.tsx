@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -11,7 +12,7 @@ export default function Footer() {
           alt="Archerbytes logo"
         ></Image>
         <div className="flex gap-[15px] text-xs md:text-base">
-          <p>FAQs</p>
+          <Link href="/faq">FAQs</Link>
           <p>Contacts</p>
           <p>About</p>
           <p>Help</p>
